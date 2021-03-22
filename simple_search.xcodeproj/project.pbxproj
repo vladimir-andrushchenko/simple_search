@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		750551C625EEBE80004001C5 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 750551C525EEBE80004001C5 /* main.cpp */; };
+		75E1515A2608950D000882D0 /* SearchServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75E151582608950D000882D0 /* SearchServer.cpp */; };
+		75E1515F260895B9000882D0 /* SplitIntoWords.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75E1515D260895B9000882D0 /* SplitIntoWords.cpp */; };
+		75E1516626089D35000882D0 /* ReadFromInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75E1516426089D35000882D0 /* ReadFromInput.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +28,14 @@
 /* Begin PBXFileReference section */
 		750551C225EEBE80004001C5 /* simple_search */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = simple_search; sourceTree = BUILT_PRODUCTS_DIR; };
 		750551C525EEBE80004001C5 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		75E151582608950D000882D0 /* SearchServer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SearchServer.cpp; sourceTree = "<group>"; };
+		75E151592608950D000882D0 /* SearchServer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SearchServer.hpp; sourceTree = "<group>"; };
+		75E1515D260895B9000882D0 /* SplitIntoWords.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SplitIntoWords.cpp; sourceTree = "<group>"; };
+		75E1515E260895B9000882D0 /* SplitIntoWords.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SplitIntoWords.hpp; sourceTree = "<group>"; };
+		75E151612608998C000882D0 /* Document.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Document.hpp; sourceTree = "<group>"; };
+		75E15162260899C8000882D0 /* Query.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Query.hpp; sourceTree = "<group>"; };
+		75E1516426089D35000882D0 /* ReadFromInput.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ReadFromInput.cpp; sourceTree = "<group>"; };
+		75E1516526089D35000882D0 /* ReadFromInput.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ReadFromInput.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +68,41 @@
 		750551C425EEBE80004001C5 /* simple_search */ = {
 			isa = PBXGroup;
 			children = (
+				75E1516326089D15000882D0 /* ReadFromInput */,
+				75E1515C2608959F000882D0 /* SplitIntoWords */,
 				750551C525EEBE80004001C5 /* main.cpp */,
+				75E1515626087B3C000882D0 /* SearchServer */,
+				75E151612608998C000882D0 /* Document.hpp */,
+				75E15162260899C8000882D0 /* Query.hpp */,
 			);
 			path = simple_search;
+			sourceTree = "<group>";
+		};
+		75E1515626087B3C000882D0 /* SearchServer */ = {
+			isa = PBXGroup;
+			children = (
+				75E151582608950D000882D0 /* SearchServer.cpp */,
+				75E151592608950D000882D0 /* SearchServer.hpp */,
+			);
+			path = SearchServer;
+			sourceTree = "<group>";
+		};
+		75E1515C2608959F000882D0 /* SplitIntoWords */ = {
+			isa = PBXGroup;
+			children = (
+				75E1515D260895B9000882D0 /* SplitIntoWords.cpp */,
+				75E1515E260895B9000882D0 /* SplitIntoWords.hpp */,
+			);
+			path = SplitIntoWords;
+			sourceTree = "<group>";
+		};
+		75E1516326089D15000882D0 /* ReadFromInput */ = {
+			isa = PBXGroup;
+			children = (
+				75E1516426089D35000882D0 /* ReadFromInput.cpp */,
+				75E1516526089D35000882D0 /* ReadFromInput.hpp */,
+			);
+			path = ReadFromInput;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -118,6 +161,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75E1515A2608950D000882D0 /* SearchServer.cpp in Sources */,
+				75E1515F260895B9000882D0 /* SplitIntoWords.cpp in Sources */,
+				75E1516626089D35000882D0 /* ReadFromInput.cpp in Sources */,
 				750551C625EEBE80004001C5 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
