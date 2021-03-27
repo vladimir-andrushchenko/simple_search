@@ -76,21 +76,20 @@ public:
             });
     }
     
+    int GetDocumentCount() const {
+        return static_cast<int>(documents_.size());
+    }
+    
     template<typename Predicate>
     vector<Document> FindTopDocuments(const string& raw_query, Predicate predicate) const {
         return GetTopFilteredDocuments(raw_query, predicate);
     }
-    
     
     vector<Document> FindTopDocuments(const string& raw_query) const {
         const auto predicate = [](int document_id, DocumentStatus status, int rating) {
             return status == DocumentStatus::ACTUAL;
         };
         return GetTopFilteredDocuments(raw_query, predicate);
-    }
-
-    int GetDocumentCount() const {
-        return static_cast<int>(documents_.size());
     }
     
     template<typename Predicate>
