@@ -9,7 +9,6 @@
 
 using namespace std;
 
-typedef vector<string> vstr;
 
 const int MAX_RESULT_DOCUMENT_COUNT = 5;
 
@@ -52,7 +51,7 @@ struct Document {
 
 struct Query {
     map<string, double> words_to_idf; // idf - indirect document frequence log(все_документы/документ_где_слово встречается) чем чаще встречается слово тем ниже его релевантность
-    vstr minus_words;
+    vector<string> minus_words;
 };
 
 class SearchServer {
@@ -64,7 +63,7 @@ public:
     }
 
     void AddDocument(int document_id, const string& document) {
-        vstr words_in_document = SplitIntoWordsNoStop(document);
+        vector<string> words_in_document = SplitIntoWordsNoStop(document);
         for (const string& word : words_in_document) {
             const double word_appears_n_times = count(words_in_document.begin(), words_in_document.end(), word);
             const double tf = word_appears_n_times / words_in_document.size();
@@ -72,7 +71,7 @@ public:
         }
         ++number_of_documents_;
     }
-
+// TODO: сюда добавить функцию по которой будет происходить сортировка
     vector<Document> FindTopDocuments(const string& query) const {
         auto matched_documents = FindAllDocuments(query);
         
