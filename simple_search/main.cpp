@@ -66,8 +66,8 @@ public:
         vector<string> words_in_document = SplitIntoWordsNoStop(document);
         for (const string& word : words_in_document) {
             const double word_appears_n_times = count(words_in_document.begin(), words_in_document.end(), word);
-            const double tf = word_appears_n_times / words_in_document.size();
-            word_to_document_freqs_[word][document_id] = tf; // стоп слова при подсчете .size() не рассчитываются
+            const double tf = word_appears_n_times / words_in_document.size(); // сколько раз слово встречается в документе / количество слов в документе
+            word_to_document_and_its_tf_[word][document_id] = tf; // стоп слова при подсчете .size() не рассчитываются
         }
         ++number_of_documents_;
     }
@@ -89,7 +89,7 @@ public:
     }
 
 private:
-    map<string, map<int, double>> word_to_document_freqs_; // word -> map<document_id, term frequency in this document>
+    map<string, map<int, double>> word_to_document_and_its_tf_; // word -> map<document_id, term frequency in this document>
     set<string> stop_words_;
     int number_of_documents_ = 0;
 
@@ -116,8 +116,8 @@ private:
                 if (stop_words_.count(word) == 1) {
                     continue;
                 }
-                if (word_to_document_freqs_.count(word) == 1) { // смотрю если слово вообще встречается в каком либо документе
-                    const double in_how_many_docs_this_word_appears = word_to_document_freqs_.at(word).size();
+                if (word_to_document_and_its_tf_.count(word) == 1) { // смотрю если слово вообще встречается в каком либо документе
+                    const double in_how_many_docs_this_word_appears = word_to_document_and_its_tf_.at(word).size();
                     const double ratio_of_all_docs_to_this_word = number_of_documents_ / in_how_many_docs_this_word_appears;
                     const double idf_of_word = log(ratio_of_all_docs_to_this_word);
                     query.words_to_idf[word] = idf_of_word;
@@ -134,20 +134,20 @@ private:
         const Query query = ParseQuery(query_raw);
         map<int, double> document_to_relevance;
         for (const auto& [word, idf] : query.words_to_idf) { // цикл по словам запроса
-            if (word_to_document_freqs_.count(word) == 0) {
+            if (word_to_document_and_its_tf_.count(word) == 0) {
                 continue;
             }
-            for (const auto& [document_id, tf_of_word_in_this_doc]: word_to_document_freqs_.at(word)) { // цикл по документам где это слово встречается
+            for (const auto& [document_id, tf_of_word_in_this_doc]: word_to_document_and_its_tf_.at(word)) { // цикл по документам где это слово встречается
                 document_to_relevance[document_id] += idf * tf_of_word_in_this_doc;
             }
         }
         
         // потом удаляю документы в которых встречается минус слово
         for (const string& minus_word : query.minus_words) {
-            if (word_to_document_freqs_.count(minus_word) == 0) {
+            if (word_to_document_and_its_tf_.count(minus_word) == 0) {
                     continue;
             }
-            for (const auto& [document_id, _] : word_to_document_freqs_.at(minus_word)) {
+            for (const auto& [document_id, _] : word_to_document_and_its_tf_.at(minus_word)) {
                 document_to_relevance.erase(document_id);
             }
         }
