@@ -78,69 +78,47 @@ public:
     
     template<typename Predicate>
     vector<Document> FindTopDocuments(const string& raw_query, Predicate predicate) const {
-        const Query query = ParseQuery(raw_query);
-        vector<Document> matched_documents = FindAllDocuments(query);
-        
-        vector<Document> filtered_documents;
-        for (const Document& document : matched_documents) {
-            if(predicate(document.id, documents_.at(document.id).status, documents_.at(document.id).rating)) {
-                filtered_documents.push_back(document);
-            }
-        }
-        
-        sort(matched_documents.begin(), matched_documents.end(),
-             [](const Document& lhs, const Document& rhs) {
-                if (abs(lhs.relevance - rhs.relevance) < 1e-6) {
-                    return lhs.rating > rhs.rating;
-                } else {
-                    return lhs.relevance > rhs.relevance;
-                }
-             });
-        
-        if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
-            matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
-        }
-        return matched_documents;
+        return GetTopFilteredDocuments(raw_query, predicate);
     }
     
     
     vector<Document> FindTopDocuments(const string& raw_query) const {
-        const Query query = ParseQuery(raw_query);
-        vector<Document> matched_documents = FindAllDocuments(query);
-        
-        vector<Document> filtered_documents;
         const auto predicate = [](int document_id, DocumentStatus status, int rating) {
             return status == DocumentStatus::ACTUAL;
         };
-        for (const Document& document : matched_documents) {
-            if(predicate(document.id, documents_.at(document.id).status, documents_.at(document.id).rating)) {
-                filtered_documents.push_back(document);
-            }
-        }
-        
-        sort(matched_documents.begin(), matched_documents.end(),
-             [](const Document& lhs, const Document& rhs) {
-                if (abs(lhs.relevance - rhs.relevance) < 1e-6) {
-                    return lhs.rating > rhs.rating;
-                } else {
-                    return lhs.relevance > rhs.relevance;
-                }
-             });
-        
-        if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
-            matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
-        }
-        return matched_documents;
+        return GetTopFilteredDocuments(raw_query, predicate);
     }
 
     int GetDocumentCount() const {
         return static_cast<int>(documents_.size());
     }
     
-//    template<typename Predicate>
-//    vector<Document> GetTopFilteredDocuments(const string& raw_query, Predicate predicate) const {
-//        
-//    }
+    template<typename Predicate>
+    vector<Document> GetTopFilteredDocuments(const string& raw_query, Predicate predicate) const {
+        const Query query = ParseQuery(raw_query);
+        vector<Document> matched_documents = FindAllDocuments(query);
+        
+        vector<Document> filtered_documents;
+        for (const Document& document : matched_documents) {
+            if(predicate(document.id, documents_.at(document.id).status, documents_.at(document.id).rating)) {
+                filtered_documents.push_back(document);
+            }
+        }
+        
+        sort(filtered_documents.begin(), filtered_documents.end(),
+             [](const Document& lhs, const Document& rhs) {
+                if (abs(lhs.relevance - rhs.relevance) < 1e-6) {
+                    return lhs.rating > rhs.rating;
+                } else {
+                    return lhs.relevance > rhs.relevance;
+                }
+             });
+        
+        if (filtered_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
+            filtered_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
+        }
+        return filtered_documents;
+    }
     
     tuple<vector<string>, DocumentStatus> MatchDocument(const string& raw_query, int document_id) const {
         const Query query = ParseQuery(raw_query);
