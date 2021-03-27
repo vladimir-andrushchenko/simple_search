@@ -64,7 +64,7 @@ public:
 
     void AddDocument(int document_id, const string& document) {
         vector<string> words_in_document = SplitIntoWordsNoStop(document);
-        for (const string& word : words_in_document) {
+        for (const string& word : words_in_document) { // для каждого слова нужна посчитать его tf в этом документе
             const double word_appears_n_times = count(words_in_document.begin(), words_in_document.end(), word);
             const double tf = word_appears_n_times / words_in_document.size(); // сколько раз слово встречается в документе / количество слов в документе
             word_to_document_and_its_tf_[word][document_id] = tf; // стоп слова при подсчете .size() не рассчитываются
@@ -72,8 +72,8 @@ public:
         ++number_of_documents_;
     }
 // TODO: сюда добавить функцию по которой будет происходить сортировка
-    vector<Document> FindTopDocuments(const string& query) const {
-        auto matched_documents = FindAllDocuments(query);
+    vector<Document> FindTopDocuments(const string& raw_query) const {
+        auto matched_documents = FindAllDocuments(raw_query);
         
         sort(
                 matched_documents.begin(),
@@ -106,9 +106,9 @@ private:
     Query ParseQuery(const string& query_raw) const {
         Query query;
         for (const string& word : SplitIntoWords(query_raw)) {
-            if (word[0] == '-'){
+            if (word[0] == '-'){ // если первый символ - значит это минус слово
                 const string stop_word_without_minus_sign = word.substr(1);
-                if (stop_words_.count(stop_word_without_minus_sign) == 1) {
+                if (stop_words_.count(stop_word_without_minus_sign) == 1) { // если минус слово это стоп слово, то значит оно пропускается
                     continue;
                 }
                 query.minus_words.push_back(stop_word_without_minus_sign);
@@ -126,19 +126,18 @@ private:
             }
         }
         return query;
-    }
+    } // ParseQuery
     
 
     vector<Document> FindAllDocuments(const string& query_raw) const {
-        // сначала считаю релевантность
-        const Query query = ParseQuery(query_raw);
+        const Query query = ParseQuery(query_raw); // разделяю строку на слова->их_idf и минус слова
         map<int, double> document_to_relevance;
         for (const auto& [word, idf] : query.words_to_idf) { // цикл по словам запроса
-            if (word_to_document_and_its_tf_.count(word) == 0) {
-                continue;
-            }
-            for (const auto& [document_id, tf_of_word_in_this_doc]: word_to_document_and_its_tf_.at(word)) { // цикл по документам где это слово встречается
-                document_to_relevance[document_id] += idf * tf_of_word_in_this_doc;
+//            if (word_to_document_and_its_tf_.count(word) == 0) {
+//                continue;
+//            } // есть возможность убрать это условие потом что существование слова из запроса в документах проверяется на этапе создания query
+            for (const auto& [document_id, tf]: word_to_document_and_its_tf_.at(word)) { // цикл по документам где это слово встречается
+                document_to_relevance[document_id] += idf * tf;
             }
         }
         
@@ -159,7 +158,7 @@ private:
         }
     
         return matched_documents;
-    }
+    } // FindAllDocuments
 };
 
 SearchServer CreateSearchServer() {
