@@ -85,9 +85,9 @@ public:
         return GetTopFilteredDocuments(raw_query, predicate);
     }
     
-    vector<Document> FindTopDocuments(const string& raw_query) const {
-        const auto predicate = [](int document_id, DocumentStatus status, int rating) {
-            return status == DocumentStatus::ACTUAL;
+    vector<Document> FindTopDocuments(const string& raw_query, const DocumentStatus& desiredStatus = DocumentStatus::ACTUAL) const {
+        const auto predicate = [desiredStatus](int _, DocumentStatus documentsStatus, int __) {
+            return documentsStatus == desiredStatus;
         };
         return GetTopFilteredDocuments(raw_query, predicate);
     }
@@ -117,7 +117,7 @@ public:
             filtered_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
         }
         return filtered_documents;
-    }
+    } // GetTopFilteredDocuments
     
     tuple<vector<string>, DocumentStatus> MatchDocument(const string& raw_query, int document_id) const {
         const Query query = ParseQuery(raw_query);
@@ -227,9 +227,7 @@ private:
             }
             const double inverse_document_freq = ComputeWordInverseDocumentFreq(word);
             for (const auto &[document_id, term_freq] : word_to_document_freqs_.at(word)) {
-//                if (documents_.at(document_id).status == status) { // перенесу в FindTopDocs
-                    document_to_relevance[document_id] += term_freq * inverse_document_freq;
-//                }
+                document_to_relevance[document_id] += term_freq * inverse_document_freq;
             }
         }
         
@@ -282,6 +280,11 @@ int main() {
     for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, [](int document_id, DocumentStatus status, int rating) { return status == DocumentStatus::ACTUAL; })) {
         PrintDocument(document);
     }
+    
+    cout << "BANNED:"s << endl;
+        for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, DocumentStatus::BANNED)) {
+            PrintDocument(document);
+        }
 
     cout << "Even ids:"s << endl;
     for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, [](int document_id, DocumentStatus status, int rating) { return document_id % 2 == 0; })) {
