@@ -41,7 +41,7 @@
 		750551B925EEBE80004001C5 = {
 			isa = PBXGroup;
 			children = (
-				750551C425EEBE80004001C5 /* simple_search */,
+				750551C425EEBE80004001C5 /* simple_search_sprint_1 */,
 				750551C325EEBE80004001C5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,12 +54,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		750551C425EEBE80004001C5 /* simple_search */ = {
+		750551C425EEBE80004001C5 /* simple_search_sprint_1 */ = {
 			isa = PBXGroup;
 			children = (
 				750551C525EEBE80004001C5 /* main.cpp */,
 			);
-			path = simple_search;
+			path = simple_search_sprint_1;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
