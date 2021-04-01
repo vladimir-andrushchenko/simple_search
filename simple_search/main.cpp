@@ -88,17 +88,18 @@ public:
         for (const Document& document : matched_documents) {
             const auto document_status = document_id_to_document_data_.at(document.id).status;
             const auto document_rating = document_id_to_document_data_.at(document.id).rating;
+            
             if(predicate(document.id, document_status, document_rating)) {
                 filtered_documents.push_back(document);
             }
         }
         
         sort(filtered_documents.begin(), filtered_documents.end(),
-             [](const Document& lhs, const Document& rhs) {
-                if (abs(lhs.relevance - rhs.relevance) < kMinSignificantDifferenceInRelevance) {
-                    return lhs.rating > rhs.rating;
+             [](const Document& left, const Document& right) {
+                if (abs(left.relevance - right.relevance) < kMinSignificantDifferenceInRelevance) {
+                    return left.rating > right.rating;
                 } else {
-                    return lhs.relevance > rhs.relevance;
+                    return left.relevance > right.relevance;
                 }
              });
         
@@ -114,8 +115,9 @@ public:
         const auto predicate = [desired_status]([[maybe_unused]] int document_id,
                                                DocumentStatus document_status,
                                                [[maybe_unused]] int rating) {
-            return document_status == desired_status;
-        };
+                                                    return document_status == desired_status;
+                                                };
+        
         return FindTopDocuments(raw_query, predicate);
     } // FindTopDocuments with status as a second argument
     
