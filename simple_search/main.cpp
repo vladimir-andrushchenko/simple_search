@@ -107,7 +107,7 @@ public:
         }
         
         return filtered_documents;
-    }
+    } // FindTopDocuments
     
     vector<Document> FindTopDocuments(const string& raw_query,
                                       const DocumentStatus& desired_status = DocumentStatus::kActual) const {
@@ -117,7 +117,7 @@ public:
             return document_status == desired_status;
         };
         return FindTopDocuments(raw_query, predicate);
-    }
+    } // FindTopDocuments with status as a second argument
     
     tuple<vector<string>, DocumentStatus> MatchDocument(const string& raw_query, int document_id) const {
         const Query query = ParseQuery(raw_query);
@@ -285,6 +285,7 @@ void PrintDocument(const Document& document) {
 }
 
 int main() {
+    // создание сервера и добавление документов
     SearchServer search_server;
     search_server.SetStopWords("и в на"s);
 
@@ -293,67 +294,46 @@ int main() {
     search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::kActual, {5, -12, 2, 1});
     search_server.AddDocument(3, "ухоженный скворец евгений"s,         DocumentStatus::kBanned, {9});
 
+    // поиск документов со статусом kActual
     cout << "ACTUAL by default:"s << endl;
     for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s)) {
         PrintDocument(document);
     }
     
-    const auto find_documents_actual_status = []([[maybe_unused]] int document_id,
-                                DocumentStatus status,
-                                [[maybe_unused]] int relevance) {
-                                    return status == DocumentStatus::kActual;
-                                };
-    
+    // поиск документов со статусом kActual
+    const auto find_documents_with_actual_status =
+                                     []([[maybe_unused]] int document_id,
+                                     DocumentStatus status,
+                                     [[maybe_unused]] int relevance) {
+                                         return status == DocumentStatus::kActual;
+                                     };
+                                    
     cout << "ACTUAL:"s << endl;
-    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, find_documents_actual_status)) {
+    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s,
+                                                                   find_documents_with_actual_status)) {
         PrintDocument(document);
     }
     
+    // поиск документов со статусом kBanned
     cout << "BANNED:"s << endl;
-        for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, DocumentStatus::kBanned)) {
+        for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s,
+                                                                       DocumentStatus::kBanned)) {
             PrintDocument(document);
         }
 
-    const auto find_documents_with_even_id_numbers = [](int document_id,
-                                                        [[maybe_unused]] DocumentStatus status,
-                                                        [[maybe_unused]] int relevance) {
-                                                            return document_id % 2 == 0;
-                                                        };
+    // поиск документов с четным id
+    const auto find_documents_with_even_id_numbers =
+                                    [](int document_id,
+                                    [[maybe_unused]] DocumentStatus status,
+                                    [[maybe_unused]] int relevance) {
+                                        return document_id % 2 == 0;
+                                    };
     
     cout << "Even ids:"s << endl;
-    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, find_documents_with_even_id_numbers)) {
+    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s,
+                                                                   find_documents_with_even_id_numbers)) {
         PrintDocument(document);
     }
 
     return 0;
 }
-
-/*
- ACTUAL by default:
- { document_id = 1, relevance = 0.866434, rating = 5 }
- { document_id = 0, relevance = 0.173287, rating = 2 }
- { document_id = 2, relevance = 0.173287, rating = -1 }
- ACTUAL:
- { document_id = 1, relevance = 0.866434, rating = 5 }
- { document_id = 0, relevance = 0.173287, rating = 2 }
- { document_id = 2, relevance = 0.173287, rating = -1 }
- Even ids:
- { document_id = 0, relevance = 0.173287, rating = 2 }
- { document_id = 2, relevance = 0.173287, rating = -1 }
- */
-
-/*
- ACTUAL by default:
- { document_id = 1, relevance = 0.866434, rating = 5 }
- { document_id = 0, relevance = 0.173287, rating = 2 }
- { document_id = 2, relevance = 0.173287, rating = -1 }
- ACTUAL:
- { document_id = 1, relevance = 0.866434, rating = 5 }
- { document_id = 0, relevance = 0.173287, rating = 2 }
- { document_id = 2, relevance = 0.173287, rating = -1 }
- BANNED:
- { document_id = 3, relevance = 0.231049, rating = 9 }
- Even ids:
- { document_id = 0, relevance = 0.173287, rating = 2 }
- { document_id = 2, relevance = 0.173287, rating = -1 }
- */
