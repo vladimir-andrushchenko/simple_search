@@ -63,7 +63,7 @@ public:
         const std::vector<std::string> words = SplitIntoWordsNoStop(document);
         
         // inverse в смыслe (words.size() ^ -1) * words.size() == 1
-        const double inverse_word_count = 1.0 / words.size();
+        const double inverse_word_count = 1.0 / static_cast<double>(words.size());
         
         for (const std::string& word : words) {
             word_to_document_id_to_term_frequency_[word][document_id] += inverse_word_count;
@@ -92,7 +92,7 @@ public:
             }
         }
         
-        sort(filtered_documents.begin(), filtered_documents.end(),
+        std::sort(filtered_documents.begin(), filtered_documents.end(),
              [](const Document& left, const Document& right) {
                 if (abs(left.relevance - right.relevance) < kMinSignificantDifferenceInRelevance) {
                     return left.rating > right.rating;
@@ -119,7 +119,8 @@ public:
         return FindTopDocuments(raw_query, predicate);
     } // FindTopDocuments with status as a second argument
     
-    std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const {
+    std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query,
+                                                                       int document_id) const {
         const Query query = ParseQuery(raw_query);
         
         std::vector<std::string> matched_words;
@@ -226,7 +227,8 @@ private:
     
     // Existence required
     double ComputeWordInverseDocumentFrequency(const std::string& word) const {
-        const double number_of_documents_constains_word = word_to_document_id_to_term_frequency_.at(word).size();
+        const double number_of_documents_constains_word =
+                        static_cast<double>(word_to_document_id_to_term_frequency_.at(word).size());
         
         return log(static_cast<double>(GetDocumentCount()) / number_of_documents_constains_word);
     } // ComputeWordInverseDocumentFrequency
@@ -258,7 +260,8 @@ private:
 
         std::vector<Document> matched_documents;
         for (const auto &[document_id, relevance] : document_id_to_relevance) {
-            matched_documents.push_back({ document_id, relevance, document_id_to_document_data_.at(document_id).rating});
+            matched_documents.push_back({ document_id, relevance,
+                document_id_to_document_data_.at(document_id).rating});
         }
         
         return matched_documents;
