@@ -166,7 +166,7 @@ private:
     };
     
 private:
-    static constexpr int kLimitForHowManyTopDocumentsToReturn = 5;
+    static constexpr int kMaxResultDocumentCount = 5;
     static constexpr double kMinSignificantDifferenceInRelevance = 1e-6;
     
 private:
