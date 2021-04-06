@@ -22,7 +22,14 @@ public:
     }
 
     bool AreSynonyms(const string& first_word, const string& second_word) const {
-        // Напишите недостающий код
+        if (synonyms_.count(first_word) == 0) {
+            return false;
+        }
+        
+        if (synonyms_.at(first_word).count(second_word) == 1) {
+            return true;
+        }
+        
         return false;
     }
 
@@ -46,7 +53,14 @@ void TestAddingSynonymsIncreasesTheirCount() {
 }
 
 void TestAreSynonyms() {
+    Synonyms synonyms;
     
+    synonyms.Add("color", "hue");
+    assert(synonyms.AreSynonyms("color", "hue") == true);
+    assert(synonyms.AreSynonyms("hue", "color") == true);
+    
+    // not added
+    assert(synonyms.AreSynonyms("goood", "great") == false);
 }
 
 void TestSynonyms() {
