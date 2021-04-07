@@ -7,6 +7,8 @@
 #include <utility>
 #include <vector>
 
+using namespace std::literals;
+
 std::string ReadLine() {
     std::string line;
     getline(std::cin, line);
@@ -27,7 +29,7 @@ std::vector<std::string> SplitIntoWords(const std::string& text) {
     for (const char character : text) {
         if (character == ' ') {
             words.push_back(word);
-            word = "";
+            word = ""s;
         } else {
             word += character;
         }
@@ -274,24 +276,24 @@ private:
 };
 
 void PrintDocument(const Document& document) {
-    std::cout << "{ "
-        << "document_id = " << document.id << ", "
-        << "relevance = " << document.relevance << ", "
-        << "rating = " << document.rating
-        << " }" << std::endl;
+    std::cout << "{ "s
+        << "document_id = "s << document.id << ", "s
+        << "relevance = "s << document.relevance << ", "s
+        << "rating = "s << document.rating
+        << " }"s << std::endl;
 }
 
 int main() {
     SearchServer search_server;
-    search_server.SetStopWords("и в на");
+    search_server.SetStopWords("и в на"s);
 
-    search_server.AddDocument(0, "белый кот и модный ошейник",        DocumentStatus::kActual, {8, -3});
-    search_server.AddDocument(1, "пушистый кот пушистый хвост",       DocumentStatus::kActual, {7, 2, 7});
-    search_server.AddDocument(2, "ухоженный пёс выразительные глаза", DocumentStatus::kActual, {5, -12, 2, 1});
-    search_server.AddDocument(3, "ухоженный скворец евгений",         DocumentStatus::kBanned, {9});
+    search_server.AddDocument(0, "белый кот и модный ошейник"s,        DocumentStatus::kActual, {8, -3});
+    search_server.AddDocument(1, "пушистый кот пушистый хвост"s,       DocumentStatus::kActual, {7, 2, 7});
+    search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::kActual, {5, -12, 2, 1});
+    search_server.AddDocument(3, "ухоженный скворец евгений"s,         DocumentStatus::kBanned, {9});
 
-    std::cout << "ACTUAL by default:" << std::endl;
-    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот")) {
+    std::cout << "ACTUAL by default:"s << std::endl;
+    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s)) {
         PrintDocument(document);
     }
     
@@ -300,14 +302,14 @@ int main() {
             return status == DocumentStatus::kActual;
         };
                                     
-    std::cout << "ACTUAL:" << std::endl;
-    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот",
+    std::cout << "ACTUAL:"s << std::endl;
+    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s,
                                                                    find_documents_with_actual_status)) {
         PrintDocument(document);
     }
     
-    std::cout << "BANNED:" << std::endl;
-        for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот",
+    std::cout << "BANNED:"s << std::endl;
+        for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s,
                                                                        DocumentStatus::kBanned)) {
             PrintDocument(document);
         }
@@ -317,8 +319,8 @@ int main() {
         return document_id % 2 == 0;
     };
     
-    std::cout << "Even ids:" << std::endl;
-    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот",
+    std::cout << "Even ids:"s << std::endl;
+    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s,
                                                                    find_documents_with_even_id_numbers)) {
         PrintDocument(document);
     }
