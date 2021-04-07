@@ -91,20 +91,20 @@ struct StopsForBusResponse {
 
 ostream& operator<<(ostream& os, const StopsForBusResponse& r) {
     if (r.stops_to_buses.empty()) {
-        cout << "No bus"s << endl;
+        os << "No bus"s;
     } else {
         for (const auto& [stop, buses] : r.stops_to_buses) {
-            cout << "Stop "s << stop << ": "s;
+            os << "Stop "s << stop << ": "s;
             if (buses.size() == 1) {
-                cout << "no interchange"s;
+                os << "no interchange"s;
             } else {
                 for (const string& other_bus : buses) {
                     if (r.bus != other_bus) {
-                        cout << other_bus << " "s;
+                        os << other_bus << " "s;
                     }
                 }
             }
-            cout << endl;
+            os << endl;
         }
     }
     
@@ -117,14 +117,14 @@ struct AllBusesResponse {
 
 ostream& operator<<(ostream& os, const AllBusesResponse& r) {
     if (r.buses_to_stops.empty()) {
-        cout << "No buses"s << endl;
+        os << "No buses"s << endl;
     } else {
         for (const auto& bus_item : r.buses_to_stops) {
-            cout << "Bus "s << bus_item.first << ": "s;
+            os << "Bus "s << bus_item.first << ": "s;
             for (const string& stop : bus_item.second) {
-                cout << stop << " "s;
+                os << stop << " "s;
             }
-            cout << endl;
+            os << endl;
         }
     }
     return os;
@@ -228,6 +228,16 @@ void TestOutputBusesForStop() {
     assert(output.str() == "32 32K"s);
 }
 
+void TestOutputStopsForBusEmpty() {
+    StopsForBusResponse response;
+    
+    ostringstream output;
+    
+    output << response;
+    
+    assert(output.str() == "No bus"s);
+}
+
 void TestOutputStopsForBus() {
     StopsForBusResponse response;
     
@@ -240,7 +250,7 @@ void TestOutputStopsForBus() {
     
     ostringstream output;
     
-    cout << response;
+    output << response;
     
     assert(output.str() == "Stop Vnukovo: 32 32K 950\n"s +
                            "Stop Moskovsky: no interchange\n"s +
@@ -270,6 +280,7 @@ static void RunTests() {
     TestQueryInputBusesForStop();
     
     TestOutputBusesForStop();
+    TestOutputStopsForBusEmpty();
 //    TestOutputStopsForBus();
     TestOutputAllBuses();
     cout << "all tests finished good" << endl;
