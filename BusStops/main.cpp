@@ -67,18 +67,15 @@ ostream& operator<<(ostream& os, const BusesForStopResponse& r) {
     if (r.buses.empty()) {
         os << "No stop"s << endl;
     } else {
-        bool first = true;
+        bool isFirst = true;
         for (const string& bus : r.buses) {
             // avoid extra space at the end of the output
-            if (!first) {
-                os << ' ';
+            if(isFirst) {
+                os << bus;
+                isFirst = false;
+                continue;
             }
-            
-            os << bus;
-            
-            if (first) {
-                first = false;
-            }
+            os << " "s << bus;
         }
     }
     return os;
@@ -86,25 +83,38 @@ ostream& operator<<(ostream& os, const BusesForStopResponse& r) {
 
 struct StopsForBusResponse {
     string bus;
-    map<string, vector<string>> stops_to_buses;
+    vector<pair<string, vector<string>>> stops_to_buses;
 };
 
 ostream& operator<<(ostream& os, const StopsForBusResponse& r) {
     if (r.stops_to_buses.empty()) {
         os << "No bus"s;
     } else {
+        bool isFirstLine = true;
+        
         for (const auto& [stop, buses] : r.stops_to_buses) {
+            if (isFirstLine) {
+                isFirstLine = false;
+            } else {
+                os << endl;
+            }
+            
             os << "Stop "s << stop << ": "s;
             if (buses.size() == 1) {
                 os << "no interchange"s;
             } else {
+                bool isFirstBus = true;
                 for (const string& other_bus : buses) {
                     if (r.bus != other_bus) {
-                        os << other_bus << " "s;
+                        if(isFirstBus) {
+                            os << other_bus;
+                            isFirstBus = false;
+                            continue;
+                        }
+                        os << " "s << other_bus;
                     }
                 }
             }
-            os << endl;
         }
     }
     
@@ -117,14 +127,26 @@ struct AllBusesResponse {
 
 ostream& operator<<(ostream& os, const AllBusesResponse& r) {
     if (r.buses_to_stops.empty()) {
-        os << "No buses"s << endl;
+        os << "No buses"s;
     } else {
+        bool isFirstLine = true;
         for (const auto& bus_item : r.buses_to_stops) {
-            os << "Bus "s << bus_item.first << ": "s;
-            for (const string& stop : bus_item.second) {
-                os << stop << " "s;
+            if (isFirstLine) {
+                isFirstLine = false;
+            } else {
+                os << endl;
             }
-            os << endl;
+            
+            os << "Bus "s << bus_item.first << ": "s;
+            bool isFirstStop = true;
+            for (const string& stop : bus_item.second) {
+                if(isFirstStop) {
+                    os << stop;
+                    isFirstStop = false;
+                    continue;
+                }
+                os << " "s << stop ;
+            }
         }
     }
     return os;
@@ -216,6 +238,16 @@ void TestQueryInputBusesForStop() {
     assert(query_buses_for_stop.stops.empty() == true);
 }
 
+void TestOutputBusesForStopNoStop() {
+    BusesForStopResponse response;
+    
+    ostringstream output;
+    
+    output << response;
+    
+    assert(output.str() == "No stop"s);
+}
+
 void TestOutputBusesForStop() {
     BusesForStopResponse response;
     
@@ -242,20 +274,19 @@ void TestOutputStopsForBus() {
     StopsForBusResponse response;
     
     response.bus = "272"s;
-    response.stops_to_buses = {{"Vnukovo", {"272"s, "32"s, "32K"s, "950"s}},
+    response.stops_to_buses = {{"Vnukovo", {"32"s, "32K"s, "950"s, "272"s}},
                                {"Moskovsky"s,{"272"s}},
                                {"Rumyantsevo"s,{"272"s}},
-                               {"Troparyovo"s,{"272"s, "950"s}}
+                               {"Troparyovo"s,{"950"s, "272"s}}
                               };
     
     ostringstream output;
     
     output << response;
     
-    assert(output.str() == "Stop Vnukovo: 32 32K 950\n"s +
-                           "Stop Moskovsky: no interchange\n"s +
-                           "Stop Rumyantsevo: no interchange\n"s +
-                           "Stop Troparyovo: 950"s);
+//    cout << response;
+    
+    assert(output.str() == ("Stop Vnukovo: 32 32K 950\nStop Moskovsky: no interchange\nStop Rumyantsevo: no interchange\nStop Troparyovo: 950"s));
 }
 
 void TestOutputAllBuses() {
@@ -266,11 +297,22 @@ void TestOutputAllBuses() {
                               };
     
     ostringstream output;
-    
     output << response;
     
-    assert(output.str() == "Bus 272: Vnukovo Moskovsky Rumyantsevo Troparyovo\n"s +
-                           "Bus 32: Tolstopaltsevo Marushkino Vnukovo"s);
+//    cout << "my output\n";
+//    cout << output.str() << endl;
+    
+    ostringstream reference_output;
+    reference_output << "Bus 272: Vnukovo Moskovsky Rumyantsevo Troparyovo"s << endl << "Bus 32: Tolstopaltsevo Marushkino Vnukovo"s;
+
+//    cout << "reference output\n";
+//    cout << reference_output.str() << endl;
+//
+//    cout << output.str().size();
+//
+//    cout << reference_output.str().size();
+    
+    assert(output.str() == reference_output.str());
 }
 
 static void RunTests() {
@@ -281,7 +323,7 @@ static void RunTests() {
     
     TestOutputBusesForStop();
     TestOutputStopsForBusEmpty();
-//    TestOutputStopsForBus();
+    TestOutputStopsForBus();
     TestOutputAllBuses();
     cout << "all tests finished good" << endl;
 }
