@@ -55,55 +55,55 @@ istream& operator>>(istream& is, Query& q) {
     
     return is;
 }
-//
-//struct BusesForStopResponse {
-//    // Наполните полями эту структуру
-//};
-//
-//ostream& operator<<(ostream& os, const BusesForStopResponse& r) {
-//    // Реализуйте эту функцию
-//    return os;
-//}
-//
-//struct StopsForBusResponse {
-//    // Наполните полями эту структуру
-//};
-//
-//ostream& operator<<(ostream& os, const StopsForBusResponse& r) {
-//    // Реализуйте эту функцию
-//    return os;
-//}
-//
-//struct AllBusesResponse {
-//    // Наполните полями эту структуру
-//};
-//
-//ostream& operator<<(ostream& os, const AllBusesResponse& r) {
-//    // Реализуйте эту функцию
-//    return os;
-//}
-//
-//class BusManager {
-//public:
-//    void AddBus(const string& bus, const vector<string>& stops) {
-//        // Реализуйте этот метод
-//    }
-//
-//    BusesForStopResponse GetBusesForStop(const string& stop) const {
-//        // Реализуйте этот метод
-//    }
-//
-//    StopsForBusResponse GetStopsForBus(const string& bus) const {
-//        // Реализуйте этот метод
-//    }
-//
-//    AllBusesResponse GetAllBuses() const {
-//        // Реализуйте этот метод
-//    }
-//
-//private:
-//    map<string, vector<string>> buses_to_stops_, stops_to_buses_;
-//};
+
+struct BusesForStopResponse {
+    // Наполните полями эту структуру
+};
+
+ostream& operator<<(ostream& os, const BusesForStopResponse& r) {
+    // Реализуйте эту функцию
+    return os;
+}
+
+struct StopsForBusResponse {
+    // Наполните полями эту структуру
+};
+
+ostream& operator<<(ostream& os, const StopsForBusResponse& r) {
+    // Реализуйте эту функцию
+    return os;
+}
+
+struct AllBusesResponse {
+    // Наполните полями эту структуру
+};
+
+ostream& operator<<(ostream& os, const AllBusesResponse& r) {
+    // Реализуйте эту функцию
+    return os;
+}
+
+class BusManager {
+public:
+    void AddBus(const string& bus, const vector<string>& stops) {
+        // Реализуйте этот метод
+    }
+
+    BusesForStopResponse GetBusesForStop(const string& stop) const {
+        // Реализуйте этот метод
+    }
+
+    StopsForBusResponse GetStopsForBus(const string& bus) const {
+        // Реализуйте этот метод
+    }
+
+    AllBusesResponse GetAllBuses() const {
+        // Реализуйте этот метод
+    }
+
+private:
+    map<string, vector<string>> buses_to_stops_, stops_to_buses_;
+};
 
 void TestQueryInputAllBuses() {
     istringstream input;
