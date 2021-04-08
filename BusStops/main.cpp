@@ -152,27 +152,60 @@ ostream& operator<<(ostream& os, const AllBusesResponse& r) {
     return os;
 }
 
-//class BusManager {
-//public:
-//    void AddBus(const string& bus, const vector<string>& stops) {
-//        // Реализуйте этот метод
-//    }
-//
-//    BusesForStopResponse GetBusesForStop(const string& stop) const {
-//        // Реализуйте этот метод
-//    }
-//
-//    StopsForBusResponse GetStopsForBus(const string& bus) const {
-//        // Реализуйте этот метод
-//    }
-//
-//    AllBusesResponse GetAllBuses() const {
-//        // Реализуйте этот метод
-//    }
-//
-//private:
-//    map<string, vector<string>> buses_to_stops_, stops_to_buses_;
-//};
+class BusManager {
+public:
+    void AddBus(const string& bus, const vector<string>& stops) {
+        buses_to_stops_[bus] = stops;
+        for (const string& stop : stops) {
+            stops_to_buses_[stop].push_back(bus);
+        }
+    }
+
+    BusesForStopResponse GetBusesForStop(const string& stop) const {
+        BusesForStopResponse response;
+        
+        if (stops_to_buses_.count(stop) == 0) {
+            return response;
+        }
+        
+        response.buses = stops_to_buses_.at(stop);
+        
+        return response;
+    }
+
+    StopsForBusResponse GetStopsForBus(const string& bus) const {
+        StopsForBusResponse response;
+        
+        if (buses_to_stops_.count(bus) == 0) {
+            return response;
+        }
+        
+        response.bus = bus;
+        
+        for (const string& stop : buses_to_stops_.at(bus)) {
+            response.stops_to_buses.push_back({stop, stops_to_buses_.at(bus)});
+        }
+        
+        return response;
+    }
+
+    AllBusesResponse GetAllBuses() const {
+        AllBusesResponse response;
+        
+        if (buses_to_stops_.empty()) {
+            return response;
+        }
+        
+        for (const auto& [bus, stops] : buses_to_stops_) {
+            response.buses_to_stops[bus] = stops;
+        }
+            
+        return response;
+    }
+
+private:
+    map<string, vector<string>> buses_to_stops_, stops_to_buses_;
+};
 
 void TestQueryInputAllBuses() {
     istringstream input;
@@ -297,6 +330,30 @@ void TestOutputAllBusesEmpty() {
     assert(output.str() == "No buses"s);
 }
 
+void TestGetBusesForStop() {
+    BusManager bus_manager;
+    /*
+     NEW_BUS 32 3 Tolstopaltsevo Marushkino Vnukovo
+     NEW_BUS 32K 6 Tolstopaltsevo Marushkino Vnukovo Peredelkino Solntsevo Skolkovo
+     */
+    bus_manager.AddBus("32"s, {"Tolstopaltsevo"s, "Marushkino"s, "Vnukovo"s});
+    bus_manager.AddBus("32K"s, {"Tolstopaltsevo"s, "Marushkino"s, "Vnukovo"s, "Peredelkino"s, "Solntsevo"s, "Skolkovo"s});
+    
+    BusesForStopResponse response = bus_manager.GetBusesForStop("Vnukovo"s);
+    
+    vector<string> desired_data {"32"s, "32K"s};
+    assert(response.buses == desired_data);
+}
+
+void TestGetBusesForStopNonExistentStop() {
+    BusManager bus_manager;
+    
+    BusesForStopResponse response = bus_manager.GetBusesForStop("Zuevo"s);
+    
+    vector<string> desired_data;
+    assert(response.buses == desired_data);
+}
+
 void TestOutputAllBuses() {
     AllBusesResponse response;
     
@@ -321,6 +378,9 @@ static void RunTests() {
     TestOutputStopsForBus();
     TestOutputAllBusesEmpty();
     TestOutputAllBuses();
+    
+    TestGetBusesForStopNonExistentStop();
+    TestGetBusesForStop();
     cout << "all tests finished good" << endl;
 }
 
