@@ -284,9 +284,17 @@ void TestOutputStopsForBus() {
     
     output << response;
     
-//    cout << response;
     
-    assert(output.str() == ("Stop Vnukovo: 32 32K 950\nStop Moskovsky: no interchange\nStop Rumyantsevo: no interchange\nStop Troparyovo: 950"s));
+    assert(output.str() == "Stop Vnukovo: 32 32K 950\nStop Moskovsky: no interchange\nStop Rumyantsevo: no interchange\nStop Troparyovo: 950"s);
+}
+
+void TestOutputAllBusesEmpty() {
+    AllBusesResponse response;
+    
+    ostringstream output;
+    output << response;
+    
+    assert(output.str() == "No buses"s);
 }
 
 void TestOutputAllBuses() {
@@ -299,20 +307,7 @@ void TestOutputAllBuses() {
     ostringstream output;
     output << response;
     
-//    cout << "my output\n";
-//    cout << output.str() << endl;
-    
-    ostringstream reference_output;
-    reference_output << "Bus 272: Vnukovo Moskovsky Rumyantsevo Troparyovo"s << endl << "Bus 32: Tolstopaltsevo Marushkino Vnukovo"s;
-
-//    cout << "reference output\n";
-//    cout << reference_output.str() << endl;
-//
-//    cout << output.str().size();
-//
-//    cout << reference_output.str().size();
-    
-    assert(output.str() == reference_output.str());
+    assert(output.str() == "Bus 272: Vnukovo Moskovsky Rumyantsevo Troparyovo\nBus 32: Tolstopaltsevo Marushkino Vnukovo"s);
 }
 
 static void RunTests() {
@@ -324,6 +319,7 @@ static void RunTests() {
     TestOutputBusesForStop();
     TestOutputStopsForBusEmpty();
     TestOutputStopsForBus();
+    TestOutputAllBusesEmpty();
     TestOutputAllBuses();
     cout << "all tests finished good" << endl;
 }
