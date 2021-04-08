@@ -280,13 +280,13 @@ private:
 // Тест проверяет, что поисковая система исключает стоп-слова при добавлении документов
 void TestExcludeStopWordsFromAddedDocumentContent() {
     const int doc_id = 42;
-    const string content = "cat in the city"s;
-    const vector<int> ratings = {1, 2, 3};
+    const std::string content = "cat in the city"s;
+    const std::vector<int> ratings = {1, 2, 3};
     // Сначала убеждаемся, что поиск слова, не входящего в список стоп-слов,
     // находит нужный документ
     {
         SearchServer server;
-        server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(doc_id, content, DocumentStatus::kActual, ratings);
         const auto found_docs = server.FindTopDocuments("in"s);
         assert(found_docs.size() == 1);
         const Document& doc0 = found_docs[0];
@@ -298,7 +298,7 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
     {
         SearchServer server;
         server.SetStopWords("in the"s);
-        server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(doc_id, content, DocumentStatus::kActual, ratings);
         assert(server.FindTopDocuments("in"s).empty());
     }
 }
@@ -318,5 +318,5 @@ void TestSearchServer() {
 int main() {
     TestSearchServer();
     // Если вы видите эту строку, значит все тесты прошли успешно
-    cout << "Search server testing finished"s << endl;
+    std::cout << "Search server testing finished"s << std::endl;
 }
