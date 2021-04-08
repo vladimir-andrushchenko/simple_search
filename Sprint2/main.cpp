@@ -47,10 +47,10 @@ struct Document {
 };
 
 enum class DocumentStatus {
-    kActual,
-    kIrrelevant,
-    kBanned,
-    kRemoved,
+    ACTUAL,
+    IRRELEVANT,
+    BANNED,
+    REMOVED,
 };
 
 class SearchServer {
@@ -111,7 +111,7 @@ public:
     } // FindTopDocuments
     
     std::vector<Document> FindTopDocuments(const std::string& raw_query,
-                                           const DocumentStatus& desired_status = DocumentStatus::kActual) const {
+                                           const DocumentStatus& desired_status = DocumentStatus::ACTUAL) const {
         const auto predicate = [desired_status]([[maybe_unused]] int document_id, DocumentStatus document_status,
                                                 [[maybe_unused]] int rating) {
             return document_status == desired_status;
@@ -156,7 +156,7 @@ public:
 private:
     struct DocumentData {
         int rating = 0;
-        DocumentStatus status = DocumentStatus::kActual;
+        DocumentStatus status = DocumentStatus::ACTUAL;
     };
     
     struct Query {
@@ -295,7 +295,7 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
     // находит нужный документ
     {
         SearchServer server;
-        server.AddDocument(doc_id, content, DocumentStatus::kActual, ratings);
+        server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
         const auto found_docs = server.FindTopDocuments("in"s);
         assert(found_docs.size() == 1);
         const Document& doc0 = found_docs[0];
@@ -307,7 +307,7 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
     {
         SearchServer server;
         server.SetStopWords("in the"s);
-        server.AddDocument(doc_id, content, DocumentStatus::kActual, ratings);
+        server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
         assert(server.FindTopDocuments("in"s).empty());
     }
 }
@@ -319,8 +319,8 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
 // Добавление документов. Добавленный документ должен находиться по поисковому запросу, который содержит слова из документа.
 void TestAddDocument() {
     SearchServer server;
-    server.AddDocument(0, "cat in the city"s, DocumentStatus::kActual, {1, 2, 3});
-    server.AddDocument(1, "happy cat"s, DocumentStatus::kActual, {8, -3});
+    server.AddDocument(0, "cat in the city"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    server.AddDocument(1, "happy cat"s, DocumentStatus::ACTUAL, {8, -3});
     const auto& found_docs = server.FindTopDocuments("cat"s);
     assert(found_docs.size() == 2);
 }
@@ -328,8 +328,8 @@ void TestAddDocument() {
 //  Поддержка минус-слов. Документы, содержащие минус-слова поискового запроса, не должны включаться в результаты поиска.
 void TestMinusWords() {
     SearchServer server;
-    server.AddDocument(0, "cat in the city"s, DocumentStatus::kActual, {1, 2, 3});
-    server.AddDocument(1, "happy cat"s, DocumentStatus::kActual, {8, -3});
+    server.AddDocument(0, "cat in the city"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    server.AddDocument(1, "happy cat"s, DocumentStatus::ACTUAL, {8, -3});
     const auto found_docs = server.FindTopDocuments("-cat"s);
     assert(found_docs.size() == 0);
 }
@@ -337,13 +337,13 @@ void TestMinusWords() {
 //Матчинг документов. При матчинге документа по поисковому запросу должны быть возвращены все слова из поискового запроса, присутствующие в документе. Если есть соответствие хотя бы по одному минус-слову, должен возвращаться пустой список слов.
 void TestMatchDocument() {
     SearchServer server;
-    server.AddDocument(0, "cat in the city"s, DocumentStatus::kActual, {1, 2, 3});
-    server.AddDocument(1, "happy cat"s, DocumentStatus::kBanned, {8, -3});
+    server.AddDocument(0, "cat in the city"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    server.AddDocument(1, "happy cat"s, DocumentStatus::BANNED, {8, -3});
     
     { // all ok
         const auto [words, status] = server.MatchDocument("cat the potato", 0);
         
-        assert(status == DocumentStatus::kActual);
+        assert(status == DocumentStatus::ACTUAL);
         
         std::vector<std::string> desired_matched_words{"cat"s, "the"s};
         assert(words == desired_matched_words);
@@ -352,7 +352,7 @@ void TestMatchDocument() {
     { // all ok
         const auto [words, status] = server.MatchDocument("cat the potato", 1);
         
-        assert(status == DocumentStatus::kBanned);
+        assert(status == DocumentStatus::BANNED);
         
         std::vector<std::string> desired_matched_words{"cat"s};
         assert(words == desired_matched_words);
@@ -361,7 +361,7 @@ void TestMatchDocument() {
     { // empty match string
         const auto [words, status] = server.MatchDocument("", 0);
         
-        assert(status == DocumentStatus::kActual);
+        assert(status == DocumentStatus::ACTUAL);
         
         assert(words.empty());
     }
@@ -369,7 +369,7 @@ void TestMatchDocument() {
     { // no such id
         const auto& [words, status] = server.MatchDocument("cat the potato", 777);
         
-        assert(status == DocumentStatus::kActual); // initialized as kActual
+        assert(status == DocumentStatus::ACTUAL); // initialized as kActual
         
         assert(words.empty());
     }
@@ -377,7 +377,7 @@ void TestMatchDocument() {
     { // minus word
         const auto& [words, status] = server.MatchDocument("cat -the potato", 0);
         
-        assert(status == DocumentStatus::kActual); // initialized as kActual
+        assert(status == DocumentStatus::ACTUAL); // initialized as kActual
         
         assert(words.empty());
     }
@@ -385,7 +385,7 @@ void TestMatchDocument() {
     { // minus word misses
         const auto [words, status] = server.MatchDocument("cat the -potato", 0);
         
-        assert(status == DocumentStatus::kActual);
+        assert(status == DocumentStatus::ACTUAL);
         
         std::vector<std::string> desired_matched_words{"cat"s, "the"s};
         assert(words == desired_matched_words);
@@ -395,12 +395,22 @@ void TestMatchDocument() {
 // Сортировка найденных документов по релевантности. Возвращаемые при поиске документов результаты должны быть отсортированы в порядке убывания релевантности.
 void TestRelevanceSort() {
     SearchServer server;
+    server.SetStopWords("и"s);
+    /*
+     белый кот и модный ошейник
+     пушистый кот пушистый хвост
+     ухоженный пёс выразительные глаза
+     */
+
+    server.AddDocument(0, "белый кот и модный ошейник"s, DocumentStatus::ACTUAL, {});
+    server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {});
+    server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL, {});
+
+    const auto found_docs = server.FindTopDocuments("пушистый ухоженный кот"s);
+    assert(found_docs.size() == 3);
     
-    server.AddDocument(0, "cat in the city"s, DocumentStatus::kActual, {1, 2, 3});
-    server.AddDocument(1, "happy cat"s, DocumentStatus::kActual, {1, 2});
-    server.AddDocument(2, "sad potato"s, DocumentStatus::kActual, {1, 2});
-    
-    const auto& found_docs = server.FindTopDocuments("cat"s);
+    std::cout << found_docs[0].relevance << std::endl;
+    std::cout << found_docs[1].relevance << std::endl;
     
     assert(found_docs[0].relevance > found_docs[1].relevance);
 }
@@ -409,10 +419,10 @@ void TestRelevanceSort() {
 void TestRating() {
     SearchServer server;
 
-    server.AddDocument(0, "cat in the city"s, DocumentStatus::kActual, {1, 2, 3});
-    server.AddDocument(1, "happy cat"s, DocumentStatus::kActual, {});
+    server.AddDocument(0, "cat in the city"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    server.AddDocument(1, "happy cat"s, DocumentStatus::ACTUAL, {});
 
-    const auto& found_docs = server.FindTopDocuments("cat"s);
+    const auto found_docs = server.FindTopDocuments("cat"s);
     
     assert(found_docs[0].rating == 2);
     assert(found_docs[1].rating == 0);
@@ -422,15 +432,15 @@ void TestRating() {
 void TestPredicateFiltering() {
     SearchServer server;
 
-    server.AddDocument(0, "cat in the city"s, DocumentStatus::kActual, {1, 2, 3});
-    server.AddDocument(1, "happy cat"s, DocumentStatus::kBanned, {2});
-    server.AddDocument(2, "happy potato"s, DocumentStatus::kBanned, {});
+    server.AddDocument(0, "cat in the city"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    server.AddDocument(1, "happy cat"s, DocumentStatus::BANNED, {2});
+    server.AddDocument(2, "happy potato"s, DocumentStatus::BANNED, {});
 
     
     {
         const auto find_documents_with_actual_status = []([[maybe_unused]] int document_id, DocumentStatus status,
                                                           [[maybe_unused]] int rating) {
-            return status == DocumentStatus::kActual;
+            return status == DocumentStatus::ACTUAL;
         };
                                     
         const auto& filtered_docs = server.FindTopDocuments("cat"s,
@@ -483,12 +493,12 @@ void TestPredicateFiltering() {
 void TestFilteringWithStatus() {
     SearchServer server;
 
-    server.AddDocument(0, "cat in the city"s, DocumentStatus::kActual, {1, 2, 3});
-    server.AddDocument(1, "happy cat"s, DocumentStatus::kBanned, {2});
+    server.AddDocument(0, "cat in the city"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    server.AddDocument(1, "happy cat"s, DocumentStatus::BANNED, {2});
     
     {
         const auto& filtered_docs = server.FindTopDocuments("cat"s,
-                                                            DocumentStatus::kBanned);
+                                                            DocumentStatus::BANNED);
         
         assert(filtered_docs.size() == 1);
     }
@@ -508,9 +518,9 @@ void TestRelevance() {
      ухоженный пёс выразительные глаза
      */
 
-    server.AddDocument(0, "белый кот и модный ошейник"s, DocumentStatus::kActual, {});
-    server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::kActual, {});
-    server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::kActual, {});
+    server.AddDocument(0, "белый кот и модный ошейник"s, DocumentStatus::ACTUAL, {});
+    server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {});
+    server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL, {});
 
     const auto& found_docs = server.FindTopDocuments("пушистый ухоженный кот"s);
     assert(found_docs.size() == 3);
