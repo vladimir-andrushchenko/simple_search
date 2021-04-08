@@ -65,7 +65,7 @@ struct BusesForStopResponse {
 
 ostream& operator<<(ostream& os, const BusesForStopResponse& r) {
     if (r.buses.empty()) {
-        os << "No stop"s << endl;
+        os << "No stop"s;
     } else {
         bool isFirst = true;
         for (const string& bus : r.buses) {
@@ -321,13 +321,26 @@ void TestOutputStopsForBus() {
     assert(output.str() == "Stop Vnukovo: 32 32K 950\nStop Moskovsky: no interchange\nStop Rumyantsevo: no interchange\nStop Troparyovo: 950"s);
 }
 
-void TestOutputAllBusesEmpty() {
+void TestOutputAllBusesNoBus() {
     AllBusesResponse response;
     
     ostringstream output;
     output << response;
     
     assert(output.str() == "No buses"s);
+}
+
+void TestOutputAllBuses() {
+    AllBusesResponse response;
+    
+    response.buses_to_stops = {{"272"s, {"Vnukovo"s, "Moskovsky"s, "Rumyantsevo"s, "Troparyovo"s}},
+                               {"32"s, {"Tolstopaltsevo"s, "Marushkino"s, "Vnukovo"s}},
+                              };
+    
+    ostringstream output;
+    output << response;
+    
+    assert(output.str() == "Bus 272: Vnukovo Moskovsky Rumyantsevo Troparyovo\nBus 32: Tolstopaltsevo Marushkino Vnukovo"s);
 }
 
 void TestGetBusesForStop() {
@@ -390,19 +403,6 @@ void TestGetStopsForBus() {
     assert(response.stops_to_buses == desired_response.stops_to_buses);
 }
 
-void TestOutputAllBuses() {
-    AllBusesResponse response;
-    
-    response.buses_to_stops = {{"272"s, {"Vnukovo"s, "Moskovsky"s, "Rumyantsevo"s, "Troparyovo"s}},
-                               {"32"s, {"Tolstopaltsevo"s, "Marushkino"s, "Vnukovo"s}},
-                              };
-    
-    ostringstream output;
-    output << response;
-    
-    assert(output.str() == "Bus 272: Vnukovo Moskovsky Rumyantsevo Troparyovo\nBus 32: Tolstopaltsevo Marushkino Vnukovo"s);
-}
-
 static void RunTests() {
     TestQueryInputNewBus();
     TestQueryInputAllBuses();
@@ -410,9 +410,12 @@ static void RunTests() {
     TestQueryInputBusesForStop();
     
     TestOutputBusesForStop();
+    TestOutputBusesForStopNoStop();
+    
     TestOutputStopsForBusEmpty();
     TestOutputStopsForBus();
-    TestOutputAllBusesEmpty();
+    
+    TestOutputAllBusesNoBus();
     TestOutputAllBuses();
     
     TestGetBusesForStopNonExistentStop();
