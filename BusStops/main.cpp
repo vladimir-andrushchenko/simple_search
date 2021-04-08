@@ -183,7 +183,7 @@ public:
         response.bus = bus;
         
         for (const string& stop : buses_to_stops_.at(bus)) {
-            response.stops_to_buses.push_back({stop, stops_to_buses_.at(bus)});
+            response.stops_to_buses.push_back({stop, stops_to_buses_.at(stop)});
         }
         
         return response;
@@ -354,6 +354,42 @@ void TestGetBusesForStopNonExistentStop() {
     assert(response.buses == desired_data);
 }
 
+void TestGetStopsForBus() {
+    BusManager bus_manager;
+    
+    /*
+     NEW_BUS 32 3 Tolstopaltsevo Marushkino Vnukovo
+     NEW_BUS 32K 6 Tolstopaltsevo Marushkino Vnukovo Peredelkino Solntsevo Skolkovo
+     NEW_BUS 950 6 Kokoshkino Marushkino Vnukovo Peredelkino Solntsevo Troparyovo
+     NEW_BUS 272 4 Vnukovo Moskovsky Rumyantsevo Troparyovo
+     */
+    
+    bus_manager.AddBus("32"s, {"Tolstopaltsevo"s, "Marushkino"s, "Vnukovo"s});
+    bus_manager.AddBus("32K"s, {"Tolstopaltsevo"s, "Marushkino"s, "Vnukovo"s, "Peredelkino"s, "Solntsevo"s, "Skolkovo"s});
+    bus_manager.AddBus("950"s, {"Kokoshkino"s, "Marushkino"s, "Vnukovo"s, "Peredelkino"s, "Solntsevo"s, "Troparyovo"s});
+    bus_manager.AddBus("272"s, {"Vnukovo"s, "Moskovsky"s, "Rumyantsevo"s, "Troparyovo"s});
+    
+    /*
+     Stop Vnukovo: 32 32K 950
+     Stop Moskovsky: no interchange
+     Stop Rumyantsevo: no interchange
+     Stop Troparyovo: 950
+     */
+    
+    StopsForBusResponse response = bus_manager.GetStopsForBus("272"s);
+    
+    StopsForBusResponse desired_response;
+    desired_response.bus = "272"s;
+    desired_response.stops_to_buses = {{"Vnukovo"s, {"32"s, "32K"s, "950"s, "272"s}},
+                                       {"Moskovsky"s, {"272"s}},
+                                       {"Rumyantsevo"s, {"272"s}},
+                                       {"Troparyovo"s, {"950"s, "272"s}}
+                                      };
+    
+    assert(response.bus == desired_response.bus);
+    assert(response.stops_to_buses == desired_response.stops_to_buses);
+}
+
 void TestOutputAllBuses() {
     AllBusesResponse response;
     
@@ -381,6 +417,8 @@ static void RunTests() {
     
     TestGetBusesForStopNonExistentStop();
     TestGetBusesForStop();
+    
+    TestGetStopsForBus();
     cout << "all tests finished good" << endl;
 }
 
