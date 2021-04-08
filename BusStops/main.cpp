@@ -447,7 +447,6 @@ void TestGetAllBusesNoBuses() {
     assert(response.buses_to_stops == desired_response.buses_to_stops);
 }
 
-
 static void RunTests() {
     TestQueryInputNewBus();
     TestQueryInputAllBuses();
@@ -479,7 +478,6 @@ static void RunTests() {
 //int main() {
 //    RunTests();
 //}
-
 
 // original main
 
