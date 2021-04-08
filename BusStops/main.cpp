@@ -293,7 +293,7 @@ void TestOutputBusesForStop() {
     assert(output.str() == "32 32K"s);
 }
 
-void TestOutputStopsForBusEmpty() {
+void TestOutputStopsForBusNoBus() {
     StopsForBusResponse response;
     
     ostringstream output;
@@ -321,7 +321,7 @@ void TestOutputStopsForBus() {
     assert(output.str() == "Stop Vnukovo: 32 32K 950\nStop Moskovsky: no interchange\nStop Rumyantsevo: no interchange\nStop Troparyovo: 950"s);
 }
 
-void TestOutputAllBusesNoBus() {
+void TestOutputAllBusesEmpty() {
     AllBusesResponse response;
     
     ostringstream output;
@@ -403,6 +403,51 @@ void TestGetStopsForBus() {
     assert(response.stops_to_buses == desired_response.stops_to_buses);
 }
 
+void TestGetStopsForBusNoBus() {
+    BusManager bus_manager;
+    
+    StopsForBusResponse response = bus_manager.GetStopsForBus("777"s);
+    
+    StopsForBusResponse desired_response;
+
+    assert(response.stops_to_buses == desired_response.stops_to_buses);
+}
+
+void TestGetAllBuses() {
+    BusManager bus_manager;
+    /*
+     Bus 272: Vnukovo Moskovsky Rumyantsevo Troparyovo
+     Bus 32: Tolstopaltsevo Marushkino Vnukovo
+     Bus 32K: Tolstopaltsevo Marushkino Vnukovo Peredelkino Solntsevo Skolkovo
+     Bus 950: Kokoshkino Marushkino Vnukovo Peredelkino Solntsevo Troparyovo
+     */
+    bus_manager.AddBus("32"s, {"Tolstopaltsevo"s, "Marushkino"s, "Vnukovo"s});
+    bus_manager.AddBus("32K"s, {"Tolstopaltsevo"s, "Marushkino"s, "Vnukovo"s, "Peredelkino"s, "Solntsevo"s, "Skolkovo"s});
+    bus_manager.AddBus("950"s, {"Kokoshkino"s, "Marushkino"s, "Vnukovo"s, "Peredelkino"s, "Solntsevo"s, "Troparyovo"s});
+    bus_manager.AddBus("272"s, {"Vnukovo"s, "Moskovsky"s, "Rumyantsevo"s, "Troparyovo"s});
+    
+    AllBusesResponse response = bus_manager.GetAllBuses();
+    
+    AllBusesResponse desired_response;
+    desired_response.buses_to_stops = {{"32"s, {"Tolstopaltsevo"s, "Marushkino"s, "Vnukovo"s}},
+                                       {"32K"s, {"Tolstopaltsevo"s, "Marushkino"s, "Vnukovo"s, "Peredelkino"s, "Solntsevo"s, "Skolkovo"s}},
+                                       {"950"s, {"Kokoshkino"s, "Marushkino"s, "Vnukovo"s, "Peredelkino"s, "Solntsevo"s, "Troparyovo"s}},
+                                       {"272"s, {"Vnukovo"s, "Moskovsky"s, "Rumyantsevo"s, "Troparyovo"s}},
+                                      };
+    assert(response.buses_to_stops == desired_response.buses_to_stops);
+}
+
+void TestGetAllBusesNoBuses() {
+    BusManager bus_manager;
+    
+    AllBusesResponse response = bus_manager.GetAllBuses();
+    
+    AllBusesResponse desired_response;
+    
+    assert(response.buses_to_stops == desired_response.buses_to_stops);
+}
+
+
 static void RunTests() {
     TestQueryInputNewBus();
     TestQueryInputAllBuses();
@@ -412,50 +457,54 @@ static void RunTests() {
     TestOutputBusesForStop();
     TestOutputBusesForStopNoStop();
     
-    TestOutputStopsForBusEmpty();
+    TestOutputStopsForBusNoBus();
     TestOutputStopsForBus();
     
-    TestOutputAllBusesNoBus();
+    TestOutputAllBusesEmpty();
     TestOutputAllBuses();
     
     TestGetBusesForStopNonExistentStop();
     TestGetBusesForStop();
     
     TestGetStopsForBus();
+    TestGetStopsForBusNoBus();
+    
+    TestGetAllBuses();
+    TestGetAllBusesNoBuses();
     cout << "all tests finished good" << endl;
 }
 
 // Не меняя тела функции main, реализуйте функции и классы выше
 
-int main() {
-    RunTests();
-}
+//int main() {
+//    RunTests();
+//}
 
 
 // original main
 
-//int main() {
-//    int query_count;
-//    Query q;
-//
-//    cin >> query_count;
-//
-//    BusManager bm;
-//    for (int i = 0; i < query_count; ++i) {
-//        cin >> q;
-//        switch (q.type) {
-//            case QueryType::NewBus:
-//                bm.AddBus(q.bus, q.stops);
-//                break;
-//            case QueryType::BusesForStop:
-//                cout << bm.GetBusesForStop(q.stop) << endl;
-//                break;
-//            case QueryType::StopsForBus:
-//                cout << bm.GetStopsForBus(q.bus) << endl;
-//                break;
-//            case QueryType::AllBuses:
-//                cout << bm.GetAllBuses() << endl;
-//                break;
-//        }
-//    }
-//}
+int main() {
+    int query_count;
+    Query q;
+
+    cin >> query_count;
+
+    BusManager bm;
+    for (int i = 0; i < query_count; ++i) {
+        cin >> q;
+        switch (q.type) {
+            case QueryType::NewBus:
+                bm.AddBus(q.bus, q.stops);
+                break;
+            case QueryType::BusesForStop:
+                cout << bm.GetBusesForStop(q.stop) << endl;
+                break;
+            case QueryType::StopsForBus:
+                cout << bm.GetStopsForBus(q.bus) << endl;
+                break;
+            case QueryType::AllBuses:
+                cout << bm.GetAllBuses() << endl;
+                break;
+        }
+    }
+}
