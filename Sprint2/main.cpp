@@ -374,27 +374,39 @@ void AssertImpl(bool value, const std::string& expr_str, const std::string& file
 
 // -------- Начало модульных тестов поисковой системы ----------
 
+struct TestData {
+    const int kIDForSearchServerThatNeedsOneDocument = 42;
+    const std::vector<int> kThreeDocumentIDs = {1, 2, 3};
+    const std::string kContent = "word1 word2 stop_word"s;
+    const std::string kContentsFirstWord = "word1"s;
+    const std::string kStopWord = "stop_word"s;
+    const std::vector<int> kRatings = {1, 2, 3};
+};
+
+void AddOneDocumentToSearchServer(SearchServer& server) {
+    TestData test_data;
+    server.AddDocument(test_data.kIDForSearchServerThatNeedsOneDocument, test_data.kContent, DocumentStatus::ACTUAL, test_data.kRatings);
+}
+
 // Test for correst stop words addition
 void TestExcludeStopWordsFromAddedDocumentContent() {
-    const int doc_id = 42;
-    const std::string content = "word1 word2 stop_word"s;
-    const std::vector<int> ratings = {1, 2, 3};
+    TestData test_data;
     
     { // word can be found before added to stop words
         SearchServer server;
-        server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
-        const auto found_docs = server.FindTopDocuments("stop_word"s);
-        ASSERT_EQUAL(found_docs.size(), 1);
+        AddOneDocumentToSearchServer(server);
+        const auto found_docs = server.FindTopDocuments(test_data.kStopWord); // search query consists of stop word
+        ASSERT_EQUAL(found_docs.size(), 1);                                   // before it's set as a stop word
         const Document& doc0 = found_docs[0];
-        ASSERT_EQUAL(doc0.id, doc_id);
+        ASSERT_EQUAL(doc0.id, test_data.kIDForSearchServerThatNeedsOneDocument);
     }
 
     // empty vector after searching by the stop word
     {
         SearchServer server;
-        server.SetStopWords("stop_word"s);
-        server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
-        ASSERT(server.FindTopDocuments("stop_word"s).empty());
+        server.SetStopWords(test_data.kStopWord);
+        AddOneDocumentToSearchServer(server);
+        ASSERT(server.FindTopDocuments(test_data.kStopWord).empty());
     }
 }
 
@@ -402,17 +414,18 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
 Разместите код остальных тестов здесь
 */
 
-// Добавление документов. Добавленный документ должен находиться по поисковому запросу, который содержит слова из документа.
 void TestAddDocument() {
+    TestData test_data;
+    
     { // test word
         SearchServer server;
         
-        server.AddDocument(0, "cat in the city"s, DocumentStatus::ACTUAL, {1, 2, 3});
+        AddOneDocumentToSearchServer(server);
         
-        const auto& found_docs = server.FindTopDocuments("cat"s);
+        const auto& found_docs = server.FindTopDocuments("word1"s);
         
-        assert(found_docs.size() == 1);
-        assert(found_docs[0].id == 0);
+        ASSERT_EQUAL(found_docs.size(), 1);
+        ASSERT_EQUAL(found_docs[0].id, test_data.kIDForSearchServerThatNeedsOneDocument);
         
     }
     
