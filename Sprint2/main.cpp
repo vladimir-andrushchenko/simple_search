@@ -394,9 +394,13 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
     
     { // word can be found before added to stop words
         SearchServer server;
+        
         AddOneDocumentToSearchServer(server);
+        
         const auto found_docs = server.FindTopDocuments(test_data.kStopWord); // search query consists of stop word
-        ASSERT_EQUAL(found_docs.size(), 1);                                   // before it's set as a stop word
+                                                                              // before it's set as a stop word
+        ASSERT_EQUAL(found_docs.size(), 1);
+        
         const Document& doc0 = found_docs[0];
         ASSERT_EQUAL(doc0.id, test_data.kIDForSearchServerThatNeedsOneDocument);
     }
