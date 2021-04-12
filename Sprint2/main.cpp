@@ -275,31 +275,126 @@ private:
     
     std::map<int, DocumentData> document_id_to_document_data_;
 };
+
+// logging functionality for containers
+
+// pair
+template<typename First, typename Second>
+std::ostream& operator<<(std::ostream& out, const std::pair<First, Second>& container) {
+    out << container.first << ": "s << container.second;
+    return out;
+}
+
+template<typename Container>
+void Print(std::ostream& out, const Container& container) {
+    bool isFirst = true;
+    for (const auto& element : container) {
+        if(isFirst) {
+            out << element;
+            isFirst = false;
+            continue;
+        }
+        out << ", "s << element;
+    }
+}
+
+// vector
+template<typename Element>
+std::ostream& operator<<(std::ostream& out, const std::vector<Element>& container) {
+    out << '[';
+    Print(out, container);
+    out << ']';
+    return out;
+}
+
+// set
+template<typename Element>
+std::ostream& operator<<(std::ostream& out, const std::set<Element>& container) {
+    out << '{';
+    Print(out, container);
+    out << '}';
+    return out;
+}
+
+// map
+template<typename Key, typename Value>
+std::ostream& operator<<(std::ostream& out, const std::map<Key, Value>& container) {
+    out << '{';
+    Print(out, container);
+    out << '}';
+    return out;
+}
+
+// testing framework
+
+template <typename TestFunction>
+void RunTestImpl(TestFunction test_function, const std::string& function_name) {
+    test_function();
+    std::cerr << function_name << " OK\n"s;
+}
+
+template <typename T, typename U>
+void AssertEqualImpl(const T& t, const U& u, const std::string& t_str, const std::string& u_str, const std::string& file,
+                     const std::string& func, unsigned line, const std::string& hint) {
+    if (t != u) {
+        std::cerr << std::boolalpha;
+        std::cerr << file << "("s << line << "): "s << func << ": "s;
+        std::cerr << "ASSERT_EQUAL("s << t_str << ", "s << u_str << ") failed: "s;
+        std::cerr << t << " != "s << u << "."s;
+        if (!hint.empty()) {
+            std::cerr << " Hint: "s << hint;
+        }
+        std::cerr << std::endl;
+        abort();
+    }
+}
+
+void AssertImpl(bool value, const std::string& expr_str, const std::string& file, const std::string& func, unsigned line,
+                const std::string& hint) {
+    if (!value) {
+        std::cerr << file << "("s << line << "): "s << func << ": "s;
+        std::cerr << "Assert("s << expr_str << ") failed."s;
+        if (!hint.empty()) {
+            std::cerr << " Hint: "s << hint;
+        }
+        std::cerr << std::endl;
+        abort();
+    }
+}
+
+#define ASSERT_EQUAL(a, b) AssertEqualImpl((a), (b), #a, #b, __FILE__, __FUNCTION__, __LINE__, ""s)
+
+#define ASSERT_EQUAL_HINT(a, b, hint) AssertEqualImpl((a), (b), #a, #b, __FILE__, __FUNCTION__, __LINE__, (hint))
+
+#define ASSERT(expr) AssertImpl((expr), #expr, __FILE__, __FUNCTION__, __LINE__, ""s)
+
+#define ASSERT_HINT(expr, hint) AssertTrueImpl((expr), #expr, __FILE__, __FUNCTION__, __LINE__, (hint))
+
+#define RUN_TEST(func) RunTestImpl((func), #func)
+
 // -------- Начало модульных тестов поисковой системы ----------
 
-// Тест проверяет, что поисковая система исключает стоп-слова при добавлении документов
+// Test for correst stop words addition
 void TestExcludeStopWordsFromAddedDocumentContent() {
     const int doc_id = 42;
-    const std::string content = "cat in the city"s;
+    const std::string content = "word1 word2 stop_word"s;
     const std::vector<int> ratings = {1, 2, 3};
-    // Сначала убеждаемся, что поиск слова, не входящего в список стоп-слов,
-    // находит нужный документ
-    {
+    
+    { // word can be found before added to stop words
         SearchServer server;
         server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
-        const auto found_docs = server.FindTopDocuments("in"s);
-        assert(found_docs.size() == 1);
+        const auto found_docs = server.FindTopDocuments("stop_word"s);
+        ASSERT_EQUAL(found_docs.size(), 1);
         const Document& doc0 = found_docs[0];
-        assert(doc0.id == doc_id);
+        ASSERT_EQUAL(doc0.id, doc_id);
     }
 
-    // Затем убеждаемся, что поиск этого же слова, входящего в список стоп-слов,
-    // возвращает пустой результат
+    // empty vector after searching by the stop word
     {
         SearchServer server;
-        server.SetStopWords("in the"s);
+        server.SetStopWords("stop_word"s);
         server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
-        assert(server.FindTopDocuments("in"s).empty());
+        ASSERT(server.FindTopDocuments("stop_word"s).empty());
     }
 }
 
