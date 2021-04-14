@@ -40,7 +40,7 @@ std::vector<std::string> SplitIntoWords(const std::string& text) {
     
     return words;
 }
-    
+
 struct Document {
     int id = 0;
     double relevance = 0;
@@ -97,12 +97,12 @@ public:
         
         std::sort(filtered_documents.begin(), filtered_documents.end(),
                   [](const Document& left, const Document& right) {
-                      if (abs(left.relevance - right.relevance) < kAccuracy) {
-                          return left.rating > right.rating;
-                      } else {
-                          return left.relevance > right.relevance;
-                      }
-                  });
+            if (abs(left.relevance - right.relevance) < kAccuracy) {
+                return left.rating > right.rating;
+            } else {
+                return left.relevance > right.relevance;
+            }
+        });
         
         if (static_cast<int>(filtered_documents.size()) > kMaxResultDocumentCount) {
             filtered_documents.resize(static_cast<size_t>(kMaxResultDocumentCount));
@@ -230,11 +230,11 @@ private:
     // Existence required
     double ComputeWordInverseDocumentFrequency(const std::string& word) const {
         const double number_of_documents_constains_word =
-            static_cast<double>(word_to_document_id_to_term_frequency_.at(word).size());
+        static_cast<double>(word_to_document_id_to_term_frequency_.at(word).size());
         
         return log(static_cast<double>(GetDocumentCount()) / number_of_documents_constains_word);
     } // ComputeWordInverseDocumentFrequency
-
+    
     std::vector<Document> FindAllDocuments(const Query& query) const {
         std::map<int, double> document_id_to_relevance;
         
@@ -259,7 +259,7 @@ private:
                 document_id_to_relevance.erase(document_id);
             }
         }
-
+        
         std::vector<Document> matched_documents;
         for (const auto &[document_id, relevance] : document_id_to_relevance) {
             matched_documents.push_back({ document_id, relevance,
@@ -268,7 +268,7 @@ private:
         
         return matched_documents;
     } // FindAllDocuments
-
+    
 private:
     std::set<std::string> stop_words_;
     
@@ -278,54 +278,68 @@ private:
 };
 
 // logging functionality for containers
-// pair
+// log pair
 template<typename First, typename Second>
 std::ostream& operator<<(std::ostream& out, const std::pair<First, Second>& container) {
     out << container.first << ": "s << container.second;
+    
     return out;
 }
 
 template<typename Container>
 void Print(std::ostream& out, const Container& container) {
     bool isFirst = true;
+    
     for (const auto& element : container) {
         if(isFirst) {
             out << element;
+            
             isFirst = false;
+            
             continue;
         }
+        
         out << ", "s << element;
     }
 }
 
-// vector
+// log vector
 template<typename Element>
 std::ostream& operator<<(std::ostream& out, const std::vector<Element>& container) {
     out << '[';
+    
     Print(out, container);
+    
     out << ']';
+    
     return out;
 }
 
-// set
+// log set
 template<typename Element>
 std::ostream& operator<<(std::ostream& out, const std::set<Element>& container) {
     out << '{';
+    
     Print(out, container);
+    
     out << '}';
+    
     return out;
 }
 
-// map
+// log map
 template<typename Key, typename Value>
 std::ostream& operator<<(std::ostream& out, const std::map<Key, Value>& container) {
     out << '{';
+    
     Print(out, container);
+    
     out << '}';
+    
     return out;
 }
 
-// DocumentStatus
+// log DocumentStatus
 std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
     switch (status) {
         case DocumentStatus::kActual:
@@ -349,34 +363,45 @@ std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
 template <typename TestFunction>
 void RunTestImplementation(TestFunction test_function, const std::string& function_name) {
     test_function();
+    
     std::cerr << function_name << " OK\n"s;
 }
 
 template <typename T, typename U>
-void AssertEqualImplementation(const T& t, const U& u, const std::string& t_str, const std::string& u_str, const std::string& file,
-                     const std::string& func, unsigned line, const std::string& hint) {
+void AssertEqualImplementation(const T& t, const U& u, const std::string& t_str, const std::string& u_str,
+                               const std::string& file, const std::string& func, unsigned line, const std::string& hint) {
     if (t != u) {
         std::cerr << std::boolalpha;
+        
         std::cerr << file << "("s << line << "): "s << func << ": "s;
+        
         std::cerr << "ASSERT_EQUAL("s << t_str << ", "s << u_str << ") failed: "s;
+        
         std::cerr << t << " != "s << u << "."s;
+        
         if (!hint.empty()) {
             std::cerr << " Hint: "s << hint;
         }
+        
         std::cerr << std::endl;
+        
         abort();
     }
 }
 
-void AssertImplementation(bool value, const std::string& expr_str, const std::string& file, const std::string& func, unsigned line,
-                const std::string& hint) {
+void AssertImplementation(bool value, const std::string& expr_str, const std::string& file,
+                          const std::string& func, unsigned line, const std::string& hint) {
     if (!value) {
         std::cerr << file << "("s << line << "): "s << func << ": "s;
-        std::cerr << "Assert("s << expr_str << ") failed."s;
+        
+        std::cerr << "ASSERT("s << expr_str << ") failed."s;
+        
         if (!hint.empty()) {
             std::cerr << " Hint: "s << hint;
         }
+        
         std::cerr << std::endl;
+        
         abort();
     }
 }
@@ -385,12 +410,15 @@ struct TestData {
     const int kIDForSearchServerThatNeedsOneDocument = 42;
     
     const std::string kContentsFirstWord = "word1"s;
+    
     const std::string kContentsFirstWordAsMinusWord = "-"s + kContentsFirstWord;
+    
     const std::string kStopWord = "stop_word"s;
     
     const std::string kContent = kContentsFirstWord + " word2 "s + kStopWord;
     
     const std::vector<int> kRatings = {1, 2, 3};
+    
     const int kAverageRating = std::accumulate(kRatings.begin(), kRatings.end(), 0) / static_cast<int>(kRatings.size());
 };
 
@@ -399,7 +427,9 @@ struct TestDataForRelevance {
     const std::string kQueryToTestRelevance = "пушистый ухоженный кот"s;
     
     const std::string kContentHighRelevance = "белый кот модный ошейник"s;         // 0.65067242136109593
+    
     const std::string kContentMediumRelevance = "пушистый кот пушистый хвост"s;    // 0.27465307216702745
+    
     const std::string kContentLowRelevance = "ухоженный пёс выразительные глаза"s; // 0.1013662770270411
 };
 
@@ -415,7 +445,8 @@ struct TestDataForRelevance {
 
 void AddOneDocumentToSearchServer(SearchServer& server) {
     TestData test_data;
-    server.AddDocument(test_data.kIDForSearchServerThatNeedsOneDocument, test_data.kContent, DocumentStatus::kActual, test_data.kRatings);
+    server.AddDocument(test_data.kIDForSearchServerThatNeedsOneDocument, test_data.kContent,
+                       DocumentStatus::kActual, test_data.kRatings);
 }
 
 // Test for correst stop words addition
@@ -427,19 +458,19 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
         
         AddOneDocumentToSearchServer(server);
         
-        const auto found_docs = server.FindTopDocuments(test_data.kStopWord); // search query consists only contains a stop word
-                                                                              // before it has been set as a stop word
-        ASSERT_EQUAL(found_docs.size(), static_cast<unsigned long>(1));
+        const auto found_docs = server.FindTopDocuments(test_data.kStopWord); // query consists of only a stop word
         
-        const Document& doc0 = found_docs[0];
-        ASSERT_EQUAL(doc0.id, test_data.kIDForSearchServerThatNeedsOneDocument);
+        ASSERT_EQUAL(found_docs.size(), static_cast<unsigned long>(1));
+        ASSERT_EQUAL(found_docs[0].id, test_data.kIDForSearchServerThatNeedsOneDocument);
     }
-
-    // empty vector after searching by the stop word
-    {
+    
+    { // empty vector after searching by the stop word
         SearchServer server;
-        server.SetStopWords(test_data.kStopWord);
+        
+        server.SetStopWords(test_data.kStopWord); // add stop word
+        
         AddOneDocumentToSearchServer(server);
+        
         ASSERT(server.FindTopDocuments(test_data.kStopWord).empty());
     }
 }
@@ -460,12 +491,13 @@ void TestAddDocument() {
 void TestMinusWords() {
     TestData test_data;
     
-    {
-        SearchServer server;
-        AddOneDocumentToSearchServer(server);
-        const auto found_docs = server.FindTopDocuments(test_data.kContentsFirstWordAsMinusWord);
-        ASSERT(found_docs.empty());
-    }
+    SearchServer server;
+    
+    AddOneDocumentToSearchServer(server);
+    
+    const auto found_docs = server.FindTopDocuments(test_data.kContentsFirstWordAsMinusWord);
+    
+    ASSERT(found_docs.empty());
 }
 
 void TestMatchDocument() {
@@ -475,9 +507,11 @@ void TestMatchDocument() {
     
     AddOneDocumentToSearchServer(server);
     
-    const auto [words, status] = server.MatchDocument(test_data.kContentsFirstWord, test_data.kIDForSearchServerThatNeedsOneDocument);
+    const auto [words, status] = server.MatchDocument(test_data.kContentsFirstWord,
+                                                      test_data.kIDForSearchServerThatNeedsOneDocument);
     
     std::vector<std::string> desired_matched_words{test_data.kContentsFirstWord};
+    
     ASSERT_EQUAL(words, desired_matched_words);
     ASSERT_EQUAL(status, DocumentStatus::kActual);
 }
@@ -486,28 +520,38 @@ void TestRelevanceSort() {
     TestDataForRelevance test_data;
     
     SearchServer server;
-
+    
     server.AddDocument(0, test_data.kContentLowRelevance, DocumentStatus::kActual, {1});
     server.AddDocument(1, test_data.kContentHighRelevance, DocumentStatus::kActual, {1});
     server.AddDocument(2, test_data.kContentMediumRelevance, DocumentStatus::kActual, {1});
-
+    
     const auto found_docs = server.FindTopDocuments(test_data.kQueryToTestRelevance);
     
     const std::string bad_sort_hint = "Sorting by relevance doesn't work"s;
     
-    ASSERT_HINT(found_docs[0].relevance > found_docs[1].relevance, bad_sort_hint);
-    ASSERT_HINT(found_docs[0].relevance > found_docs[2].relevance, bad_sort_hint);
+    constexpr double kAccuracy = 1e-6;
     
-    ASSERT_HINT(found_docs[1].relevance > found_docs[2].relevance, bad_sort_hint);
+    // relevance is in descending order or difference is less than accuracy
+    ASSERT_HINT((found_docs[0].relevance > found_docs[1].relevance) ||
+                std::abs(found_docs[0].relevance - found_docs[1].relevance) < kAccuracy,
+                bad_sort_hint);
+    
+    ASSERT_HINT((found_docs[0].relevance > found_docs[2].relevance) ||
+                std::abs(found_docs[0].relevance - found_docs[2].relevance) < kAccuracy,
+                bad_sort_hint);
+    
+    ASSERT_HINT((found_docs[1].relevance > found_docs[2].relevance) ||
+                std::abs(found_docs[1].relevance - found_docs[2].relevance) < kAccuracy,
+                bad_sort_hint);
 }
 
 void TestRating() {
     TestData test_data;
     
     SearchServer server;
-
+    
     AddOneDocumentToSearchServer(server);
-
+    
     const auto found_docs = server.FindTopDocuments(test_data.kContentsFirstWord);
     
     ASSERT_EQUAL(found_docs.size(), static_cast<unsigned long>(1));
@@ -520,15 +564,19 @@ void TestPredicateFiltering() {
     
     SearchServer server;
     
+    // every element higher by one
     std::vector<int> higher_ratings = test_data.kRatings;
-    higher_ratings.push_back(test_data.kRatings[0] + 10); // this is bad, I can feel it
-
-    server.AddDocument(0, test_data_for_relevance.kContentLowRelevance, DocumentStatus::kActual, higher_ratings);
+    for (int& rating : higher_ratings) {
+        ++rating;
+    }
+    
+    server.AddDocument(0, test_data_for_relevance.kContentLowRelevance, DocumentStatus::kActual, higher_ratings); // rating 1 higher then others
     server.AddDocument(1, test_data_for_relevance.kContentHighRelevance, DocumentStatus::kBanned, test_data.kRatings);
     server.AddDocument(2, test_data_for_relevance.kContentMediumRelevance, DocumentStatus::kRemoved, test_data.kRatings);
-
-    {
-        const auto& filtered_docs = server.FindTopDocuments(test_data_for_relevance.kQueryToTestRelevance, [](int , DocumentStatus status, int ) {
+    
+    { // status predicate
+        const auto& filtered_docs = server.FindTopDocuments(test_data_for_relevance.kQueryToTestRelevance,
+                                                            [](int , DocumentStatus status, int ) {
             return status == DocumentStatus::kActual;
         });
         
@@ -536,21 +584,24 @@ void TestPredicateFiltering() {
         ASSERT_EQUAL(filtered_docs[0].id, 0);
     }
     
-    {
-        const auto& filtered_docs = server.FindTopDocuments(test_data_for_relevance.kQueryToTestRelevance, [&test_data]( int , DocumentStatus , int rating) {
+    { // rating predicate
+        const auto& filtered_docs = server.FindTopDocuments(test_data_for_relevance.kQueryToTestRelevance,
+                                                            [&test_data]( int , DocumentStatus , int rating) {
             return rating > test_data.kAverageRating;
         });
-
-        ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(1));
+        
+        ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(1)); // only a doc with higher rating is found
+        ASSERT_EQUAL(filtered_docs[0].rating, test_data.kAverageRating + 1);
     }
-
-    {
+    
+    { // id predicate
         const int document_id_to_search_for = 1;
         
-        const auto& filtered_docs = server.FindTopDocuments(test_data_for_relevance.kQueryToTestRelevance, [](int document_id, DocumentStatus , int ) {
+        const auto& filtered_docs = server.FindTopDocuments(test_data_for_relevance.kQueryToTestRelevance,
+                                                            [](int document_id, DocumentStatus , int ) {
             return document_id == document_id_to_search_for;
         });
-
+        
         ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(document_id_to_search_for));
     }
 }
@@ -561,14 +612,14 @@ void TestFilteringWithStatus() {
     SearchServer server;
     
     AddOneDocumentToSearchServer(server);
-
-    {
+    
+    { // explicit status
         const auto& filtered_docs = server.FindTopDocuments(test_data.kContentsFirstWord, DocumentStatus::kActual);
         
         ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(1));
     }
     
-    {
+    { // default status
         const auto& filtered_docs = server.FindTopDocuments(test_data.kContentsFirstWord);
         
         ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(1));
@@ -577,21 +628,21 @@ void TestFilteringWithStatus() {
 
 void TestRelevance() {
     SearchServer server;
-
+    
     server.AddDocument(0, "белый кот модный ошейник"s, DocumentStatus::kActual, {1});
     server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::kActual, {1});
     server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::kActual, {1});
-
+    
     const auto& found_docs = server.FindTopDocuments("пушистый ухоженный кот"s);
     
     ASSERT(found_docs.size() == 3);
     
     ASSERT((found_docs[0].relevance > 0.65) &&
            (found_docs[0].relevance < 0.66));
-
+    
     ASSERT((found_docs[1].relevance > 0.27) &&
            (found_docs[1].relevance < 0.28));
-
+    
     ASSERT((found_docs[2].relevance > 0.10) &&
            (found_docs[2].relevance < 0.11));
 }
