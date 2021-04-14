@@ -427,9 +427,9 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
         
         AddOneDocumentToSearchServer(server);
         
-        const auto found_docs = server.FindTopDocuments(test_data.kStopWord); // search query consists of stop word
-                                                                              // before it's set as a stop word
-        ASSERT_EQUAL(found_docs.size(), 1);
+        const auto found_docs = server.FindTopDocuments(test_data.kStopWord); // search query consists only contains a stop word
+                                                                              // before it has been set as a stop word
+        ASSERT_EQUAL(found_docs.size(), static_cast<unsigned long>(1));
         
         const Document& doc0 = found_docs[0];
         ASSERT_EQUAL(doc0.id, test_data.kIDForSearchServerThatNeedsOneDocument);
@@ -453,7 +453,7 @@ void TestAddDocument() {
     
     const auto& found_docs = server.FindTopDocuments(test_data.kContentsFirstWord);
     
-    ASSERT_EQUAL(found_docs.size(), 1);
+    ASSERT_EQUAL(found_docs.size(), static_cast<unsigned long>(1));
     ASSERT_EQUAL(found_docs[0].id, test_data.kIDForSearchServerThatNeedsOneDocument);
 }
 
@@ -510,7 +510,7 @@ void TestRating() {
 
     const auto found_docs = server.FindTopDocuments(test_data.kContentsFirstWord);
     
-    ASSERT_EQUAL(found_docs.size(), 1);
+    ASSERT_EQUAL(found_docs.size(), static_cast<unsigned long>(1));
     ASSERT_EQUAL(found_docs[0].rating, test_data.kAverageRating);
 }
 
@@ -532,7 +532,7 @@ void TestPredicateFiltering() {
             return status == DocumentStatus::ACTUAL;
         });
         
-        ASSERT_EQUAL(filtered_docs.size(), 1);
+        ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(1));
         ASSERT_EQUAL(filtered_docs[0].id, 0);
     }
     
@@ -541,7 +541,7 @@ void TestPredicateFiltering() {
             return rating > test_data.kAverageRating;
         });
 
-        ASSERT_EQUAL(filtered_docs.size(), 1);
+        ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(1));
     }
 
     {
@@ -551,7 +551,7 @@ void TestPredicateFiltering() {
             return document_id == document_id_to_search_for;
         });
 
-        ASSERT_EQUAL(filtered_docs.size(), document_id_to_search_for);
+        ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(document_id_to_search_for));
     }
 }
 
@@ -565,13 +565,13 @@ void TestFilteringWithStatus() {
     {
         const auto& filtered_docs = server.FindTopDocuments(test_data.kContentsFirstWord, DocumentStatus::ACTUAL);
         
-        ASSERT_EQUAL(filtered_docs.size(), 1);
+        ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(1));
     }
     
     {
         const auto& filtered_docs = server.FindTopDocuments(test_data.kContentsFirstWord);
         
-        ASSERT_EQUAL(filtered_docs.size(), 1);
+        ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(1));
     }
 }
 
