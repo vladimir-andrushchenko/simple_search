@@ -437,11 +437,11 @@ struct TestDataForRelevance {
 
 #define ASSERT_EQUAL_HINT(a, b, hint) AssertEqualImplementation((a), (b), #a, #b, __FILE__, __FUNCTION__, __LINE__, (hint))
 
-#define ASSERT(expr) AssertImplementation((expr), #expr, __FILE__, __FUNCTION__, __LINE__, ""s)
+#define ASSERT(expression) AssertImplementation((expression), #expression, __FILE__, __FUNCTION__, __LINE__, ""s)
 
-#define ASSERT_HINT(expr, hint) AssertImplementation((expr), #expr, __FILE__, __FUNCTION__, __LINE__, (hint))
+#define ASSERT_HINT(expression, hint) AssertImplementation((expression), #expression, __FILE__, __FUNCTION__, __LINE__, (hint))
 
-#define RUN_TEST(func) RunTestImplementation((func), #func)
+#define RUN_TEST(test_function) RunTestImplementation((test_function), #test_function)
 
 void AddOneDocumentToSearchServer(SearchServer& server) {
     TestData test_data;
