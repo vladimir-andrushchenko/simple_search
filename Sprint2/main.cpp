@@ -347,13 +347,13 @@ std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
 
 // testing framework
 template <typename TestFunction>
-void RunTestImpl(TestFunction test_function, const std::string& function_name) {
+void RunTestImplementation(TestFunction test_function, const std::string& function_name) {
     test_function();
     std::cerr << function_name << " OK\n"s;
 }
 
 template <typename T, typename U>
-void AssertEqualImpl(const T& t, const U& u, const std::string& t_str, const std::string& u_str, const std::string& file,
+void AssertEqualImplementation(const T& t, const U& u, const std::string& t_str, const std::string& u_str, const std::string& file,
                      const std::string& func, unsigned line, const std::string& hint) {
     if (t != u) {
         std::cerr << std::boolalpha;
@@ -368,7 +368,7 @@ void AssertEqualImpl(const T& t, const U& u, const std::string& t_str, const std
     }
 }
 
-void AssertImpl(bool value, const std::string& expr_str, const std::string& file, const std::string& func, unsigned line,
+void AssertImplementation(bool value, const std::string& expr_str, const std::string& file, const std::string& func, unsigned line,
                 const std::string& hint) {
     if (!value) {
         std::cerr << file << "("s << line << "): "s << func << ": "s;
@@ -403,15 +403,15 @@ struct TestDataForRelevance {
     const std::string kContentLowRelevance = "ухоженный пёс выразительные глаза"s; // 0.1013662770270411
 };
 
-#define ASSERT_EQUAL(a, b) AssertEqualImpl((a), (b), #a, #b, __FILE__, __FUNCTION__, __LINE__, ""s)
+#define ASSERT_EQUAL(a, b) AssertEqualImplementation((a), (b), #a, #b, __FILE__, __FUNCTION__, __LINE__, ""s)
 
-#define ASSERT_EQUAL_HINT(a, b, hint) AssertEqualImpl((a), (b), #a, #b, __FILE__, __FUNCTION__, __LINE__, (hint))
+#define ASSERT_EQUAL_HINT(a, b, hint) AssertEqualImplementation((a), (b), #a, #b, __FILE__, __FUNCTION__, __LINE__, (hint))
 
-#define ASSERT(expr) AssertImpl((expr), #expr, __FILE__, __FUNCTION__, __LINE__, ""s)
+#define ASSERT(expr) AssertImplementation((expr), #expr, __FILE__, __FUNCTION__, __LINE__, ""s)
 
-#define ASSERT_HINT(expr, hint) AssertImpl((expr), #expr, __FILE__, __FUNCTION__, __LINE__, (hint))
+#define ASSERT_HINT(expr, hint) AssertImplementation((expr), #expr, __FILE__, __FUNCTION__, __LINE__, (hint))
 
-#define RUN_TEST(func) RunTestImpl((func), #func)
+#define RUN_TEST(func) RunTestImplementation((func), #func)
 
 void AddOneDocumentToSearchServer(SearchServer& server) {
     TestData test_data;
