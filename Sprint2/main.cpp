@@ -48,10 +48,10 @@ struct Document {
 };
 
 enum class DocumentStatus {
-    ACTUAL,
-    IRRELEVANT,
-    BANNED,
-    REMOVED,
+    kActual,
+    kIrrelevant,
+    kBanned,
+    kRemoved,
 };
 
 class SearchServer {
@@ -112,7 +112,7 @@ public:
     } // FindTopDocuments
     
     std::vector<Document> FindTopDocuments(const std::string& raw_query,
-                                           const DocumentStatus& desired_status = DocumentStatus::ACTUAL) const {
+                                           const DocumentStatus& desired_status = DocumentStatus::kActual) const {
         const auto predicate = [desired_status]([[maybe_unused]] int document_id, DocumentStatus document_status,
                                                 [[maybe_unused]] int rating) {
             return document_status == desired_status;
@@ -153,7 +153,7 @@ public:
 private:
     struct DocumentData {
         int rating = 0;
-        DocumentStatus status = DocumentStatus::ACTUAL;
+        DocumentStatus status = DocumentStatus::kActual;
     };
     
     struct Query {
@@ -328,16 +328,16 @@ std::ostream& operator<<(std::ostream& out, const std::map<Key, Value>& containe
 // DocumentStatus
 std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
     switch (status) {
-        case DocumentStatus::ACTUAL:
+        case DocumentStatus::kActual:
             out << "kActual"s;
             break;
-        case DocumentStatus::BANNED:
+        case DocumentStatus::kBanned:
             out << "kBanned"s;
             break;
-        case DocumentStatus::IRRELEVANT:
+        case DocumentStatus::kIrrelevant:
             out << "kIrrelevant"s;
             break;
-        case DocumentStatus::REMOVED:
+        case DocumentStatus::kRemoved:
             out << "kRemoved"s;
             break;
     }
@@ -415,7 +415,7 @@ struct TestDataForRelevance {
 
 void AddOneDocumentToSearchServer(SearchServer& server) {
     TestData test_data;
-    server.AddDocument(test_data.kIDForSearchServerThatNeedsOneDocument, test_data.kContent, DocumentStatus::ACTUAL, test_data.kRatings);
+    server.AddDocument(test_data.kIDForSearchServerThatNeedsOneDocument, test_data.kContent, DocumentStatus::kActual, test_data.kRatings);
 }
 
 // Test for correst stop words addition
@@ -479,7 +479,7 @@ void TestMatchDocument() {
     
     std::vector<std::string> desired_matched_words{test_data.kContentsFirstWord};
     ASSERT_EQUAL(words, desired_matched_words);
-    ASSERT_EQUAL(status, DocumentStatus::ACTUAL);
+    ASSERT_EQUAL(status, DocumentStatus::kActual);
 }
 
 void TestRelevanceSort() {
@@ -487,9 +487,9 @@ void TestRelevanceSort() {
     
     SearchServer server;
 
-    server.AddDocument(0, test_data.kContentLowRelevance, DocumentStatus::ACTUAL, {1});
-    server.AddDocument(1, test_data.kContentHighRelevance, DocumentStatus::ACTUAL, {1});
-    server.AddDocument(2, test_data.kContentMediumRelevance, DocumentStatus::ACTUAL, {1});
+    server.AddDocument(0, test_data.kContentLowRelevance, DocumentStatus::kActual, {1});
+    server.AddDocument(1, test_data.kContentHighRelevance, DocumentStatus::kActual, {1});
+    server.AddDocument(2, test_data.kContentMediumRelevance, DocumentStatus::kActual, {1});
 
     const auto found_docs = server.FindTopDocuments(test_data.kQueryToTestRelevance);
     
@@ -523,13 +523,13 @@ void TestPredicateFiltering() {
     std::vector<int> higher_ratings = test_data.kRatings;
     higher_ratings.push_back(test_data.kRatings[0] + 10); // this is bad, I can feel it
 
-    server.AddDocument(0, test_data_for_relevance.kContentLowRelevance, DocumentStatus::ACTUAL, higher_ratings);
-    server.AddDocument(1, test_data_for_relevance.kContentHighRelevance, DocumentStatus::BANNED, test_data.kRatings);
-    server.AddDocument(2, test_data_for_relevance.kContentMediumRelevance, DocumentStatus::REMOVED, test_data.kRatings);
+    server.AddDocument(0, test_data_for_relevance.kContentLowRelevance, DocumentStatus::kActual, higher_ratings);
+    server.AddDocument(1, test_data_for_relevance.kContentHighRelevance, DocumentStatus::kBanned, test_data.kRatings);
+    server.AddDocument(2, test_data_for_relevance.kContentMediumRelevance, DocumentStatus::kRemoved, test_data.kRatings);
 
     {
         const auto& filtered_docs = server.FindTopDocuments(test_data_for_relevance.kQueryToTestRelevance, [](int , DocumentStatus status, int ) {
-            return status == DocumentStatus::ACTUAL;
+            return status == DocumentStatus::kActual;
         });
         
         ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(1));
@@ -563,7 +563,7 @@ void TestFilteringWithStatus() {
     AddOneDocumentToSearchServer(server);
 
     {
-        const auto& filtered_docs = server.FindTopDocuments(test_data.kContentsFirstWord, DocumentStatus::ACTUAL);
+        const auto& filtered_docs = server.FindTopDocuments(test_data.kContentsFirstWord, DocumentStatus::kActual);
         
         ASSERT_EQUAL(filtered_docs.size(), static_cast<unsigned long>(1));
     }
@@ -578,9 +578,9 @@ void TestFilteringWithStatus() {
 void TestRelevance() {
     SearchServer server;
 
-    server.AddDocument(0, "белый кот модный ошейник"s, DocumentStatus::ACTUAL, {1});
-    server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {1});
-    server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL, {1});
+    server.AddDocument(0, "белый кот модный ошейник"s, DocumentStatus::kActual, {1});
+    server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::kActual, {1});
+    server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::kActual, {1});
 
     const auto& found_docs = server.FindTopDocuments("пушистый ухоженный кот"s);
     
