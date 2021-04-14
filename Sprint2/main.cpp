@@ -381,16 +381,6 @@ void AssertImpl(bool value, const std::string& expr_str, const std::string& file
     }
 }
 
-#define ASSERT_EQUAL(a, b) AssertEqualImpl((a), (b), #a, #b, __FILE__, __FUNCTION__, __LINE__, ""s)
-
-#define ASSERT_EQUAL_HINT(a, b, hint) AssertEqualImpl((a), (b), #a, #b, __FILE__, __FUNCTION__, __LINE__, (hint))
-
-#define ASSERT(expr) AssertImpl((expr), #expr, __FILE__, __FUNCTION__, __LINE__, ""s)
-
-#define ASSERT_HINT(expr, hint) AssertImpl((expr), #expr, __FILE__, __FUNCTION__, __LINE__, (hint))
-
-#define RUN_TEST(func) RunTestImpl((func), #func)
-
 struct TestData {
     const int kIDForSearchServerThatNeedsOneDocument = 42;
     
@@ -412,6 +402,16 @@ struct TestDataForRelevance {
     const std::string kContentMediumRelevance = "пушистый кот пушистый хвост"s;    // 0.27465307216702745
     const std::string kContentLowRelevance = "ухоженный пёс выразительные глаза"s; // 0.1013662770270411
 };
+
+#define ASSERT_EQUAL(a, b) AssertEqualImpl((a), (b), #a, #b, __FILE__, __FUNCTION__, __LINE__, ""s)
+
+#define ASSERT_EQUAL_HINT(a, b, hint) AssertEqualImpl((a), (b), #a, #b, __FILE__, __FUNCTION__, __LINE__, (hint))
+
+#define ASSERT(expr) AssertImpl((expr), #expr, __FILE__, __FUNCTION__, __LINE__, ""s)
+
+#define ASSERT_HINT(expr, hint) AssertImpl((expr), #expr, __FILE__, __FUNCTION__, __LINE__, (hint))
+
+#define RUN_TEST(func) RunTestImpl((func), #func)
 
 void AddOneDocumentToSearchServer(SearchServer& server) {
     TestData test_data;
@@ -609,7 +609,7 @@ void TestSearchServer() {
 }
 
 int main() {
-    TestSearchServer();
+    RUN_TEST(TestSearchServer);
     
     std::cout << "Search server testing finished"s << std::endl;
 }
