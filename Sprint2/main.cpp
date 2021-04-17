@@ -97,7 +97,7 @@ public:
         
         std::sort(filtered_documents.begin(), filtered_documents.end(),
                   [](const Document& left, const Document& right) {
-            if (abs(left.relevance - right.relevance) < kAccuracy) {
+            if (std::abs(left.relevance - right.relevance) < kAccuracy) {
                 return left.rating > right.rating;
             } else {
                 return left.relevance > right.relevance;
