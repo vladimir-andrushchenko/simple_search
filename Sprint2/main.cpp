@@ -596,7 +596,7 @@ void TestDocumentsFoundBySearchServerAreSortedByRelevanceInDescendingOrder() {
     }
 }
 
-void TestRatingOfDocumentIsAverageOfRatings() {
+void TestRatingOfFoundDocumentIsAverageOfRatings() {
     const int doc_id = 1;
     const std::string content = "cat city"s; // only one word matches query
 
@@ -627,7 +627,7 @@ void TestRatingOfDocumentIsAverageOfRatings() {
     }
 }
 
-void TestPredicateFiltering() {
+void TestPredicateFilteringOfSearchResults() {
     const int doc_id = 1;
     const std::string content = "cat city"s; // only one word matches query
     
@@ -678,7 +678,7 @@ void TestPredicateFiltering() {
     }
 }
 
-void TestFilteringWithStatus() {
+void TestStatusFilteringOfSearchResults() {
     const int doc_id = 1;
     const std::string content = "cat city"s; // only one word matches query
     
@@ -707,7 +707,7 @@ void TestFilteringWithStatus() {
     }
 }
 
-void TestRelevance() {
+void TestRelevanceOfTheFoundDocumentsIsCorrect() {
     SearchServer server;
 
     server.AddDocument(0, "белый кот модный ошейник"s, DocumentStatus::kActual, {1});
@@ -734,10 +734,10 @@ void TestSearchServer() {
     RUN_TEST(TestMinusWordsInQueryExcludeDocumentsFromSearchResults);
     RUN_TEST(TestMatchDocumentReturnsIntersectionOfWordsFromQueryAndWordsInDocument);
     RUN_TEST(TestDocumentsFoundBySearchServerAreSortedByRelevanceInDescendingOrder);
-    RUN_TEST(TestRatingOfDocumentIsAverageOfRatings);
-    RUN_TEST(TestPredicateFiltering);
-    RUN_TEST(TestFilteringWithStatus);
-    RUN_TEST(TestRelevance);
+    RUN_TEST(TestRatingOfFoundDocumentIsAverageOfRatings);
+    RUN_TEST(TestPredicateFilteringOfSearchResults);
+    RUN_TEST(TestStatusFilteringOfSearchResults);
+    RUN_TEST(TestRelevanceOfTheFoundDocumentsIsCorrect);
 }
 
 int main() {
