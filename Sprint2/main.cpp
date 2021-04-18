@@ -416,8 +416,6 @@ void AssertImplementation(bool value, const std::string& expr_str, const std::st
 
 #define RUN_TEST(test_function) RunTestImplementation((test_function), #test_function)
 
-
-// Test for correst stop words addition
 void TestExcludeStopWordsFromAddedDocumentContent() {
     const int doc_id = 42;
     const std::string content = "cat in the city"s;
@@ -431,7 +429,7 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
         const Document& doc0 = found_docs[0];
         ASSERT_EQUAL(doc0.id, doc_id);
     }
-
+    
     {
         SearchServer server;
         server.SetStopWords("in the"s);
@@ -440,8 +438,7 @@ void TestExcludeStopWordsFromAddedDocumentContent() {
     }
 }
 
-// documents can be added to the search_server
-void TestAddDocument() {
+void TestAddedDocumentsCanBeFoundUsingQuery() {
     const int doc_id = 42;
     const std::string content = "cat in the city"s;
     const std::vector<int> ratings = {1, 2, 3};
@@ -453,7 +450,14 @@ void TestAddDocument() {
         
         ASSERT_EQUAL(found_docs.size(), static_cast<size_t>(1));
         ASSERT_EQUAL(found_docs[0].id, doc_id);
+    }
+    
+    {
+        SearchServer server;
+        server.AddDocument(doc_id, "", DocumentStatus::kActual, ratings);
+        const auto& found_docs = server.FindTopDocuments("cat");
         
+        ASSERT(found_docs.empty());
     }
 }
 
@@ -476,6 +480,7 @@ void TestMinusWordsInQueryExcludeDocumentsFromSearchResults() {
         ASSERT(found_docs.empty());
     }
     
+    // minus words dont exclude documents where they dont appear
     {
         SearchServer server;
         
@@ -510,6 +515,7 @@ void TestMatchDocumentReturnsIntersectionOfWordsFromQueryAndWordsInDocument() {
         ASSERT_EQUAL(status, DocumentStatus::kActual);
     }
     
+    // status banned
     {
         SearchServer server;
         
@@ -550,7 +556,7 @@ void TestDocumentsFoundBySearchServerAreSortedByRelevanceInDescendingOrder() {
     const std::string content_7 = "the cat says meow to dog"s;
     
     const std::vector<int> ratings = {1, 2, 3};
-
+    
     {
         SearchServer server;
         
@@ -598,8 +604,9 @@ void TestDocumentsFoundBySearchServerAreSortedByRelevanceInDescendingOrder() {
 
 void TestRatingOfFoundDocumentIsAverageOfRatings() {
     const int doc_id = 1;
-    const std::string content = "cat city"s; // only one word matches query
-
+    const std::string content = "cat city"s;
+    
+    // positive ratings
     {
         SearchServer server;
         
@@ -613,6 +620,7 @@ void TestRatingOfFoundDocumentIsAverageOfRatings() {
         ASSERT_EQUAL(found_docs[0].rating, 2);
     }
     
+    // negative ratings
     {
         SearchServer server;
         
@@ -638,7 +646,7 @@ void TestPredicateFilteringOfSearchResults() {
     const std::string content_3 = "dog city"s;
     
     const std::vector<int> ratings = {1, 2, 3};
-
+    
     SearchServer server;
     
     server.AddDocument(doc_id, content, DocumentStatus::kActual, ratings);
@@ -650,7 +658,7 @@ void TestPredicateFilteringOfSearchResults() {
         const auto& filtered_docs = server.FindTopDocuments("city", [](int , DocumentStatus status, int ) {
             return status == DocumentStatus::kActual;
         });
-
+        
         ASSERT_EQUAL(filtered_docs.size(), static_cast<size_t>(1));
         ASSERT_EQUAL(filtered_docs[0].id, 1);
     }
@@ -660,15 +668,15 @@ void TestPredicateFilteringOfSearchResults() {
         const auto& filtered_docs = server.FindTopDocuments("city", [](int , DocumentStatus , int rating) {
             return rating == 2;
         });
-
+        
         ASSERT_EQUAL(filtered_docs.size(), static_cast<size_t>(3)); // only a doc with higher rating is found
         ASSERT_EQUAL(filtered_docs[0].rating, 2);
     }
-
+    
     // id predicate
     {
         const int document_id_to_search_for = 1;
-
+        
         const auto& filtered_docs = server.FindTopDocuments("city", [](int document_id, DocumentStatus , int ) {
             return document_id == document_id_to_search_for;
         });
@@ -686,51 +694,67 @@ void TestStatusFilteringOfSearchResults() {
     const std::string content_2 = "dog city potato"s;
     
     const std::vector<int> ratings = {1, 2, 3};
-
+    
     SearchServer server;
     
     server.AddDocument(doc_id, content, DocumentStatus::kActual, ratings);
     server.AddDocument(doc_id_2, content_2, DocumentStatus::kBanned, ratings);
-
-    { // explicit status
+    
+    // explicit status
+    {
         const auto& filtered_docs = server.FindTopDocuments("city", DocumentStatus::kBanned);
-
+        
         ASSERT_EQUAL(filtered_docs.size(), static_cast<size_t>(1));
         ASSERT_EQUAL(filtered_docs[0].id, doc_id_2);
     }
-
-    { // default status
+    
+    // default status
+    {
         const auto& filtered_docs = server.FindTopDocuments("city");
-
+        
         ASSERT_EQUAL(filtered_docs.size(), static_cast<size_t>(1));
         ASSERT_EQUAL(filtered_docs[0].id, doc_id);
     }
 }
 
 void TestRelevanceOfTheFoundDocumentsIsCorrect() {
+    constexpr double kAccuracy = 1e-6;
+    
     SearchServer server;
-
-    server.AddDocument(0, "белый кот модный ошейник"s, DocumentStatus::kActual, {1});
-    server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::kActual, {1});
-    server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::kActual, {1});
-
-    const auto& found_docs = server.FindTopDocuments("пушистый ухоженный кот"s);
-
-    ASSERT(found_docs.size() == 3);
-
-    ASSERT((found_docs[0].relevance > 0.65) &&
-           (found_docs[0].relevance < 0.66));
-
-    ASSERT((found_docs[1].relevance > 0.27) &&
-           (found_docs[1].relevance < 0.28));
-
-    ASSERT((found_docs[2].relevance > 0.10) &&
-           (found_docs[2].relevance < 0.11));
+    
+    server.AddDocument(0, "cat cat city dog"s, DocumentStatus::kActual, {1});
+    server.AddDocument(1, "city dog"s, DocumentStatus::kActual, {1});
+    server.AddDocument(2, "cat city potato"s, DocumentStatus::kActual, {1});
+    
+    // positive case
+    {
+        const auto& found_docs = server.FindTopDocuments("cat"s);
+        
+        // log(documents_count * 1.0 / a) * (b / c)
+        double expected_relevance_doc_0 = std::log(static_cast<double>(server.GetDocumentCount()) / 2.0) * (2.0 / 4.0);
+        double expected_relevance_doc_2 = std::log(static_cast<double>(server.GetDocumentCount()) / 2.0) * (1.0 / 3.0);
+        
+        ASSERT_EQUAL(found_docs.size(), static_cast<size_t>(2));
+        
+        ASSERT(std::abs(found_docs[0].relevance - expected_relevance_doc_0) < kAccuracy);
+        ASSERT(std::abs(found_docs[1].relevance - expected_relevance_doc_2) < kAccuracy);
+    }
+    
+    // zero relevance
+    {
+        const auto& found_docs = server.FindTopDocuments("city"s);
+        
+        ASSERT_EQUAL(found_docs.size(), static_cast<size_t>(3));
+        
+        ASSERT(std::abs(found_docs[0].relevance) < kAccuracy);
+        ASSERT(std::abs(found_docs[1].relevance) < kAccuracy);
+        ASSERT(std::abs(found_docs[2].relevance) < kAccuracy);
+    }
 }
 
 void TestSearchServer() {
     RUN_TEST(TestExcludeStopWordsFromAddedDocumentContent);
-    RUN_TEST(TestAddDocument);
+    RUN_TEST(TestAddedDocumentsCanBeFoundUsingQuery);
     RUN_TEST(TestMinusWordsInQueryExcludeDocumentsFromSearchResults);
     RUN_TEST(TestMatchDocumentReturnsIntersectionOfWordsFromQueryAndWordsInDocument);
     RUN_TEST(TestDocumentsFoundBySearchServerAreSortedByRelevanceInDescendingOrder);
