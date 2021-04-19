@@ -10,7 +10,7 @@
 #include <numeric>
 #include <sstream>
 
-#include "Test.h"
+//#include "Test.h"
 
 using namespace std::literals;
 
@@ -42,19 +42,35 @@ std::vector<std::string> SplitIntoWords(const std::string& text) {
 
 struct Document {
     int id = 0;
-    double relevance = 0;
+    double relevance = 0.0;
     int rating = 0;
+    
+    Document(): id(0), relevance(0), rating(0) {};
+    Document(int id, double relevance, int rating): id(id), relevance(relevance), rating(rating) {};
 };
 
 enum class DocumentStatus {
-    kActual,
-    kIrrelevant,
-    kBanned,
-    kRemoved,
+    ACTUAL,
+    IRRELEVANT,
+    BANNED,
+    REMOVED,
 };
 
 class SearchServer {
 public:
+public:
+    SearchServer() = default;
+    
+    template <typename StringCollection>
+    explicit SearchServer(const StringCollection& stop_words) {
+        for (const auto stop_word : stop_words) {
+            stop_words_.insert(stop_word);
+        }
+    }
+    
+    explicit SearchServer(const std::string& stop_words) {
+        SetStopWords(stop_words);
+    }
     
 public:
     void SetStopWords(const std::string& text) {
@@ -113,7 +129,7 @@ public:
     } // FindTopDocuments
     
     std::vector<Document> FindTopDocuments(const std::string& raw_query,
-                                           const DocumentStatus& desired_status = DocumentStatus::kActual) const {
+                                           const DocumentStatus& desired_status = DocumentStatus::ACTUAL) const {
         const auto predicate = [desired_status]([[maybe_unused]] int document_id, DocumentStatus document_status,
                                                 [[maybe_unused]] int rating) {
             return document_status == desired_status;
@@ -154,7 +170,7 @@ public:
 private:
     struct DocumentData {
         int rating = 0;
-        DocumentStatus status = DocumentStatus::kActual;
+        DocumentStatus status = DocumentStatus::ACTUAL;
     };
     
     struct Query {
@@ -287,30 +303,30 @@ void PrintDocument(const Document& document) {
          << " }"s << std::endl;
 }
 
-void TestSplitIntoWordsEscapesSpaces() {
-    ASSERT_EQUAL((std::vector<std::string> {"hello"s, "bro"s}), SplitIntoWords("   hello    bro    "s));
-    ASSERT_EQUAL(std::vector<std::string>{}, SplitIntoWords("                 "));
-}
+//void TestSplitIntoWordsEscapesSpaces() {
+//    ASSERT_EQUAL((std::vector<std::string> {"hello"s, "bro"s}), SplitIntoWords("   hello    bro    "s));
+//    ASSERT_EQUAL(std::vector<std::string>{}, SplitIntoWords("                 "));
+//}
 
 int main() {
-    RUN_TEST(TestSplitIntoWordsEscapesSpaces);
+//    RUN_TEST(TestSplitIntoWordsEscapesSpaces);
     
-//    SearchServer search_server;
+    SearchServer search_server("и в на"s);
 //    search_server.SetStopWords("и в на"s);
-//    search_server.AddDocument(0, "белый кот и модный ошейник"s,        DocumentStatus::kActual, {8, -3});
-//    search_server.AddDocument(1, "пушистый кот пушистый хвост"s,       DocumentStatus::kActual, {7, 2, 7});
-//    search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::kActual, {5, -12, 2, 1});
-//    search_server.AddDocument(3, "ухоженный скворец евгений"s,         DocumentStatus::kBanned, {9});
-//    std::cout << "ACTUAL by default:"s << std::endl;
-//    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s)) {
-//        PrintDocument(document);
-//    }
-//    std::cout << "BANNED:"s << std::endl;
-//    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, DocumentStatus::kBanned)) {
-//        PrintDocument(document);
-//    }
-//    std::cout << "Even ids:"s << std::endl;
-//    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, [](int document_id, DocumentStatus , int ) { return document_id % 2 == 0; })) {
-//        PrintDocument(document);
-//    }
+    search_server.AddDocument(0, "белый кот и модный ошейник"s,        DocumentStatus::ACTUAL, {8, -3});
+    search_server.AddDocument(1, "пушистый кот пушистый хвост"s,       DocumentStatus::ACTUAL, {7, 2, 7});
+    search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL, {5, -12, 2, 1});
+    search_server.AddDocument(3, "ухоженный скворец евгений"s,         DocumentStatus::BANNED, {9});
+    std::cout << "ACTUAL by default:"s << std::endl;
+    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s)) {
+        PrintDocument(document);
+    }
+    std::cout << "BANNED:"s << std::endl;
+    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, DocumentStatus::BANNED)) {
+        PrintDocument(document);
+    }
+    std::cout << "Even ids:"s << std::endl;
+    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, [](int document_id, DocumentStatus , int ) { return document_id % 2 == 0; })) {
+        PrintDocument(document);
+    }
 }
