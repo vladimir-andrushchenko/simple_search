@@ -1,23 +1,22 @@
 #include <vector>
 #include <iostream>
-
-using namespace std;
+#include <numeric>
 
 class Rational {
 public:
     Rational() = default;
-    
-    Rational(int integer) {
-        numerator_ = integer;
-        denominator_ = 1;
+
+    Rational(int numerator)
+        : numerator_(numerator)
+        , denominator_(1) {
     }
-    
-    Rational(int numerator, int denominator) {
-        int gcd = greatest_common_denominator(numerator, denominator);
-        numerator_ = numerator / gcd;
-        denominator_ = denominator / gcd;
+
+    Rational(int numerator, int denominator)
+        : numerator_(numerator)
+        , denominator_(denominator) {
+        Normalize();
     }
-    
+
     int Numerator() const {
         return numerator_;
     }
@@ -27,12 +26,16 @@ public:
     }
 
 private:
-    int greatest_common_denominator(int a, int b) {
-        if (a == 0)
-            return b;
-        return greatest_common_denominator(b % a, a);
+    void Normalize() {
+        if (denominator_ < 0) {
+            numerator_ = -numerator_;
+            denominator_ = -denominator_;
+        }
+        const int divisor = std::gcd(numerator_, denominator_);
+        numerator_ /= divisor;
+        denominator_ /= divisor;
     }
-    
+
     int numerator_ = 0;
     int denominator_ = 1;
 };
@@ -50,7 +53,7 @@ int main() {
     const Rational seven(7); // Дробь 7/1 = 7
     const Rational one_third(1, 3); // Дробь 1/3
 
-    vector<Rational> numbers;
+    std::vector<Rational> numbers;
     numbers.push_back(Rational{7, 8});
 
     // Следующие 2 строки эквивалентны - добавляют в numbers дробь 3/1
@@ -59,5 +62,6 @@ int main() {
 
     Rational sum = Add(Rational{1,6}, one_third);
     // Выведет 1/2
-    cout << sum.Numerator() << "/" << sum.Denominator();
+    std::cout << sum.Numerator() << "/" << sum.Denominator();
+    std::cout << std::endl;
 }
