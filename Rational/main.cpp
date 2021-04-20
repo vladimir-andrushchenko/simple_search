@@ -99,6 +99,14 @@ Rational operator-(Rational left, Rational right) {
     return left + (-right);
 }
 
+Rational operator*(Rational left, Rational right) {
+    return left *= right;
+}
+
+Rational operator/(Rational left, Rational right) {
+    return left /= right;
+}
+
 // tests
 void TestPlusEqualsOperator() {
     {
@@ -248,6 +256,46 @@ void TestMinusOperatorRational() {
     }
 }
 
+void TestMultiplyOperatorRational() {
+    {
+        Rational rational(1, 2);
+        
+        std::stringstream ss;
+        ss << (rational * rational);
+        
+        ASSERT_EQUAL(ss.str(), "1/4");
+    }
+    
+    {
+        Rational rational(1, 2);
+        
+        std::stringstream ss;
+        ss << (rational * Rational{0});
+        
+        ASSERT_EQUAL(ss.str(), "0/1");
+    }
+}
+
+void TestDivideOperatorRational() {
+    {
+        Rational rational(1, 2);
+        
+        std::stringstream ss;
+        ss << (rational / rational);
+        
+        ASSERT_EQUAL(ss.str(), "1/1");
+    }
+    
+    {
+        Rational rational(1, 2);
+        
+        std::stringstream ss;
+        ss << (rational / Rational{1});
+        
+        ASSERT_EQUAL(ss.str(), "1/2");
+    }
+}
+
 void TestRational() {
     RUN_TEST(TestPlusEqualsOperator);
     RUN_TEST(TestMinusEqualsOperator);
@@ -255,6 +303,8 @@ void TestRational() {
     RUN_TEST(TestDivideEqualsOperator);
     RUN_TEST(TestPlusOperatorRational);
     RUN_TEST(TestMinusOperatorRational);
+    RUN_TEST(TestMultiplyOperatorRational);
+    RUN_TEST(TestDivideOperatorRational);
 }
 // tests ^^^
 
