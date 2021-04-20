@@ -23,8 +23,6 @@ public:
     }
     
 public:
-    Rational operator-(Rational rational);
-    
     Rational& operator+=(Rational right) {
         numerator_ = numerator_ * right.Denominator() + right.Numerator() * denominator_;
         denominator_ *= right.Denominator();
@@ -34,6 +32,13 @@ public:
     
     Rational& operator-=(Rational right) {
         return *this += Rational{-right.Numerator(), right.Denominator()};
+    }
+    
+    Rational& operator*=(Rational right) {
+        numerator_ *= right.Numerator();
+        denominator_ *= right.Denominator();
+        Normalize();
+        return *this;
     }
     
 public:
@@ -158,9 +163,32 @@ void TestMinusEqualsOperator() {
     }
 }
 
+void TestMultiplyEqualsOperator() {
+    {
+        Rational rational(1, 2);
+        rational *= Rational{1, 2};
+        
+        std::stringstream ss;
+        ss << rational;
+        
+        ASSERT_EQUAL(ss.str(), "1/4");
+    }
+    
+    {
+        Rational rational(1, 2);
+        rational *= Rational{0};
+        
+        std::stringstream ss;
+        ss << rational;
+        
+        ASSERT_EQUAL(ss.str(), "0/1");
+    }
+}
+
 void TestRational() {
     RUN_TEST(TestPlusEqualsOperator);
     RUN_TEST(TestMinusEqualsOperator);
+    RUN_TEST(TestMultiplyEqualsOperator);
 }
 
 int main() {
