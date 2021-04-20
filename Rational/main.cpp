@@ -65,6 +65,7 @@ private:
         denominator_ /= divisor;
     }
 
+private:
     int numerator_ = 0;
     int denominator_ = 1;
 };
@@ -103,6 +104,7 @@ Rational operator-(Rational left, Rational right) {
     return left + (-right);
 }
 
+// tests
 void TestPlusEqualsOperator() {
     {
         Rational rational(1, 2);
@@ -217,6 +219,7 @@ void TestRational() {
     RUN_TEST(TestMultiplyEqualsOperator);
     RUN_TEST(TestDivideEqualsOperator);
 }
+// tests ^^^
 
 int main() {
     TestRational();
