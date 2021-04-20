@@ -2,6 +2,8 @@
 #include <iostream>
 #include <numeric>
 
+using namespace std::string_literals;
+
 class Rational {
 public:
     Rational() = default;
@@ -48,20 +50,22 @@ Rational Add(Rational r1, Rational r2) {
     return Rational{numerator, denominator};
 }
 
+std::ostream& operator<<(std::ostream& output, const Rational& rational) {
+    output << rational.Numerator() << "/"s << rational.Denominator();
+    return output;
+}
+
+// ввод
+std::istream& operator>>(std::istream& input, Rational& rational) {
+    int x, y;
+    char dash; // переменная для считывания запятой
+    input >> x >> dash >> y;
+    rational = Rational{x, y};
+    return input;
+}
+
 int main() {
-//    Rational zero;     // Дробь 0/1 = 0
-    const Rational seven(7); // Дробь 7/1 = 7
-    const Rational one_third(1, 3); // Дробь 1/3
-
-    std::vector<Rational> numbers;
-    numbers.push_back(Rational{7, 8});
-
-    // Следующие 2 строки эквивалентны - добавляют в numbers дробь 3/1
-    numbers.push_back(Rational{3});
-    numbers.push_back(3);
-
-    Rational sum = Add(Rational{1,6}, one_third);
-    // Выведет 1/2
-    std::cout << sum.Numerator() << "/" << sum.Denominator();
-    std::cout << std::endl;
+    Rational rational;
+    std::cin >> rational;
+    std::cout << rational << std::endl;
 }

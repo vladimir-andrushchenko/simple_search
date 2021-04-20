@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		7505A95E2618B1080077C493 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7505A95D2618B1080077C493 /* main.cpp */; };
 		750F42362618AE95001859B8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 750551C525EEBE80004001C5 /* main.cpp */; };
+		756F5ED4262F37EA00D762C6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7586A7E3262DC83900585561 /* main.cpp */; };
 		7586A7D3262DAB8700585561 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7586A7D2262DAB8700585561 /* main.cpp */; };
-		7586A7E4262DC83900585561 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7586A7E3262DC83900585561 /* main.cpp */; };
 		75F5CBFF261B5D7A00CB6D97 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75F5CBFE261B5D7A00CB6D97 /* main.cpp */; };
 		75F5CC0D261CEA8F00CB6D97 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75F5CC0C261CEA8F00CB6D97 /* main.cpp */; };
 /* End PBXBuildFile section */
@@ -161,6 +161,7 @@
 				7586A7D1262DAB8700585561 /* Rational */,
 				7586A7E2262DC83900585561 /* Sprint3 */,
 				750551C325EEBE80004001C5 /* Products */,
+				7586A7F7262DCA0100585561 /* Test.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -206,7 +207,6 @@
 			isa = PBXGroup;
 			children = (
 				7586A7E3262DC83900585561 /* main.cpp */,
-				7586A7F7262DCA0100585561 /* Test.h */,
 			);
 			path = Sprint3;
 			sourceTree = "<group>";
@@ -433,7 +433,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7586A7E4262DC83900585561 /* main.cpp in Sources */,
+				756F5ED4262F37EA00D762C6 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
