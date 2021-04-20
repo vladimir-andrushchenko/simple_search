@@ -1,6 +1,9 @@
 #include <vector>
 #include <iostream>
 #include <numeric>
+#include <sstream>
+
+#include "Test.h"
 
 using namespace std::string_literals;
 
@@ -18,7 +21,23 @@ public:
         , denominator_(denominator) {
         Normalize();
     }
-
+    
+public:
+    Rational operator-(Rational rational);
+    
+    Rational& operator+=(Rational right) {
+        numerator_ = numerator_ * right.Denominator() + right.Numerator() * denominator_;
+        denominator_ *= right.Denominator();
+        Normalize();
+        return *this;
+    }
+    
+    Rational& operator-=(Rational right) {
+        *this += Rational{-right.Numerator(), right.Denominator()};
+        return *this;
+    }
+    
+public:
     int Numerator() const {
         return numerator_;
     }
@@ -64,8 +83,62 @@ std::istream& operator>>(std::istream& input, Rational& rational) {
     return input;
 }
 
+Rational operator+(Rational rational) {
+    return rational;
+}
+
+Rational operator+(Rational left, Rational right) {
+    const int numerator = left.Numerator() * right.Denominator()
+                  + right.Numerator() * left.Denominator();
+    const int denominator = left.Denominator() * right.Denominator();
+
+    return {numerator, denominator};
+}
+
+Rational operator-(Rational rational) {
+    return {-rational.Numerator(), rational.Denominator()};
+}
+
+Rational operator-(Rational left, Rational right) {
+    return left + (-right);
+}
+
+void TestPlusEqualsOperator() {
+    {
+        Rational rational(1, 2);
+        rational += Rational{1, 2};
+        
+        std::stringstream ss;
+        ss << rational;
+        
+        ASSERT_EQUAL(ss.str(), "1/1");
+    }
+    
+    {
+        Rational rational;
+        rational += Rational{1, 2};
+        
+        std::stringstream ss;
+        ss << rational;
+        
+        ASSERT_EQUAL(ss.str(), "1/2");
+    }
+    
+    {
+        Rational rational(3, 2);
+        rational += Rational{2, 2};
+        
+        std::stringstream ss;
+        ss << rational;
+        
+        ASSERT_EQUAL(ss.str(), "5/2");
+    }
+}
+
+void TestRational() {
+    RUN_TEST(TestPlusEqualsOperator);
+}
+
 int main() {
-    Rational rational;
-    std::cin >> rational;
-    std::cout << rational << std::endl;
+    TestRational();
 }

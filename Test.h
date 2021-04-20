@@ -1,6 +1,10 @@
 #ifndef Test_h
 #define Test_h
 
+#include <vector>
+#include <map>
+#include <set>
+
 using namespace std::string_literals;
 
 // logging functionality for containers
@@ -31,26 +35,26 @@ void Print(std::ostream& out, const Container& container) {
 
 // log vector
 template<typename Element>
-std::ostream& operator<<(std::ostream& out, const std::vector<Element>& container) {
-    out << '[';
+std::ostream& operator<<(std::ostream& output, const std::vector<Element>& container) {
+    output << '[';
     
-    Print(out, container);
+    Print(output, container);
     
-    out << ']';
+    output << ']';
     
-    return out;
+    return output;
 }
 
 // log set
 template<typename Element>
-std::ostream& operator<<(std::ostream& out, const std::set<Element>& container) {
-    out << '{';
+std::ostream& operator<<(std::ostream& output, const std::set<Element>& container) {
+    output << '{';
     
-    Print(out, container);
+    Print(output, container);
     
-    out << '}';
+    output << '}';
     
-    return out;
+    return output;
 }
 
 // log map

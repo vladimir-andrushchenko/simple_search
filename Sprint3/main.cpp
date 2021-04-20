@@ -10,7 +10,7 @@
 #include <numeric>
 #include <sstream>
 
-//#include "Test.h"
+#include "Test.h"
 
 using namespace std::literals;
 
@@ -57,7 +57,6 @@ enum class DocumentStatus {
 };
 
 class SearchServer {
-public:
 public:
     SearchServer() = default;
     
@@ -303,13 +302,13 @@ void PrintDocument(const Document& document) {
          << " }"s << std::endl;
 }
 
-//void TestSplitIntoWordsEscapesSpaces() {
-//    ASSERT_EQUAL((std::vector<std::string> {"hello"s, "bro"s}), SplitIntoWords("   hello    bro    "s));
-//    ASSERT_EQUAL(std::vector<std::string>{}, SplitIntoWords("                 "));
-//}
+void TestSplitIntoWordsEscapesSpaces() {
+    ASSERT_EQUAL((std::vector<std::string> {"hello"s, "bro"s}), SplitIntoWords("   hello    bro    "s));
+    ASSERT_EQUAL(std::vector<std::string>{}, SplitIntoWords("                 "));
+}
 
 int main() {
-//    RUN_TEST(TestSplitIntoWordsEscapesSpaces);
+    RUN_TEST(TestSplitIntoWordsEscapesSpaces);
     
     SearchServer search_server("и в на"s);
 //    search_server.SetStopWords("и в на"s);
