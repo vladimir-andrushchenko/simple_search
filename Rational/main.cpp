@@ -41,6 +41,10 @@ public:
         return *this;
     }
     
+    Rational& operator/=(Rational right) {
+        return *this *= Rational{right.Denominator(), right.Numerator()};
+    }
+    
 public:
     int Numerator() const {
         return numerator_;
@@ -185,10 +189,33 @@ void TestMultiplyEqualsOperator() {
     }
 }
 
+void TestDivideEqualsOperator() {
+    {
+        Rational rational(1, 2);
+        rational /= Rational{1, 2};
+        
+        std::stringstream ss;
+        ss << rational;
+        
+        ASSERT_EQUAL(ss.str(), "1/1");
+    }
+    
+    {
+        Rational rational(1, 2);
+        rational *= Rational{0};
+        
+        std::stringstream ss;
+        ss << rational;
+        
+        ASSERT_EQUAL(ss.str(), "0/1");
+    }
+}
+
 void TestRational() {
     RUN_TEST(TestPlusEqualsOperator);
     RUN_TEST(TestMinusEqualsOperator);
     RUN_TEST(TestMultiplyEqualsOperator);
+    RUN_TEST(TestDivideEqualsOperator);
 }
 
 int main() {
