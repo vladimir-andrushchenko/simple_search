@@ -33,8 +33,7 @@ public:
     }
     
     Rational& operator-=(Rational right) {
-        *this += Rational{-right.Numerator(), right.Denominator()};
-        return *this;
+        return *this += Rational{-right.Numerator(), right.Denominator()};
     }
     
 public:
@@ -60,14 +59,6 @@ private:
     int numerator_ = 0;
     int denominator_ = 1;
 };
-
-Rational Add(Rational r1, Rational r2) {
-    int numerator = r1.Numerator() * r2.Denominator() + r2.Numerator() * r1.Denominator();
-    int denominator = r1.Denominator() * r2.Denominator();
-
-    // Создаём и возвращаем дробь с заданным числителем и знаменателем
-    return Rational{numerator, denominator};
-}
 
 std::ostream& operator<<(std::ostream& output, const Rational& rational) {
     output << rational.Numerator() << "/"s << rational.Denominator();
@@ -135,8 +126,41 @@ void TestPlusEqualsOperator() {
     }
 }
 
+void TestMinusEqualsOperator() {
+    {
+        Rational rational(1, 1);
+        rational -= Rational{1, 2};
+        
+        std::stringstream ss;
+        ss << rational;
+        
+        ASSERT_EQUAL(ss.str(), "1/2");
+    }
+    
+    {
+        Rational rational(1, 2);
+        rational -= Rational{1, 2};
+        
+        std::stringstream ss;
+        ss << rational;
+        
+        ASSERT_EQUAL(ss.str(), "0/1");
+    }
+    
+    {
+        Rational rational(6, 17);
+        rational -= Rational{2, 17};
+        
+        std::stringstream ss;
+        ss << rational;
+        
+        ASSERT_EQUAL(ss.str(), "4/17");
+    }
+}
+
 void TestRational() {
     RUN_TEST(TestPlusEqualsOperator);
+    RUN_TEST(TestMinusEqualsOperator);
 }
 
 int main() {
