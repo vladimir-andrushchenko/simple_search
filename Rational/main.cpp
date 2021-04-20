@@ -75,7 +75,6 @@ std::ostream& operator<<(std::ostream& output, const Rational& rational) {
     return output;
 }
 
-// ввод
 std::istream& operator>>(std::istream& input, Rational& rational) {
     int x, y;
     char dash; // переменная для считывания запятой
@@ -89,11 +88,7 @@ Rational operator+(Rational rational) {
 }
 
 Rational operator+(Rational left, Rational right) {
-    const int numerator = left.Numerator() * right.Denominator()
-                  + right.Numerator() * left.Denominator();
-    const int denominator = left.Denominator() * right.Denominator();
-
-    return {numerator, denominator};
+    return left += right;
 }
 
 Rational operator-(Rational rational) {
@@ -213,11 +208,53 @@ void TestDivideEqualsOperator() {
     }
 }
 
+void TestPlusOperatorRational() {
+    {
+        Rational rational(1, 2);
+        
+        std::stringstream ss;
+        ss << (rational + rational);
+        
+        ASSERT_EQUAL(ss.str(), "1/1");
+    }
+    
+    {
+        Rational rational(1, 2);
+        
+        std::stringstream ss;
+        ss << (rational + rational + rational);
+        
+        ASSERT_EQUAL(ss.str(), "3/2");
+    }
+}
+
+void TestMinusOperatorRational() {
+    {
+        Rational rational(1, 2);
+        
+        std::stringstream ss;
+        ss << (rational - rational);
+        
+        ASSERT_EQUAL(ss.str(), "0/1");
+    }
+    
+    {
+        Rational rational(1, 2);
+        
+        std::stringstream ss;
+        ss << (rational - rational - rational);
+        
+        ASSERT_EQUAL(ss.str(), "-1/2");
+    }
+}
+
 void TestRational() {
     RUN_TEST(TestPlusEqualsOperator);
     RUN_TEST(TestMinusEqualsOperator);
     RUN_TEST(TestMultiplyEqualsOperator);
     RUN_TEST(TestDivideEqualsOperator);
+    RUN_TEST(TestPlusOperatorRational);
+    RUN_TEST(TestMinusOperatorRational);
 }
 // tests ^^^
 
