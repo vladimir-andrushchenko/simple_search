@@ -107,6 +107,31 @@ Rational operator/(Rational left, Rational right) {
     return left /= right;
 }
 
+bool operator==(Rational left, Rational right) {
+    return left.Numerator() == right.Numerator() &&
+           left.Denominator() == right.Denominator();
+}
+
+bool operator!=(Rational left, Rational right) {
+    return !(left == right);
+}
+
+bool operator<(Rational left, Rational right) {
+    return (left.Numerator() * right.Denominator()) < (right.Numerator() * left.Denominator());
+}
+
+bool operator>(Rational left, Rational right) {
+    return right < left;
+}
+
+bool operator<=(Rational left, Rational right) {
+    return (left < right) || (left == right);
+}
+
+bool operator>=(Rational left, Rational right) {
+    return right <= left;
+}
+
 // tests
 void TestPlusEqualsOperator() {
     {
