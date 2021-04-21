@@ -286,6 +286,13 @@ private:
         return matched_documents;
     } // FindAllDocuments
     
+    static bool IsValidWord(const std::string& word) {
+            // A valid word must not contain special characters
+            return none_of(word.begin(), word.end(), [](char c) {
+                return c >= '\0' && c < ' ';
+            });
+        } // IsValidWord
+    
 private:
     std::set<std::string> stop_words_;
     
@@ -655,6 +662,7 @@ void TestSearchServer() {
     RUN_TEST(TestStatusFilteringOfSearchResults);
     RUN_TEST(TestRelevanceOfTheFoundDocumentsIsCorrect);
     RUN_TEST(TestSplitIntoWordsEscapesSpaces);
+//    RUN_TEST(TestDoubleMinusIsHandled);
 }
 
 int main() {
