@@ -817,24 +817,30 @@ void TestSearchServer() {
 }
 
 int main() {
-    TestSearchServer();
-    
-    //    SearchServer search_server("и в на"s);
-    ////    search_server.SetStopWords("и в на"s);
-    //    search_server.AddDocument(0, "белый кот и модный ошейник"s,        DocumentStatus::ACTUAL, {8, -3});
-    //    search_server.AddDocument(1, "пушистый кот пушистый хвост"s,       DocumentStatus::ACTUAL, {7, 2, 7});
-    //    search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL, {5, -12, 2, 1});
-    //    search_server.AddDocument(3, "ухоженный скворец евгений"s,         DocumentStatus::BANNED, {9});
-    //    std::cout << "ACTUAL by default:"s << std::endl;
-    //    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s)) {
-    //        PrintDocument(document);
-    //    }
-    //    std::cout << "BANNED:"s << std::endl;
-    //    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, DocumentStatus::BANNED)) {
-    //        PrintDocument(document);
-    //    }
-    //    std::cout << "Even ids:"s << std::endl;
-    //    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, [](int document_id, DocumentStatus , int ) { return document_id % 2 == 0; })) {
-    //        PrintDocument(document);
-    //    }
+    SearchServer search_server("и в на"s);
+
+    // Явно игнорируем результат метода AddDocument, чтобы избежать предупреждения
+    // о неиспользуемом результате его вызова
+    (void) search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
+
+    if (!search_server.AddDocument(1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2})) {
+        std::cout << "Документ не был добавлен, так как его id совпадает с уже имеющимся"s << std::endl;
+    }
+
+    if (!search_server.AddDocument(-1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2})) {
+        std::cout << "Документ не был добавлен, так как его id отрицательный"s << std::endl;
+    }
+
+    if (!search_server.AddDocument(3, "большой пёс скво\x12рец"s, DocumentStatus::ACTUAL, {1, 3, 2})) {
+        std::cout << "Документ не был добавлен, так как содержит спецсимволы"s << std::endl;
+    }
+
+    std::vector<Document> documents;
+    if (search_server.FindTopDocuments("--пушистый"s, documents)) {
+        for (const Document& document : documents) {
+            PrintDocument(document);
+        }
+    } else {
+        std::cout << "Ошибка в поисковом запросе"s << std::endl;
+    }
 }
