@@ -113,7 +113,10 @@ public:
     
     template<typename Predicate>
     [[nodiscard]] bool FindTopDocuments(const std::string& raw_query, Predicate predicate, std::vector<Document>& result) const {
-        if (raw_query.find("--") != std::string::npos) {
+        if ((raw_query.empty()) ||
+            (raw_query.back()  == '-') ||
+            (raw_query.find("--"s) != std::string::npos) ||
+            (raw_query.find("- "s) != std::string::npos)) {
             return false;
         }
         
@@ -749,6 +752,16 @@ void TestDoubleMinusIsHandled() {
     ASSERT(search_server.FindTopDocuments("иван-чай"s, documents) == true);
 }
 
+void TestMinusWithoutWordIsHandled() {
+    SearchServer search_server;
+    
+    (void) search_server.AddDocument(1, "пушистый кот пушистый хвост иван-чай"s, DocumentStatus::ACTUAL, {7, 2, 7});
+    
+    std::vector<Document> documents;
+    ASSERT(search_server.FindTopDocuments("пушистый -"s, documents) == false);
+    ASSERT(search_server.FindTopDocuments("пушистый - кот"s, documents) == false);
+}
+
 void TestSearchServer() {
     RUN_TEST(TestExcludeStopWordsFromAddedDocumentContent);
     RUN_TEST(TestAddedDocumentsCanBeFoundUsingQuery);
@@ -765,6 +778,7 @@ void TestSearchServer() {
     RUN_TEST(TestAddDocumentWithNegativeId);
     RUN_TEST(TestAddDocumentWithSpecialSymbolIsHandled);
     RUN_TEST(TestDoubleMinusIsHandled);
+    RUN_TEST(TestMinusWithoutWordIsHandled);
 }
 
 int main() {
