@@ -79,11 +79,13 @@ public:
         }
     } // SetStopWords
     
-//    [[nodiscard]] bool AddDocument(int document_id, const string& document, DocumentStatus status,
-//                                       const vector<int>& ratings)
-    
-    void AddDocument(int document_id, const std::string& document,
+    [[nodiscard]] bool AddDocument(int document_id, const std::string& document,
                      DocumentStatus status, const std::vector<int>& ratings) {
+        if ((std::count(document_ids_.begin(), document_ids_.end(), document_id) > 0) ||
+            (document_id < 0)) {
+            return false;
+        }
+        
         const std::vector<std::string> words = SplitIntoWordsNoStop(document);
         
         const double inverse_word_count = 1.0 / static_cast<double>(words.size());
@@ -95,6 +97,8 @@ public:
         document_ids_.push_back(document_id);
         
         document_id_to_document_data_.emplace(document_id, DocumentData{ComputeAverageRating(ratings), status});
+        
+        return true;
     } // AddDocument
     
     int GetDocumentCount() const {
@@ -671,27 +675,31 @@ void TestGetDocumentId() {
     ASSERT_EQUAL(search_server.GetDocumentId(1), 2);
 }
 
-//void TestAddDocumentWithRepeatingId() {
-//    SearchServer search_server;
-//
-//    (void) search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
-//
-//    ASSERT_HINT(search_server.AddDocument(1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2}) == false,
-//                "adding document with already existing id return false");
-//}
+void TestAddDocumentWithRepeatingId() {
+    SearchServer search_server;
 
-//void TestAddDocumentWithNegativeId() {
-//    SearchServer search_server;
-//
-//    ASSERT_HINT(search_server.AddDocument(-1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2}) == false,
-//                "adding document with negative id should return false");
-//}
+    (void) search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
 
-//void TestAddDocumentWithSpecialSymbolIsHandled() {
-//    SearchServer search_server;
-//    ASSERT_HINT(search_server.AddDocument(3, "большой пёс скво\x12рец"s, DocumentStatus::ACTUAL, {1, 3, 2}) == false,
-//                "adding document with special simbol should return false");
-//}
+    ASSERT_HINT(search_server.AddDocument(1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2}) == false,
+                "adding document with already existing id return false");
+    
+    const auto& [words, doc] = search_server.MatchDocument("кот", 1);
+    
+    ASSERT(words.size() == 1);
+}
+
+void TestAddDocumentWithNegativeId() {
+    SearchServer search_server;
+
+    ASSERT_HINT(search_server.AddDocument(-1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2}) == false,
+                "adding document with negative id should return false");
+}
+
+void TestAddDocumentWithSpecialSymbolIsHandled() {
+    SearchServer search_server;
+    ASSERT_HINT(search_server.AddDocument(3, "большой пёс скво\x12рец"s, DocumentStatus::ACTUAL, {1, 3, 2}) == false,
+                "adding document with special simbol should return false");
+}
 
 //Наличие спецсимволов — то есть символов с кодами в диапазоне от 0 до 31 включительно — в тексте документов и поискового запроса.
 //Попытка добавить документ с отрицательным id.
@@ -709,31 +717,31 @@ void TestSearchServer() {
     RUN_TEST(TestRelevanceOfTheFoundDocumentsIsCorrect);
     RUN_TEST(TestSplitIntoWordsEscapesSpaces);
     RUN_TEST(TestGetDocumentId);
-//    RUN_TEST(TestAddDocumentWithRepeatingId);
-//    RUN_TEST(TestAddDocumentWithNegativeId);
-//    RUN_TEST(TestAddDocumentWithSpecialSymbolIsHandled);
+    RUN_TEST(TestAddDocumentWithRepeatingId);
+    RUN_TEST(TestAddDocumentWithNegativeId);
+    RUN_TEST(TestAddDocumentWithSpecialSymbolIsHandled);
 //    RUN_TEST(TestDoubleMinusIsHandled);
 }
 
 int main() {
     TestSearchServer();
     
-    SearchServer search_server("и в на"s);
-//    search_server.SetStopWords("и в на"s);
-    search_server.AddDocument(0, "белый кот и модный ошейник"s,        DocumentStatus::ACTUAL, {8, -3});
-    search_server.AddDocument(1, "пушистый кот пушистый хвост"s,       DocumentStatus::ACTUAL, {7, 2, 7});
-    search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL, {5, -12, 2, 1});
-    search_server.AddDocument(3, "ухоженный скворец евгений"s,         DocumentStatus::BANNED, {9});
-    std::cout << "ACTUAL by default:"s << std::endl;
-    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s)) {
-        PrintDocument(document);
-    }
-    std::cout << "BANNED:"s << std::endl;
-    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, DocumentStatus::BANNED)) {
-        PrintDocument(document);
-    }
-    std::cout << "Even ids:"s << std::endl;
-    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, [](int document_id, DocumentStatus , int ) { return document_id % 2 == 0; })) {
-        PrintDocument(document);
-    }
+//    SearchServer search_server("и в на"s);
+////    search_server.SetStopWords("и в на"s);
+//    search_server.AddDocument(0, "белый кот и модный ошейник"s,        DocumentStatus::ACTUAL, {8, -3});
+//    search_server.AddDocument(1, "пушистый кот пушистый хвост"s,       DocumentStatus::ACTUAL, {7, 2, 7});
+//    search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL, {5, -12, 2, 1});
+//    search_server.AddDocument(3, "ухоженный скворец евгений"s,         DocumentStatus::BANNED, {9});
+//    std::cout << "ACTUAL by default:"s << std::endl;
+//    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s)) {
+//        PrintDocument(document);
+//    }
+//    std::cout << "BANNED:"s << std::endl;
+//    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, DocumentStatus::BANNED)) {
+//        PrintDocument(document);
+//    }
+//    std::cout << "Even ids:"s << std::endl;
+//    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, [](int document_id, DocumentStatus , int ) { return document_id % 2 == 0; })) {
+//        PrintDocument(document);
+//    }
 }
