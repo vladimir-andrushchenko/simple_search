@@ -113,6 +113,10 @@ public:
     
     template<typename Predicate>
     [[nodiscard]] bool FindTopDocuments(const std::string& raw_query, Predicate predicate, std::vector<Document>& result) const {
+        if (raw_query.find("--") != std::string::npos) {
+            return false;
+        }
+        
         const Query query = ParseQuery(raw_query);
         
         std::vector<Document> matched_documents = FindAllDocuments(query);
@@ -738,10 +742,11 @@ void TestAddDocumentWithSpecialSymbolIsHandled() {
 void TestDoubleMinusIsHandled() {
     SearchServer search_server;
     
-    (void) search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
+    (void) search_server.AddDocument(1, "пушистый кот пушистый хвост иван-чай"s, DocumentStatus::ACTUAL, {7, 2, 7});
     
     std::vector<Document> documents;
     ASSERT(search_server.FindTopDocuments("--пушистый"s, documents) == false);
+    ASSERT(search_server.FindTopDocuments("иван-чай"s, documents) == true);
 }
 
 void TestSearchServer() {
@@ -759,7 +764,7 @@ void TestSearchServer() {
     RUN_TEST(TestAddDocumentWithRepeatingId);
     RUN_TEST(TestAddDocumentWithNegativeId);
     RUN_TEST(TestAddDocumentWithSpecialSymbolIsHandled);
-//    RUN_TEST(TestDoubleMinusIsHandled);
+    RUN_TEST(TestDoubleMinusIsHandled);
 }
 
 int main() {
