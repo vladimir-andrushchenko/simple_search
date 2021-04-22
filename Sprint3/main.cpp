@@ -113,10 +113,7 @@ public:
     
     template<typename Predicate>
     [[nodiscard]] bool FindTopDocuments(const std::string& raw_query, Predicate predicate, std::vector<Document>& result) const {
-        if ((raw_query.empty()) ||
-            (raw_query.back()  == '-') ||
-            (raw_query.find("--"s) != std::string::npos) ||
-            (raw_query.find("- "s) != std::string::npos)) {
+        if (IsValidQuery(raw_query) == false) {
             return false;
         }
         
@@ -172,6 +169,10 @@ public:
     
     [[nodiscard]] bool MatchDocument(const std::string& raw_query, int document_id,
                                      std::tuple<std::vector<std::string>, DocumentStatus>& result) const {
+        if (IsValidQuery(raw_query) == false) {
+            return false;
+        }
+        
         const Query query = ParseQuery(raw_query);
         
         std::vector<std::string> matched_words;
@@ -329,6 +330,17 @@ private:
             return c >= '\0' && c < ' ';
         });
     } // IsValidWord
+    
+    static bool IsValidQuery(const std::string& query) {
+        if ((query.empty()) ||
+            (query.back()  == '-') ||                   // ends with minus, meaning empty minus word
+            (query.find("--"s) != std::string::npos) || // double minus word
+            (query.find("- "s) != std::string::npos)) { // empty muinus word
+            return false;
+        }
+        
+        return true;
+    }
     
 private:
     std::set<std::string> stop_words_;
