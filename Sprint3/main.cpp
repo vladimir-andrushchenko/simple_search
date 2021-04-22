@@ -706,7 +706,14 @@ void TestAddDocumentWithSpecialSymbolIsHandled() {
                 "adding document with special simbol should return false");
 }
 
-
+void TestDoubleMinusIsHandled() {
+    SearchServer search_server;
+    
+    (void) search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
+    
+    std::vector<Document> documents;
+    ASSERT(search_server.FindTopDocuments("--пушистый"s, documents) == false);
+}
 
 void TestSearchServer() {
     RUN_TEST(TestExcludeStopWordsFromAddedDocumentContent);
@@ -723,7 +730,7 @@ void TestSearchServer() {
     RUN_TEST(TestAddDocumentWithRepeatingId);
     RUN_TEST(TestAddDocumentWithNegativeId);
     RUN_TEST(TestAddDocumentWithSpecialSymbolIsHandled);
-//    RUN_TEST(TestDoubleMinusIsHandled);
+    RUN_TEST(TestDoubleMinusIsHandled);
 }
 
 int main() {
