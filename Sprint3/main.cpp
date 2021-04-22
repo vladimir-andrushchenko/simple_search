@@ -145,8 +145,7 @@ public:
     
     std::vector<Document> FindTopDocuments(const std::string& raw_query,
                                            const DocumentStatus& desired_status = DocumentStatus::ACTUAL) const {
-        const auto predicate = [desired_status]([[maybe_unused]] int document_id, DocumentStatus document_status,
-                                                [[maybe_unused]] int rating) {
+        const auto predicate = [desired_status](int , DocumentStatus document_status, int ) {
             return document_status == desired_status;
         };
         
