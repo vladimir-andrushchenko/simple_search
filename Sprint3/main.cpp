@@ -59,6 +59,11 @@ struct Document {
 
 class SearchServer {
 public:
+    // Defines an invalid document id
+    // You can refer to this constant as SearchServer::INVALID_DOCUMENT_ID
+    inline static constexpr int INVALID_DOCUMENT_ID = -1;
+    
+public:
     SearchServer() = default;
     
     template <typename StringCollection>
@@ -202,6 +207,11 @@ public:
     } // MatchDocument
     
     int GetDocumentId(int index) const {
+        if ((index < 0) ||
+            (static_cast<size_t>(index) >= document_ids_.size())) {
+            return INVALID_DOCUMENT_ID;
+        }
+        
         return document_ids_.at(index);
     }
     
@@ -402,7 +412,7 @@ void TestAddedDocumentsCanBeFoundUsingQuery() {
         std::vector<Document> found_docs;
         (void) server.FindTopDocuments("cat in the city", found_docs);
         
-        ASSERT_EQUAL(found_docs.size(), static_cast<size_t>(1));
+        ASSERT_EQUAL(found_docs.size(), 1u);
         ASSERT_EQUAL(found_docs[0].id, doc_id);
     }
     
@@ -534,7 +544,7 @@ void TestDocumentsFoundBySearchServerAreSortedByRelevanceInDescendingOrder() {
         std::vector<Document> found_docs;
         (void) server.FindTopDocuments("dog in the city", found_docs);
         
-        ASSERT_EQUAL(found_docs.size(), static_cast<size_t>(5));
+        ASSERT_EQUAL(found_docs.size(), 5u);
         
         ASSERT(std::is_sorted(found_docs.begin(), found_docs.end(), [](const Document& left, const Document& right) {
             if (std::abs(left.relevance - right.relevance) < kAccuracy) {
@@ -582,7 +592,7 @@ void TestRatingOfFoundDocumentIsAverageOfRatings() {
         std::vector<Document> found_docs;
         (void) server.FindTopDocuments("cat loves NY city", found_docs);
         
-        ASSERT_EQUAL(found_docs.size(), static_cast<size_t>(1));
+        ASSERT_EQUAL(found_docs.size(), 1u);
         ASSERT_EQUAL(found_docs[0].rating, 2);
     }
     
@@ -597,7 +607,7 @@ void TestRatingOfFoundDocumentIsAverageOfRatings() {
         std::vector<Document> found_docs;
         (void) server.FindTopDocuments("cat loves NY city", found_docs);
         
-        ASSERT_EQUAL(found_docs.size(), static_cast<size_t>(1));
+        ASSERT_EQUAL(found_docs.size(), 1u);
         ASSERT_EQUAL(found_docs[0].rating, -2);
     }
 }
@@ -627,7 +637,7 @@ void TestPredicateFilteringOfSearchResults() {
             return status == DocumentStatus::ACTUAL;
         }, filtered_docs);
         
-        ASSERT_EQUAL(filtered_docs.size(), static_cast<size_t>(1));
+        ASSERT_EQUAL(filtered_docs.size(), 1u);
         ASSERT_EQUAL(filtered_docs[0].id, 1);
     }
     
@@ -638,7 +648,7 @@ void TestPredicateFilteringOfSearchResults() {
             return rating == 2;
         }, filtered_docs);
         
-        ASSERT_EQUAL(filtered_docs.size(), static_cast<size_t>(3)); // only a doc with higher rating is found
+        ASSERT_EQUAL(filtered_docs.size(), 3u); // only a doc with higher rating is found
         ASSERT_EQUAL(filtered_docs[0].rating, 2);
     }
     
@@ -651,7 +661,7 @@ void TestPredicateFilteringOfSearchResults() {
             return document_id == document_id_to_search_for;
         }, filtered_docs);
         
-        ASSERT_EQUAL(filtered_docs.size(), static_cast<size_t>(1));
+        ASSERT_EQUAL(filtered_docs.size(), 1u);
         ASSERT_EQUAL(filtered_docs[0].id, document_id_to_search_for);
     }
 }
@@ -707,7 +717,7 @@ void TestRelevanceOfTheFoundDocumentsIsCorrect() {
         double expected_relevance_doc_0 = std::log(static_cast<double>(server.GetDocumentCount()) / 2.0) * (2.0 / 4.0);
         double expected_relevance_doc_2 = std::log(static_cast<double>(server.GetDocumentCount()) / 2.0) * (1.0 / 3.0);
         
-        ASSERT_EQUAL(found_docs.size(), static_cast<size_t>(2));
+        ASSERT_EQUAL(found_docs.size(), 2u);
         
         ASSERT(std::abs(found_docs[0].relevance - expected_relevance_doc_0) < kAccuracy);
         ASSERT(std::abs(found_docs[1].relevance - expected_relevance_doc_2) < kAccuracy);
@@ -718,7 +728,7 @@ void TestRelevanceOfTheFoundDocumentsIsCorrect() {
         std::vector<Document> found_docs;
         (void) server.FindTopDocuments("city"s, found_docs);
         
-        ASSERT_EQUAL(found_docs.size(), static_cast<size_t>(3));
+        ASSERT_EQUAL(found_docs.size(), 3u);
         
         ASSERT(std::abs(found_docs[0].relevance) < kAccuracy);
         ASSERT(std::abs(found_docs[1].relevance) < kAccuracy);
@@ -733,6 +743,9 @@ void TestGetDocumentId() {
     
     ASSERT_EQUAL(search_server.GetDocumentId(0), 1);
     ASSERT_EQUAL(search_server.GetDocumentId(1), 2);
+    
+    ASSERT_EQUAL(search_server.GetDocumentId(-1), SearchServer::INVALID_DOCUMENT_ID);
+    ASSERT_EQUAL(search_server.GetDocumentId(2), SearchServer::INVALID_DOCUMENT_ID);
 }
 
 void TestAddDocumentWithRepeatingId() {
