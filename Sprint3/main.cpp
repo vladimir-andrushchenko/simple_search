@@ -79,6 +79,9 @@ public:
         }
     } // SetStopWords
     
+//    [[nodiscard]] bool AddDocument(int document_id, const string& document, DocumentStatus status,
+//                                       const vector<int>& ratings)
+    
     void AddDocument(int document_id, const std::string& document,
                      DocumentStatus status, const std::vector<int>& ratings) {
         const std::vector<std::string> words = SplitIntoWordsNoStop(document);
@@ -88,6 +91,8 @@ public:
         for (const std::string& word : words) {
             word_to_document_id_to_term_frequency_[word][document_id] += inverse_word_count;
         }
+        
+        document_ids_.push_back(document_id);
         
         document_id_to_document_data_.emplace(document_id, DocumentData{ComputeAverageRating(ratings), status});
     } // AddDocument
@@ -166,6 +171,10 @@ public:
         
         return {matched_words, document_id_to_document_data_.at(document_id).status};
     } // MatchDocument
+    
+    int GetDocumentId(int index) const {
+        return document_ids_.at(index);
+    }
     
 private:
     struct DocumentData {
@@ -299,6 +308,8 @@ private:
     std::map<std::string, std::map<int, double>> word_to_document_id_to_term_frequency_;
     
     std::map<int, DocumentData> document_id_to_document_data_;
+    
+    std::vector<int> document_ids_;
 };
 
 
@@ -651,6 +662,41 @@ void TestRelevanceOfTheFoundDocumentsIsCorrect() {
     }
 }
 
+void TestGetDocumentId() {
+    SearchServer search_server;
+    search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
+    search_server.AddDocument(2, "смешной пёс"s, DocumentStatus::ACTUAL, {7, 2, 7});
+    
+    ASSERT_EQUAL(search_server.GetDocumentId(0), 1);
+    ASSERT_EQUAL(search_server.GetDocumentId(1), 2);
+}
+
+//void TestAddDocumentWithRepeatingId() {
+//    SearchServer search_server;
+//
+//    (void) search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
+//
+//    ASSERT_HINT(search_server.AddDocument(1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2}) == false,
+//                "adding document with already existing id return false");
+//}
+
+//void TestAddDocumentWithNegativeId() {
+//    SearchServer search_server;
+//
+//    ASSERT_HINT(search_server.AddDocument(-1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2}) == false,
+//                "adding document with negative id should return false");
+//}
+
+//void TestAddDocumentWithSpecialSymbolIsHandled() {
+//    SearchServer search_server;
+//    ASSERT_HINT(search_server.AddDocument(3, "большой пёс скво\x12рец"s, DocumentStatus::ACTUAL, {1, 3, 2}) == false,
+//                "adding document with special simbol should return false");
+//}
+
+//Наличие спецсимволов — то есть символов с кодами в диапазоне от 0 до 31 включительно — в тексте документов и поискового запроса.
+//Попытка добавить документ с отрицательным id.
+//Попытка добавить документ с id, совпадающим с id документа, который добавился ранее.
+
 void TestSearchServer() {
     RUN_TEST(TestExcludeStopWordsFromAddedDocumentContent);
     RUN_TEST(TestAddedDocumentsCanBeFoundUsingQuery);
@@ -662,6 +708,10 @@ void TestSearchServer() {
     RUN_TEST(TestStatusFilteringOfSearchResults);
     RUN_TEST(TestRelevanceOfTheFoundDocumentsIsCorrect);
     RUN_TEST(TestSplitIntoWordsEscapesSpaces);
+    RUN_TEST(TestGetDocumentId);
+//    RUN_TEST(TestAddDocumentWithRepeatingId);
+//    RUN_TEST(TestAddDocumentWithNegativeId);
+//    RUN_TEST(TestAddDocumentWithSpecialSymbolIsHandled);
 //    RUN_TEST(TestDoubleMinusIsHandled);
 }
 
