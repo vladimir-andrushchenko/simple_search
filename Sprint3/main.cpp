@@ -36,7 +36,7 @@ std::vector<std::string> SplitIntoWords(const std::string& text) {
     while (text_stream >> word) {
         words.push_back(word);
     }
-
+    
     return words;
 }
 
@@ -80,7 +80,7 @@ public:
     } // SetStopWords
     
     [[nodiscard]] bool AddDocument(int document_id, const std::string& document,
-                     DocumentStatus status, const std::vector<int>& ratings) {
+                                   DocumentStatus status, const std::vector<int>& ratings) {
         if ((std::count(document_ids_.begin(), document_ids_.end(), document_id) > 0) ||
             (document_id < 0)) {
             return false;
@@ -152,8 +152,8 @@ public:
     } // FindTopDocuments
     
     [[nodiscard]] bool FindTopDocuments(const std::string& raw_query,
-                                           const DocumentStatus& desired_status,
-                                           std::vector<Document>& result) const {
+                                        const DocumentStatus& desired_status,
+                                        std::vector<Document>& result) const {
         const auto predicate = [desired_status](int , DocumentStatus document_status, int ) {
             return document_status == desired_status;
         };
@@ -170,8 +170,8 @@ public:
         return FindTopDocuments(raw_query, predicate, result);
     }
     
-    std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query,
-                                                                       int document_id) const {
+    [[nodiscard]] bool MatchDocument(const std::string& raw_query, int document_id,
+                                     std::tuple<std::vector<std::string>, DocumentStatus>& result) const {
         const Query query = ParseQuery(raw_query);
         
         std::vector<std::string> matched_words;
@@ -196,7 +196,8 @@ public:
             }
         }
         
-        return {matched_words, document_id_to_document_data_.at(document_id).status};
+        result = {matched_words, document_id_to_document_data_.at(document_id).status};
+        return true;
     } // MatchDocument
     
     int GetDocumentId(int index) const {
@@ -323,11 +324,11 @@ private:
     } // FindAllDocuments
     
     static bool IsValidWord(const std::string& word) {
-            // A valid word must not contain special characters
-            return none_of(word.begin(), word.end(), [](char c) {
-                return c >= '\0' && c < ' ';
-            });
-        } // IsValidWord
+        // A valid word must not contain special characters
+        return none_of(word.begin(), word.end(), [](char c) {
+            return c >= '\0' && c < ' ';
+        });
+    } // IsValidWord
     
 private:
     std::set<std::string> stop_words_;
@@ -339,13 +340,13 @@ private:
     std::vector<int> document_ids_;
 };
 
-
+// tests
 void PrintDocument(const Document& document) {
     std::cout << "{ "s
-         << "document_id = "s << document.id << ", "s
-         << "relevance = "s << document.relevance << ", "s
-         << "rating = "s << document.rating
-         << " }"s << std::endl;
+    << "document_id = "s << document.id << ", "s
+    << "relevance = "s << document.relevance << ", "s
+    << "rating = "s << document.rating
+    << " }"s << std::endl;
 }
 
 void TestSplitIntoWordsEscapesSpaces() {
@@ -451,7 +452,10 @@ void TestMatchDocumentReturnsIntersectionOfWordsFromQueryAndWordsInDocument() {
         
         (void) server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
         
-        const auto [words, status] = server.MatchDocument("fat cat out of city", doc_id);
+        std::tuple<std::vector<std::string>, DocumentStatus> words_and_status;
+        (void) server.MatchDocument("fat cat out of city", doc_id, words_and_status);
+        
+        const auto& [words, status] = words_and_status;
         
         std::vector<std::string> desired_matched_words{"cat", "city"};
         
@@ -466,7 +470,10 @@ void TestMatchDocumentReturnsIntersectionOfWordsFromQueryAndWordsInDocument() {
         (void) server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
         (void) server.AddDocument(doc_id2, content2, DocumentStatus::BANNED, ratings);
         
-        const auto [words, status] = server.MatchDocument("fat cat out of city and a cute dog", doc_id2);
+        std::tuple<std::vector<std::string>, DocumentStatus> words_and_status;
+        (void) server.MatchDocument("fat cat out of city and a cute dog", doc_id2, words_and_status);
+        
+        const auto& [words, status] = words_and_status;
         
         std::vector<std::string> desired_matched_words{"dog"};
         
@@ -718,20 +725,23 @@ void TestGetDocumentId() {
 
 void TestAddDocumentWithRepeatingId() {
     SearchServer search_server;
-
+    
     (void) search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
-
+    
     ASSERT_HINT(search_server.AddDocument(1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2}) == false,
                 "adding document with already existing id return false");
     
-    const auto& [words, doc] = search_server.MatchDocument("кот", 1);
+    std::tuple<std::vector<std::string>, DocumentStatus> words_and_status;
+    (void) search_server.MatchDocument("кот", 1, words_and_status);
+    
+    const auto& [words, doc] = words_and_status;
     
     ASSERT(words.size() == 1);
 }
 
 void TestAddDocumentWithNegativeId() {
     SearchServer search_server;
-
+    
     ASSERT_HINT(search_server.AddDocument(-1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2}) == false,
                 "adding document with negative id should return false");
 }
@@ -784,22 +794,22 @@ void TestSearchServer() {
 int main() {
     TestSearchServer();
     
-//    SearchServer search_server("и в на"s);
-////    search_server.SetStopWords("и в на"s);
-//    search_server.AddDocument(0, "белый кот и модный ошейник"s,        DocumentStatus::ACTUAL, {8, -3});
-//    search_server.AddDocument(1, "пушистый кот пушистый хвост"s,       DocumentStatus::ACTUAL, {7, 2, 7});
-//    search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL, {5, -12, 2, 1});
-//    search_server.AddDocument(3, "ухоженный скворец евгений"s,         DocumentStatus::BANNED, {9});
-//    std::cout << "ACTUAL by default:"s << std::endl;
-//    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s)) {
-//        PrintDocument(document);
-//    }
-//    std::cout << "BANNED:"s << std::endl;
-//    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, DocumentStatus::BANNED)) {
-//        PrintDocument(document);
-//    }
-//    std::cout << "Even ids:"s << std::endl;
-//    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, [](int document_id, DocumentStatus , int ) { return document_id % 2 == 0; })) {
-//        PrintDocument(document);
-//    }
+    //    SearchServer search_server("и в на"s);
+    ////    search_server.SetStopWords("и в на"s);
+    //    search_server.AddDocument(0, "белый кот и модный ошейник"s,        DocumentStatus::ACTUAL, {8, -3});
+    //    search_server.AddDocument(1, "пушистый кот пушистый хвост"s,       DocumentStatus::ACTUAL, {7, 2, 7});
+    //    search_server.AddDocument(2, "ухоженный пёс выразительные глаза"s, DocumentStatus::ACTUAL, {5, -12, 2, 1});
+    //    search_server.AddDocument(3, "ухоженный скворец евгений"s,         DocumentStatus::BANNED, {9});
+    //    std::cout << "ACTUAL by default:"s << std::endl;
+    //    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s)) {
+    //        PrintDocument(document);
+    //    }
+    //    std::cout << "BANNED:"s << std::endl;
+    //    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, DocumentStatus::BANNED)) {
+    //        PrintDocument(document);
+    //    }
+    //    std::cout << "Even ids:"s << std::endl;
+    //    for (const Document& document : search_server.FindTopDocuments("пушистый ухоженный кот"s, [](int document_id, DocumentStatus , int ) { return document_id % 2 == 0; })) {
+    //        PrintDocument(document);
+    //    }
 }
