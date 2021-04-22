@@ -88,6 +88,12 @@ public:
         
         const std::vector<std::string> words = SplitIntoWordsNoStop(document);
         
+        for (const std::string& word : words) {
+            if (!IsValidWord(word)) {
+                return false;
+            }
+        }
+        
         const double inverse_word_count = 1.0 / static_cast<double>(words.size());
         
         for (const std::string& word : words) {
@@ -701,9 +707,7 @@ void TestAddDocumentWithSpecialSymbolIsHandled() {
                 "adding document with special simbol should return false");
 }
 
-//Наличие спецсимволов — то есть символов с кодами в диапазоне от 0 до 31 включительно — в тексте документов и поискового запроса.
-//Попытка добавить документ с отрицательным id.
-//Попытка добавить документ с id, совпадающим с id документа, который добавился ранее.
+
 
 void TestSearchServer() {
     RUN_TEST(TestExcludeStopWordsFromAddedDocumentContent);
