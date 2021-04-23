@@ -11,15 +11,18 @@ using namespace std::string_literals;
 class Rational {
 public:
     Rational() = default;
-
+    
     Rational(int numerator)
-        : numerator_(numerator)
-        , denominator_(1) {
+    : numerator_(numerator)
+    , denominator_(1) {
     }
-
+    
     Rational(int numerator, int denominator)
-        : numerator_(numerator)
-        , denominator_(denominator) {
+    : numerator_(numerator)
+    , denominator_(denominator) {
+        if (denominator_ == 0) {
+            throw std::domain_error("cannot initialize with zero in denominator"s);
+        }
         Normalize();
     }
     
@@ -44,7 +47,7 @@ public:
     
     Rational& operator/=(Rational right) {
         if (right.Numerator() == 0) {
-            throw std::invalid_argument("division by zero");
+            throw std::invalid_argument("division by zero"s);
         }
         
         return *this *= Rational{right.Denominator(), right.Numerator()};
@@ -359,4 +362,14 @@ int main() {
     } catch (const std::invalid_argument& e) {
         std::cout << "Ошибка: "s << e.what() << std::endl;
     }
+    
+    try {
+            // При попытке сконструировать дробь с нулевым знаменателем
+            // должно выброситься исключение domain_error
+            const Rational invalid_value{1, 0};
+            // Следующая строка не должна выполниться
+            std::cout << invalid_value << std::endl;
+        } catch (const std::domain_error& e) {
+            std::cout << "Ошибка: "s << e.what() << std::endl;
+        }
 }
