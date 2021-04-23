@@ -2,8 +2,9 @@
 #include <iostream>
 #include <numeric>
 #include <sstream>
+#include <stdexcept>
 
-#include "Test.h"
+//#include "Test.h"
 
 using namespace std::string_literals;
 
@@ -42,6 +43,10 @@ public:
     }
     
     Rational& operator/=(Rational right) {
+        if (right.Numerator() == 0) {
+            throw std::invalid_argument("division by zero");
+        }
+        
         return *this *= Rational{right.Denominator(), right.Numerator()};
     }
     
@@ -131,7 +136,7 @@ bool operator<=(Rational left, Rational right) {
 bool operator>=(Rational left, Rational right) {
     return right <= left;
 }
-
+/*
 // tests
 void TestPlusEqualsOperator() {
     {
@@ -332,7 +337,26 @@ void TestRational() {
     RUN_TEST(TestDivideOperatorRational);
 }
 // tests ^^^
+*/
+//int main() {
+//    TestRational();
+//}
 
 int main() {
-    TestRational();
+    try {
+        const Rational three_fifth{3, 5};
+        const Rational zero;
+        std::cout << three_fifth << " / " << zero << " = " << (three_fifth / zero) << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cout << "Ошибка: "s << e.what() << std::endl;
+    }
+
+    try {
+        Rational value{3, 5};
+        value /= Rational();
+        // Следующая строка не должна выполниться
+        std::cout << value << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cout << "Ошибка: "s << e.what() << std::endl;
+    }
 }
