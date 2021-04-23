@@ -117,9 +117,9 @@ public:
     } // GetDocumentCount
     
     template<typename Predicate>
-    [[nodiscard]] bool FindTopDocuments(const std::string& raw_query, Predicate predicate, std::vector<Document>& result) const {
+    std::optional<std::vector<Document>> FindTopDocuments(const std::string& raw_query, Predicate predicate) const {
         if (IsValidQuery(raw_query) == false) {
-            return false;
+            return std::nullopt;
         }
         
         const Query query = ParseQuery(raw_query);
@@ -149,33 +149,29 @@ public:
             filtered_documents.resize(static_cast<size_t>(kMaxResultDocumentCount));
         }
         
-        result = filtered_documents;
-        return true;
+        return filtered_documents;
     } // FindTopDocuments
     
-    [[nodiscard]] bool FindTopDocuments(const std::string& raw_query,
-                                        const DocumentStatus& desired_status,
-                                        std::vector<Document>& result) const {
+    std::optional<std::vector<Document>> FindTopDocuments(const std::string& raw_query,
+                                                          const DocumentStatus& desired_status) const {
         const auto predicate = [desired_status](int , DocumentStatus document_status, int ) {
             return document_status == desired_status;
         };
         
-        return FindTopDocuments(raw_query, predicate, result);
+        return FindTopDocuments(raw_query, predicate);
     } // FindTopDocuments with status as a second argument
     
-    [[nodiscard]] bool FindTopDocuments(const std::string& raw_query,
-                                        std::vector<Document>& result) const {
+    std::optional<std::vector<Document>> FindTopDocuments(const std::string& raw_query) const {
         const auto predicate = [](int , DocumentStatus document_status, int ) {
             return document_status == DocumentStatus::ACTUAL;
         };
         
-        return FindTopDocuments(raw_query, predicate, result);
+        return FindTopDocuments(raw_query, predicate);
     }
     
-    [[nodiscard]] bool MatchDocument(const std::string& raw_query, int document_id,
-                                     std::tuple<std::vector<std::string>, DocumentStatus>& result) const {
+    std::optional<std::tuple<std::vector<std::string>, DocumentStatus>> MatchDocument(const std::string& raw_query, int document_id) const {
         if (IsValidQuery(raw_query) == false) {
-            return false;
+            return std::nullopt;
         }
         
         const Query query = ParseQuery(raw_query);
@@ -202,8 +198,7 @@ public:
             }
         }
         
-        result = {matched_words, document_id_to_document_data_.at(document_id).status};
-        return true;
+        return std::tuple<std::vector<std::string>, DocumentStatus>{matched_words, document_id_to_document_data_.at(document_id).status};
     } // MatchDocument
     
     int GetDocumentId(int index) const {
@@ -370,7 +365,7 @@ void PrintDocument(const Document& document) {
     << "rating = "s << document.rating
     << " }"s << std::endl;
 }
-
+/*
 void TestSplitIntoWordsEscapesSpaces() {
     ASSERT_EQUAL((std::vector<std::string> {"hello"s, "bro"s}), SplitIntoWords("   hello    bro    "s));
     ASSERT_EQUAL(std::vector<std::string>{}, SplitIntoWords("                 "));
@@ -823,9 +818,9 @@ void TestSearchServer() {
     RUN_TEST(TestMinusWithoutWordInQueryIsHandled);
     RUN_TEST(TestFindTopDocumentsWithSpecialSymbolIsHandled);
 }
-
+*/
 int main() {
-    TestSearchServer();
+//    TestSearchServer();
     
     SearchServer search_server("и в на"s);
 
@@ -845,9 +840,8 @@ int main() {
         std::cout << "Документ не был добавлен, так как содержит спецсимволы"s << std::endl;
     }
 
-    std::vector<Document> documents;
-    if (search_server.FindTopDocuments("--пушистый"s, documents)) {
-        for (const Document& document : documents) {
+    if (const auto documents = search_server.FindTopDocuments("--пушистый"s)) {
+        for (const Document& document : *documents) {
             PrintDocument(document);
         }
     } else {
