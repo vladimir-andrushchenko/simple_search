@@ -529,7 +529,7 @@ void TestMatchDocument() {
     }
 }
 
-void TestDocumentsAreSortedByRelevance() {
+void TestFoundDocumentsAreSortedByRelevance() {
     constexpr double kAccuracy = 1e-6;
     
     const std::vector<int> ratings = {1, 2, 3};
@@ -715,7 +715,7 @@ void TestSearchServer() {
     RUN_TEST(TestAddedDocumentsCanBeFound);
     RUN_TEST(TestMinusWordsExcludeDocuments);
     RUN_TEST(TestMatchDocument);
-    RUN_TEST(TestDocumentsAreSortedByRelevance);
+    RUN_TEST(TestFoundDocumentsAreSortedByRelevance);
     RUN_TEST(TestRatingCalculation);
     RUN_TEST(TestFilteringByPredicate);
     RUN_TEST(TestFilteringByStatus);
