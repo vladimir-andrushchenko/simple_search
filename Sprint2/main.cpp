@@ -423,17 +423,23 @@ void TestExcludeStopWords() {
     
     {
         SearchServer server;
+        
         server.AddDocument(doc_id, content, DocumentStatus::kActual, ratings);
+        
         const auto found_docs = server.FindTopDocuments("in"s);
+        
         ASSERT_EQUAL(found_docs.size(), 1u);
-        const Document& doc0 = found_docs[0];
-        ASSERT_EQUAL(doc0.id, doc_id);
+        
+        ASSERT_EQUAL(found_docs[0].id, doc_id);
     }
     
     {
         SearchServer server;
+        
         server.SetStopWords("in the"s);
+        
         server.AddDocument(doc_id, content, DocumentStatus::kActual, ratings);
+        
         ASSERT_HINT(server.FindTopDocuments("in"s).empty(), "Stop words must be excluded from documents"s);
     }
 }
@@ -445,7 +451,9 @@ void TestAddedDocumentsCanBeFound() {
     
     {
         SearchServer server;
+        
         server.AddDocument(doc_id, content, DocumentStatus::kActual, ratings);
+        
         const auto& found_docs = server.FindTopDocuments("cat in the city");
         
         ASSERT_EQUAL(found_docs.size(), 1u);
@@ -454,7 +462,9 @@ void TestAddedDocumentsCanBeFound() {
     
     {
         SearchServer server;
+        
         server.AddDocument(doc_id, "", DocumentStatus::kActual, ratings);
+        
         const auto& found_docs = server.FindTopDocuments("cat");
         
         ASSERT(found_docs.empty());
