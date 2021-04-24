@@ -107,7 +107,7 @@ public:
     } // SetStopWords
     
     bool AddDocument(int document_id, const std::string& document,
-                                   DocumentStatus status, const std::vector<int>& ratings) {
+                     DocumentStatus status, const std::vector<int>& ratings) {
         if (document_id < 0) {
             throw std::invalid_argument("negative ids are not allowed");
         }
@@ -355,17 +355,6 @@ private:
         });
     } // IsValidWord
     
-    static bool IsValidQuery(const std::string& query) {
-        if ((query.empty()) ||
-            (query.back() == '-') ||                   // ends with minus, meaning empty minus word
-            (query.find("--"s) != std::string::npos) || // double minus word
-            (query.find("- "s) != std::string::npos)) { // empty muinus word
-            return false;
-        }
-        
-        return IsValidWord(query);
-    }
-    
 private:
     std::set<std::string> stop_words_;
     
@@ -377,28 +366,24 @@ private:
 };
 
 // tests
-
 void TestStopWordsExclusion() {
-    const int doc_id = 42;
-    const std::string content = "cat in the city"s;
     const std::vector<int> ratings = {1, 2, 3};
     
     {
         SearchServer server;
-        server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(42, "cat in the city"s, DocumentStatus::ACTUAL, ratings);
         
         std::vector<Document> found_docs = server.FindTopDocuments("in"s);
         
         ASSERT_EQUAL(found_docs.size(), 1u);
         
-        const Document& doc0 = found_docs[0];
-        ASSERT_EQUAL(doc0.id, doc_id);
+        ASSERT_EQUAL(found_docs[0].id, 42);
     }
     
     {
         SearchServer server("in the"s);
         
-        server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(42, "cat in the city"s, DocumentStatus::ACTUAL, ratings);
         
         std::vector<Document> found_docs = server.FindTopDocuments("in"s);
         
@@ -407,25 +392,23 @@ void TestStopWordsExclusion() {
 }
 
 void TestAddedDocumentsCanBeFound() {
-    const int doc_id = 42;
-    const std::string content = "cat in the city"s;
     const std::vector<int> ratings = {1, 2, 3};
     
     {
         SearchServer server;
         
-        server.AddDocument(doc_id, content, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(42, "cat in the city"s, DocumentStatus::ACTUAL, ratings);
         
         std::vector<Document> found_docs = server.FindTopDocuments("cat in the city");
         
         ASSERT_EQUAL(found_docs.size(), 1u);
-        ASSERT_EQUAL(found_docs[0].id, doc_id);
+        ASSERT_EQUAL(found_docs[0].id, 42);
     }
     
     {
         SearchServer server;
         
-        server.AddDocument(doc_id, "", DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(42, "", DocumentStatus::ACTUAL, ratings);
         
         std::vector<Document> found_docs = server.FindTopDocuments("cat");
         
@@ -446,7 +429,7 @@ void TestMinusWordsExcludeDocuments() {
         ASSERT(found_docs.empty());
     }
     
-    // minus words dont exclude documents where they dont appear
+    // minus words dont exclude documents where they dont appear in
     {
         SearchServer server;
         
@@ -605,14 +588,12 @@ void TestFilteringByPredicate() {
     
     // id predicate
     {
-        const int document_id_to_search_for = 1;
-        
         const auto& filtered_docs = server.FindTopDocuments("city", [](int document_id, DocumentStatus , int ) {
-            return document_id == document_id_to_search_for;
+            return document_id == 1;
         });
         
         ASSERT_EQUAL(filtered_docs.size(), 1u);
-        ASSERT_EQUAL(filtered_docs[0].id, document_id_to_search_for);
+        ASSERT_EQUAL(filtered_docs[0].id, 1);
     }
 }
 
@@ -846,18 +827,18 @@ int main() {
     std::cout << "\n";
     
     SearchServer search_server("и в на"s);
-
+    
     AddDocument(search_server, 1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
     AddDocument(search_server, 1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2});
     AddDocument(search_server, -1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2});
     AddDocument(search_server, 3, "большой пёс скво\x12рец евгений"s, DocumentStatus::ACTUAL, {1, 3, 2});
     AddDocument(search_server, 4, "большой пёс скворец евгений"s, DocumentStatus::ACTUAL, {1, 1, 1});
-
+    
     FindTopDocuments(search_server, "пушистый -пёс"s);
     FindTopDocuments(search_server, "пушистый --кот"s);
     FindTopDocuments(search_server, "пушистый -"s);
     FindTopDocuments(search_server, "скво\x12рец"s);
-
+    
     MatchDocuments(search_server, "пушистый пёс"s);
     MatchDocuments(search_server, "модный -кот"s);
     MatchDocuments(search_server, "модный --пёс"s);
