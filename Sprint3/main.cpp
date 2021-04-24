@@ -82,11 +82,11 @@ public:
     
     template <typename StringCollection>
     explicit SearchServer(const StringCollection& stop_words) {
-        if (!IsValidWord(stop_words)) {
-            throw std::invalid_argument("stop word contains unaccaptable symbol");
-        }
-        
         for (const auto stop_word : stop_words) {
+            if (!IsValidWord(stop_word)) {
+                throw std::invalid_argument("stop word contains unaccaptable symbol");
+            }
+            
             stop_words_.insert(stop_word);
         }
     }
