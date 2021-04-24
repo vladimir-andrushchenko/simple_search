@@ -49,13 +49,32 @@ struct Document {
     Document(int id, double relevance, int rating): id(id), relevance(relevance), rating(rating) {};
 };
 
-// defined in Test.h
-//enum class DocumentStatus {
-//    ACTUAL,
-//    IRRELEVANT,
-//    BANNED,
-//    REMOVED,
-//};
+enum class DocumentStatus {
+    ACTUAL,
+    IRRELEVANT,
+    BANNED,
+    REMOVED,
+};
+
+// log DocumentStatus is necessary for testing framework
+std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
+    switch (status) {
+        case DocumentStatus::ACTUAL:
+            out << "ACTUAL"s;
+            break;
+        case DocumentStatus::BANNED:
+            out << "BANNED"s;
+            break;
+        case DocumentStatus::IRRELEVANT:
+            out << "IRRELEVANT"s;
+            break;
+        case DocumentStatus::REMOVED:
+            out << "REMOVED"s;
+            break;
+    }
+    
+    return out;
+}
 
 class SearchServer {
 public:
@@ -122,10 +141,6 @@ public:
     
     template<typename Predicate>
     std::vector<Document> FindTopDocuments(const std::string& raw_query, Predicate predicate) const {
-        //        if (IsValidQuery(raw_query) == false) {
-        //            throw std::invalid_argument("bad query");
-        //        }
-        
         const Query query = ParseQuery(raw_query);
         
         std::vector<Document> matched_documents = FindAllDocuments(query);
@@ -164,14 +179,6 @@ public:
         
         return FindTopDocuments(raw_query, predicate);
     } // FindTopDocuments with status as a second argument
-    
-//    std::vector<Document> FindTopDocuments(const std::string& raw_query) const {
-//        const auto predicate = [](int , DocumentStatus document_status, int ) {
-//            return document_status == DocumentStatus::ACTUAL;
-//        };
-//
-//        return FindTopDocuments(raw_query, predicate);
-//    }
     
     std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const {
         const Query query = ParseQuery(raw_query);

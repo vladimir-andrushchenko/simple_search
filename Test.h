@@ -69,34 +69,6 @@ std::ostream& operator<<(std::ostream& out, const std::map<Key, Value>& containe
     return out;
 }
 
-
-enum class DocumentStatus {
-    ACTUAL,
-    IRRELEVANT,
-    BANNED,
-    REMOVED,
-};
-
-// log DocumentStatus
-std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
-    switch (status) {
-        case DocumentStatus::ACTUAL:
-            out << "ACTUAL"s;
-            break;
-        case DocumentStatus::BANNED:
-            out << "BANNED"s;
-            break;
-        case DocumentStatus::IRRELEVANT:
-            out << "IRRELEVANT"s;
-            break;
-        case DocumentStatus::REMOVED:
-            out << "REMOVED"s;
-            break;
-    }
-    
-    return out;
-}
-
 // testing framework
 template <typename TestFunction>
 void RunTestImplementation(TestFunction test_function, const std::string& function_name) {
