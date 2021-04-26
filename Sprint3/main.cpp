@@ -50,26 +50,26 @@ struct Document {
 };
 
 enum class DocumentStatus {
-    ACTUAL,
-    IRRELEVANT,
-    BANNED,
-    REMOVED,
+    kActual,
+    kIrrelevant,
+    kBanned,
+    kRemoved,
 };
 
 // log DocumentStatus is necessary for testing framework
 std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
     switch (status) {
-        case DocumentStatus::ACTUAL:
-            out << "ACTUAL"s;
+        case DocumentStatus::kActual:
+            out << "kActual"s;
             break;
-        case DocumentStatus::BANNED:
-            out << "BANNED"s;
+        case DocumentStatus::kBanned:
+            out << "kBanned"s;
             break;
-        case DocumentStatus::IRRELEVANT:
-            out << "IRRELEVANT"s;
+        case DocumentStatus::kIrrelevant:
+            out << "kIrrelevant"s;
             break;
-        case DocumentStatus::REMOVED:
-            out << "REMOVED"s;
+        case DocumentStatus::kRemoved:
+            out << "kRemoved"s;
             break;
     }
     
@@ -172,7 +172,7 @@ public:
     } // FindTopDocuments
     
     std::vector<Document> FindTopDocuments(const std::string& raw_query,
-                                           const DocumentStatus& desired_status = DocumentStatus::ACTUAL) const {
+                                           const DocumentStatus& desired_status = DocumentStatus::kActual) const {
         const auto predicate = [desired_status](int , DocumentStatus document_status, int ) {
             return document_status == desired_status;
         };
@@ -220,7 +220,7 @@ public:
 private:
     struct DocumentData {
         int rating = 0;
-        DocumentStatus status = DocumentStatus::ACTUAL;
+        DocumentStatus status = DocumentStatus::kActual;
     };
     
     struct Query {
@@ -371,7 +371,7 @@ void TestStopWordsExclusion() {
     
     {
         SearchServer server;
-        server.AddDocument(42, "cat in the city"s, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
         
         std::vector<Document> found_docs = server.FindTopDocuments("in"s);
         
@@ -383,7 +383,7 @@ void TestStopWordsExclusion() {
     {
         SearchServer server("in the"s);
         
-        server.AddDocument(42, "cat in the city"s, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
         
         std::vector<Document> found_docs = server.FindTopDocuments("in"s);
         
@@ -397,7 +397,7 @@ void TestAddedDocumentsCanBeFound() {
     {
         SearchServer server;
         
-        server.AddDocument(42, "cat in the city"s, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
         
         std::vector<Document> found_docs = server.FindTopDocuments("cat in the city");
         
@@ -408,7 +408,7 @@ void TestAddedDocumentsCanBeFound() {
     {
         SearchServer server;
         
-        server.AddDocument(42, "", DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(42, "", DocumentStatus::kActual, ratings);
         
         std::vector<Document> found_docs = server.FindTopDocuments("cat");
         
@@ -422,7 +422,7 @@ void TestMinusWordsExcludeDocuments() {
     {
         SearchServer server;
         
-        server.AddDocument(42, "cat in the city"s, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
         
         const auto found_docs = server.FindTopDocuments("-cat");
         
@@ -433,8 +433,8 @@ void TestMinusWordsExcludeDocuments() {
     {
         SearchServer server;
         
-        server.AddDocument(42, "cat in the city"s, DocumentStatus::ACTUAL, ratings);
-        server.AddDocument(43, "happy dog"s, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
+        server.AddDocument(43, "happy dog"s, DocumentStatus::kActual, ratings);
         
         const auto found_docs = server.FindTopDocuments("-cat dog");
         
@@ -449,29 +449,29 @@ void TestMatchDocumentResults() {
     {
         SearchServer server;
         
-        server.AddDocument(42, "cat in the city"s, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
         
         const auto [words, status] = server.MatchDocument("fat cat out of city", 42);
         
         std::vector<std::string> desired_matched_words{"cat", "city"};
         
         ASSERT_EQUAL(words, desired_matched_words);
-        ASSERT_EQUAL(status, DocumentStatus::ACTUAL);
+        ASSERT_EQUAL(status, DocumentStatus::kActual);
     }
     
-    // status banned
+    // status kBanned
     {
         SearchServer server;
         
-        server.AddDocument(42, "cat in the city"s, DocumentStatus::ACTUAL, ratings);
-        server.AddDocument(43, "happy dog"s, DocumentStatus::BANNED, ratings);
+        server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
+        server.AddDocument(43, "happy dog"s, DocumentStatus::kBanned, ratings);
         
         const auto [words, status] = server.MatchDocument("fat cat out of city and a cute dog", 43);
         
         std::vector<std::string> desired_matched_words{"dog"};
         
         ASSERT_EQUAL(words, desired_matched_words);
-        ASSERT_EQUAL(status, DocumentStatus::BANNED);
+        ASSERT_EQUAL(status, DocumentStatus::kBanned);
     }
 }
 
@@ -483,13 +483,13 @@ void TestFindTopDocumentsResultsSorting() {
     {
         SearchServer server;
         
-        server.AddDocument(1, "cat city"s, DocumentStatus::ACTUAL, ratings);
-        server.AddDocument(2, "dog city potato"s, DocumentStatus::ACTUAL, ratings);
-        server.AddDocument(3, "dog city"s, DocumentStatus::ACTUAL, ratings);
-        server.AddDocument(4, "lorem ipsum"s, DocumentStatus::ACTUAL, ratings);
-        server.AddDocument(5, "city"s, DocumentStatus::BANNED, ratings); // kBanned
-        server.AddDocument(6, "frog city"s, DocumentStatus::ACTUAL, ratings);
-        server.AddDocument(7, "the cat says meow to dog"s, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(1, "cat city"s, DocumentStatus::kActual, ratings);
+        server.AddDocument(2, "dog city potato"s, DocumentStatus::kActual, ratings);
+        server.AddDocument(3, "dog city"s, DocumentStatus::kActual, ratings);
+        server.AddDocument(4, "lorem ipsum"s, DocumentStatus::kActual, ratings);
+        server.AddDocument(5, "city"s, DocumentStatus::kBanned, ratings); // kkBanned
+        server.AddDocument(6, "frog city"s, DocumentStatus::kActual, ratings);
+        server.AddDocument(7, "the cat says meow to dog"s, DocumentStatus::kActual, ratings);
         
         const auto found_docs = server.FindTopDocuments("dog in the city");
         
@@ -507,9 +507,9 @@ void TestFindTopDocumentsResultsSorting() {
     {
         SearchServer server;
         
-        server.AddDocument(1, "cat city"s, DocumentStatus::ACTUAL, ratings);
-        server.AddDocument(2, "dog city potato"s, DocumentStatus::ACTUAL, ratings);
-        server.AddDocument(3, "dog city"s, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(1, "cat city"s, DocumentStatus::kActual, ratings);
+        server.AddDocument(2, "dog city potato"s, DocumentStatus::kActual, ratings);
+        server.AddDocument(3, "dog city"s, DocumentStatus::kActual, ratings);
         
         const auto found_docs = server.FindTopDocuments("cat loves NY city");
         
@@ -534,7 +534,7 @@ void TestRatingsCalculation() {
         
         const std::vector<int> ratings = {1, 2, 3};
         
-        server.AddDocument(1, content, DocumentStatus::ACTUAL, ratings);
+        server.AddDocument(1, content, DocumentStatus::kActual, ratings);
         
         std::vector<Document> found_docs = server.FindTopDocuments("cat loves NY city");
         
@@ -548,7 +548,7 @@ void TestRatingsCalculation() {
         
         const std::vector<int> ratings = {-1, -2, -3};
         
-        (void) server.AddDocument(1, content, DocumentStatus::ACTUAL, ratings);
+        (void) server.AddDocument(1, content, DocumentStatus::kActual, ratings);
         
         std::vector<Document> found_docs = server.FindTopDocuments("cat loves NY city");
         
@@ -562,14 +562,14 @@ void TestFilteringByPredicate() {
     
     SearchServer server;
     
-    server.AddDocument(1, "cat city"s, DocumentStatus::ACTUAL, ratings);
-    server.AddDocument(2, "dog city potato"s, DocumentStatus::BANNED, ratings);
-    server.AddDocument(3, "dog city"s, DocumentStatus::REMOVED, ratings);
+    server.AddDocument(1, "cat city"s, DocumentStatus::kActual, ratings);
+    server.AddDocument(2, "dog city potato"s, DocumentStatus::kBanned, ratings);
+    server.AddDocument(3, "dog city"s, DocumentStatus::kRemoved, ratings);
     
     // status predicate
     {
         const auto& filtered_docs = server.FindTopDocuments("city", [](int , DocumentStatus status, int ) {
-            return status == DocumentStatus::ACTUAL;
+            return status == DocumentStatus::kActual;
         });
         
         ASSERT_EQUAL(filtered_docs.size(), 1u);
@@ -602,12 +602,12 @@ void TestFilteringByStatus() {
     
     SearchServer server;
     
-    server.AddDocument(1, "cat city"s, DocumentStatus::ACTUAL, ratings);
-    server.AddDocument(2, "dog city potato"s, DocumentStatus::BANNED, ratings);
+    server.AddDocument(1, "cat city"s, DocumentStatus::kActual, ratings);
+    server.AddDocument(2, "dog city potato"s, DocumentStatus::kBanned, ratings);
     
     // explicit status
     {
-        const auto& filtered_docs = server.FindTopDocuments("city", DocumentStatus::BANNED);
+        const auto& filtered_docs = server.FindTopDocuments("city", DocumentStatus::kBanned);
         
         ASSERT_EQUAL(filtered_docs.size(), 1u);
         ASSERT_EQUAL(filtered_docs[0].id, 2);
@@ -627,9 +627,9 @@ void TestRelevanceCalculation() {
     
     SearchServer server;
     
-    server.AddDocument(0, "cat cat city dog"s, DocumentStatus::ACTUAL, {1});
-    server.AddDocument(1, "city dog"s, DocumentStatus::ACTUAL, {1});
-    server.AddDocument(2, "cat city potato"s, DocumentStatus::ACTUAL, {1});
+    server.AddDocument(0, "cat cat city dog"s, DocumentStatus::kActual, {1});
+    server.AddDocument(1, "city dog"s, DocumentStatus::kActual, {1});
+    server.AddDocument(2, "cat city potato"s, DocumentStatus::kActual, {1});
     
     // positive case
     {
@@ -665,8 +665,8 @@ void TestSplitIntoWordsEscapesSpaces() {
 void TestGetDocumentIdReturnsId() {
     SearchServer search_server;
     
-    search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
-    search_server.AddDocument(2, "смешной пёс"s, DocumentStatus::ACTUAL, {7, 2, 7});
+    search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::kActual, {7, 2, 7});
+    search_server.AddDocument(2, "смешной пёс"s, DocumentStatus::kActual, {7, 2, 7});
     
     ASSERT_EQUAL(search_server.GetDocumentId(0), 1);
     ASSERT_EQUAL(search_server.GetDocumentId(1), 2);
@@ -675,10 +675,10 @@ void TestGetDocumentIdReturnsId() {
 void TestAddDocumentWithRepeatingId() {
     SearchServer search_server;
     
-    search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
+    search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::kActual, {7, 2, 7});
     
     try {
-        search_server.AddDocument(1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2});
+        search_server.AddDocument(1, "пушистый пёс и модный ошейник"s, DocumentStatus::kActual, {1, 2});
     } catch (std::invalid_argument& e) {
         return;
     }
@@ -690,7 +690,7 @@ void TestAddDocumentWithNegativeId() {
     SearchServer search_server;
     
     try {
-        search_server.AddDocument(-1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2});
+        search_server.AddDocument(-1, "пушистый пёс и модный ошейник"s, DocumentStatus::kActual, {1, 2});
     } catch (std::invalid_argument& e) {
         return;
     }
@@ -702,7 +702,7 @@ void TestAddDocumentWithSpecialSymbol() {
     SearchServer search_server;
     
     try {
-        search_server.AddDocument(1, "большой пёс скво\x12рец"s, DocumentStatus::ACTUAL, {1, 2});
+        search_server.AddDocument(1, "большой пёс скво\x12рец"s, DocumentStatus::kActual, {1, 2});
     } catch (std::invalid_argument& e) {
         return;
     }
@@ -828,11 +828,11 @@ int main() {
     
     SearchServer search_server("и в на"s);
     
-    AddDocument(search_server, 1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
-    AddDocument(search_server, 1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2});
-    AddDocument(search_server, -1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2});
-    AddDocument(search_server, 3, "большой пёс скво\x12рец евгений"s, DocumentStatus::ACTUAL, {1, 3, 2});
-    AddDocument(search_server, 4, "большой пёс скворец евгений"s, DocumentStatus::ACTUAL, {1, 1, 1});
+    AddDocument(search_server, 1, "пушистый кот пушистый хвост"s, DocumentStatus::kActual, {7, 2, 7});
+    AddDocument(search_server, 1, "пушистый пёс и модный ошейник"s, DocumentStatus::kActual, {1, 2});
+    AddDocument(search_server, -1, "пушистый пёс и модный ошейник"s, DocumentStatus::kActual, {1, 2});
+    AddDocument(search_server, 3, "большой пёс скво\x12рец евгений"s, DocumentStatus::kActual, {1, 3, 2});
+    AddDocument(search_server, 4, "большой пёс скворец евгений"s, DocumentStatus::kActual, {1, 1, 1});
     
     FindTopDocuments(search_server, "пушистый -пёс"s);
     FindTopDocuments(search_server, "пушистый --кот"s);
