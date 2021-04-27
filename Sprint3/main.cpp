@@ -112,7 +112,7 @@ public:
             throw std::invalid_argument("negative ids are not allowed"s);
         }
         
-        if (std::count(document_ids_.begin(), document_ids_.end(), document_id) > 0) {
+        if (document_id_to_document_data_.count(document_id) > 0) {
             throw std::invalid_argument("repeating ids are not allowed"s);
         }
         
