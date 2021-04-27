@@ -10,8 +10,6 @@
 #include <numeric>
 #include <sstream>
 
-#include "Test.h"
-
 using namespace std::literals;
 
 std::string ReadLine() {
