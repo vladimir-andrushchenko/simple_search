@@ -84,7 +84,7 @@ public:
     explicit SearchServer(const StringCollection& stop_words) {
         for (const auto& stop_word : stop_words) {
             if (!IsValidWord(stop_word)) {
-                throw std::invalid_argument("stop word contains unaccaptable symbol");
+                throw std::invalid_argument("stop word contains unaccaptable symbol"s);
             }
             
             stop_words_.insert(stop_word);
@@ -93,7 +93,7 @@ public:
     
     explicit SearchServer(const std::string& stop_words) {
         if (!IsValidWord(stop_words)) {
-            throw std::invalid_argument("stop word contains unaccaptable symbol");
+            throw std::invalid_argument("stop word contains unaccaptable symbol"s);
         }
         
         SetStopWords(stop_words);
@@ -109,15 +109,15 @@ public:
     bool AddDocument(int document_id, const std::string& document,
                      DocumentStatus status, const std::vector<int>& ratings) {
         if (document_id < 0) {
-            throw std::invalid_argument("negative ids are not allowed");
+            throw std::invalid_argument("negative ids are not allowed"s);
         }
         
         if (std::count(document_ids_.begin(), document_ids_.end(), document_id) > 0) {
-            throw std::invalid_argument("repeating ids are not allowed");
+            throw std::invalid_argument("repeating ids are not allowed"s);
         }
         
         if (!IsValidWord(document)) {
-            throw std::invalid_argument("word in document contains unaccaptable symbol");
+            throw std::invalid_argument("word in document contains unaccaptable symbol"s);
         }
         
         const std::vector<std::string> words = SplitIntoWordsNoStop(document);
@@ -211,7 +211,7 @@ public:
     int GetDocumentId(int index) const {
         if ((index < 0) ||
             (static_cast<size_t>(index) >= document_ids_.size())) {
-            throw std::out_of_range("index of document is out of range");
+            throw std::out_of_range("index of document is out of range"s);
         }
         
         return document_ids_.at(index);
@@ -274,7 +274,7 @@ private:
         }
         
         if (text.back() == '-') {
-            throw std::invalid_argument("empty minus words are not allowed");
+            throw std::invalid_argument("empty minus words are not allowed"s);
         }
         
         bool is_minus = false;
@@ -399,7 +399,7 @@ void TestAddedDocumentsCanBeFound() {
         
         server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
         
-        std::vector<Document> found_docs = server.FindTopDocuments("cat in the city");
+        std::vector<Document> found_docs = server.FindTopDocuments("cat in the city"s);
         
         ASSERT_EQUAL(found_docs.size(), 1u);
         ASSERT_EQUAL(found_docs[0].id, 42);
@@ -410,7 +410,7 @@ void TestAddedDocumentsCanBeFound() {
         
         server.AddDocument(42, "", DocumentStatus::kActual, ratings);
         
-        std::vector<Document> found_docs = server.FindTopDocuments("cat");
+        std::vector<Document> found_docs = server.FindTopDocuments("cat"s);
         
         ASSERT(found_docs.empty());
     }
@@ -424,7 +424,7 @@ void TestMinusWordsExcludeDocuments() {
         
         server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
         
-        const auto found_docs = server.FindTopDocuments("-cat");
+        const auto found_docs = server.FindTopDocuments("-cat"s);
         
         ASSERT(found_docs.empty());
     }
@@ -436,7 +436,7 @@ void TestMinusWordsExcludeDocuments() {
         server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
         server.AddDocument(43, "happy dog"s, DocumentStatus::kActual, ratings);
         
-        const auto found_docs = server.FindTopDocuments("-cat dog");
+        const auto found_docs = server.FindTopDocuments("-cat dog"s);
         
         ASSERT(found_docs.size() == 1);
     }
@@ -451,9 +451,9 @@ void TestMatchDocumentResults() {
         
         server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
         
-        const auto [words, status] = server.MatchDocument("fat cat out of city", 42);
+        const auto [words, status] = server.MatchDocument("fat cat out of city"s, 42);
         
-        std::vector<std::string> desired_matched_words{"cat", "city"};
+        std::vector<std::string> desired_matched_words{"cat"s, "city"s};
         
         ASSERT_EQUAL(words, desired_matched_words);
         ASSERT_EQUAL(status, DocumentStatus::kActual);
@@ -466,9 +466,9 @@ void TestMatchDocumentResults() {
         server.AddDocument(42, "cat in the city"s, DocumentStatus::kActual, ratings);
         server.AddDocument(43, "happy dog"s, DocumentStatus::kBanned, ratings);
         
-        const auto [words, status] = server.MatchDocument("fat cat out of city and a cute dog", 43);
+        const auto [words, status] = server.MatchDocument("fat cat out of city and a cute dog"s, 43);
         
-        std::vector<std::string> desired_matched_words{"dog"};
+        std::vector<std::string> desired_matched_words{"dog"s};
         
         ASSERT_EQUAL(words, desired_matched_words);
         ASSERT_EQUAL(status, DocumentStatus::kBanned);
@@ -491,7 +491,7 @@ void TestFindTopDocumentsResultsSorting() {
         server.AddDocument(6, "frog city"s, DocumentStatus::kActual, ratings);
         server.AddDocument(7, "the cat says meow to dog"s, DocumentStatus::kActual, ratings);
         
-        const auto found_docs = server.FindTopDocuments("dog in the city");
+        const auto found_docs = server.FindTopDocuments("dog in the city"s);
         
         ASSERT_EQUAL(found_docs.size(), 5u);
         
@@ -511,7 +511,7 @@ void TestFindTopDocumentsResultsSorting() {
         server.AddDocument(2, "dog city potato"s, DocumentStatus::kActual, ratings);
         server.AddDocument(3, "dog city"s, DocumentStatus::kActual, ratings);
         
-        const auto found_docs = server.FindTopDocuments("cat loves NY city");
+        const auto found_docs = server.FindTopDocuments("cat loves NY city"s);
         
         ASSERT(found_docs.size() == 3);
         
@@ -536,7 +536,7 @@ void TestRatingsCalculation() {
         
         server.AddDocument(1, content, DocumentStatus::kActual, ratings);
         
-        std::vector<Document> found_docs = server.FindTopDocuments("cat loves NY city");
+        std::vector<Document> found_docs = server.FindTopDocuments("cat loves NY city"s);
         
         ASSERT_EQUAL(found_docs.size(), 1u);
         ASSERT_EQUAL(found_docs[0].rating, 2);
@@ -550,7 +550,7 @@ void TestRatingsCalculation() {
         
         (void) server.AddDocument(1, content, DocumentStatus::kActual, ratings);
         
-        std::vector<Document> found_docs = server.FindTopDocuments("cat loves NY city");
+        std::vector<Document> found_docs = server.FindTopDocuments("cat loves NY city"s);
         
         ASSERT_EQUAL(found_docs.size(), 1u);
         ASSERT_EQUAL(found_docs[0].rating, -2);
@@ -568,7 +568,7 @@ void TestFilteringByPredicate() {
     
     // status predicate
     {
-        const auto& filtered_docs = server.FindTopDocuments("city", [](int , DocumentStatus status, int ) {
+        const auto& filtered_docs = server.FindTopDocuments("city"s, [](int , DocumentStatus status, int ) {
             return status == DocumentStatus::kActual;
         });
         
@@ -578,7 +578,7 @@ void TestFilteringByPredicate() {
     
     // rating predicate
     {
-        const auto& filtered_docs = server.FindTopDocuments("city", [](int , DocumentStatus , int rating) {
+        const auto& filtered_docs = server.FindTopDocuments("city"s, [](int , DocumentStatus , int rating) {
             return rating == 2;
         });
         
@@ -588,7 +588,7 @@ void TestFilteringByPredicate() {
     
     // id predicate
     {
-        const auto& filtered_docs = server.FindTopDocuments("city", [](int document_id, DocumentStatus , int ) {
+        const auto& filtered_docs = server.FindTopDocuments("city"s, [](int document_id, DocumentStatus , int ) {
             return document_id == 1;
         });
         
@@ -607,7 +607,7 @@ void TestFilteringByStatus() {
     
     // explicit status
     {
-        const auto& filtered_docs = server.FindTopDocuments("city", DocumentStatus::kBanned);
+        const auto& filtered_docs = server.FindTopDocuments("city"s, DocumentStatus::kBanned);
         
         ASSERT_EQUAL(filtered_docs.size(), 1u);
         ASSERT_EQUAL(filtered_docs[0].id, 2);
@@ -615,7 +615,7 @@ void TestFilteringByStatus() {
     
     // default status
     {
-        const auto& filtered_docs = server.FindTopDocuments("city");
+        const auto& filtered_docs = server.FindTopDocuments("city"s);
         
         ASSERT_EQUAL(filtered_docs.size(), 1u);
         ASSERT_EQUAL(filtered_docs[0].id, 1);
@@ -659,7 +659,7 @@ void TestRelevanceCalculation() {
 
 void TestSplitIntoWordsEscapesSpaces() {
     ASSERT_EQUAL((std::vector<std::string> {"hello"s, "bro"s}), SplitIntoWords("   hello    bro    "s));
-    ASSERT_EQUAL(std::vector<std::string>{}, SplitIntoWords("                 "));
+    ASSERT_EQUAL(std::vector<std::string>{}, SplitIntoWords("                 "s));
 }
 
 void TestGetDocumentIdReturnsId() {
@@ -683,7 +683,7 @@ void TestAddDocumentWithRepeatingId() {
         return;
     }
     
-    ASSERT_HINT(false, "adding document with repeating id is not handled");
+    ASSERT_HINT(false, "adding document with repeating id is not handled"s);
 }
 
 void TestAddDocumentWithNegativeId() {
@@ -695,7 +695,7 @@ void TestAddDocumentWithNegativeId() {
         return;
     }
     
-    ASSERT_HINT(false, "adding document with negative id is not handled");
+    ASSERT_HINT(false, "adding document with negative id is not handled"s);
 }
 
 void TestAddDocumentWithSpecialSymbol() {
@@ -707,7 +707,7 @@ void TestAddDocumentWithSpecialSymbol() {
         return;
     }
     
-    ASSERT_HINT(false, "adding document containing unaccaptable symbol is not handled");
+    ASSERT_HINT(false, "adding document containing unaccaptable symbol is not handled"s);
     
 }
 
@@ -720,7 +720,7 @@ void TestQueryWithSpecialSymbol() {
         return;
     }
     
-    ASSERT_HINT(false, "query with symbols in not handled");
+    ASSERT_HINT(false, "query with symbols in not handled"s);
 }
 
 void TestDoubleMinusWord() {
@@ -744,7 +744,7 @@ void TestEmptyMinusWord() {
         return;
     }
     
-    ASSERT_HINT(false, "query with empty minus word is not handled");
+    ASSERT_HINT(false, "query with empty minus word is not handled"s);
 }
 
 void TestSearchServer() {
