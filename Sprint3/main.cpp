@@ -265,24 +265,28 @@ private:
     } // IsStopWord
     
     QueryWord ParseQueryWord(std::string text) const {
-        if (text.substr(0, 2) == "--"s) {
-            throw std::invalid_argument("double minus words are not allowed"s);
+        bool is_minus = false;
+        
+        if (text.empty()) {
+            throw std::invalid_argument("caught empty word, check for double spaces"s);
+        }
+        
+        if (text[0] == '-') {
+            text = text.substr(1);
+            
+            if (text.empty()) {
+                throw std::invalid_argument("empty minus words are not allowed"s);
+            }
+            
+            if (text[0] == '-') {
+                throw std::invalid_argument("double minus words are not allowed"s);
+            }
+            
+            is_minus = true;
         }
         
         if (!IsValidWord(text)) {
             throw std::invalid_argument("special symbols in words are not allowed"s);
-        }
-        
-        if (text.back() == '-') {
-            throw std::invalid_argument("empty minus words are not allowed"s);
-        }
-        
-        bool is_minus = false;
-        
-        // Word shouldn't be empty
-        if (text[0] == '-') {
-            is_minus = true;
-            text = text.substr(1);
         }
         
         return {text, is_minus, IsStopWord(text)};
