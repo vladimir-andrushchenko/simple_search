@@ -209,11 +209,6 @@ public:
     } // MatchDocument
     
     int GetDocumentId(int index) const {
-        if ((index < 0) ||
-            (static_cast<size_t>(index) >= document_ids_.size())) {
-            throw std::out_of_range("index of document is out of range"s);
-        }
-        
         return document_ids_.at(index);
     }
     
@@ -676,6 +671,18 @@ void TestGetDocumentIdReturnsId() {
     ASSERT_EQUAL(search_server.GetDocumentId(1), 2);
 }
 
+void TestGetDocumentIdThrowsOutOfRange() {
+    SearchServer search_server;
+    
+    try {
+        search_server.GetDocumentId(-1);
+    } catch (std::out_of_range& e) {
+        return;
+    }
+    
+    ASSERT_HINT(false, "GetDocumentId with negative id throws out_of_range"s);
+}
+
 void TestAddDocumentWithRepeatingId() {
     SearchServer search_server;
     
@@ -763,6 +770,8 @@ void TestSearchServer() {
     RUN_TEST(TestRelevanceCalculation);
     
     // tests for Sprint3
+    RUN_TEST(TestGetDocumentIdThrowsOutOfRange);
+    
     RUN_TEST(TestSplitIntoWordsEscapesSpaces);
     RUN_TEST(TestGetDocumentIdReturnsId);
     RUN_TEST(TestAddDocumentWithRepeatingId);
