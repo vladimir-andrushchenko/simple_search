@@ -307,8 +307,11 @@ private:
     
     // Existence required
     double ComputeWordInverseDocumentFrequency(const std::string& word) const {
-        const double number_of_documents_constains_word =
-        static_cast<double>(word_to_document_id_to_term_frequency_.at(word).size());
+        assert(word_to_document_id_to_term_frequency_.count(word) != 0);
+        
+        const size_t number_of_documents_constains_word = word_to_document_id_to_term_frequency_.at(word).size();
+        
+        assert(number_of_documents_constains_word != 0);
         
         return log(static_cast<double>(GetDocumentCount()) / number_of_documents_constains_word);
     } // ComputeWordInverseDocumentFrequency
@@ -758,6 +761,12 @@ void TestEmptyMinusWord() {
     ASSERT_HINT(false, "query with empty minus word is not handled"s);
 }
 
+void TestSearchNonExistentWord() {
+    SearchServer search_server;
+    
+    search_server.FindTopDocuments("potato");
+}
+
 void TestSearchServer() {
     RUN_TEST(TestStopWordsExclusion);
     RUN_TEST(TestAddedDocumentsCanBeFound);
@@ -771,6 +780,7 @@ void TestSearchServer() {
     
     // tests for Sprint3
     RUN_TEST(TestGetDocumentIdThrowsOutOfRange);
+    RUN_TEST(TestSearchNonExistentWord);
     
     RUN_TEST(TestSplitIntoWordsEscapesSpaces);
     RUN_TEST(TestGetDocumentIdReturnsId);
