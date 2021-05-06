@@ -28,14 +28,19 @@ void Merge(RandomIt range_begin, RandomIt range_mid, RandomIt range_end) {
 
 template <typename RandomIt>
 void MergeSort(RandomIt range_begin, RandomIt range_end) {
-    if (distance(range_begin, range_end) == 1) {
+    auto range_length = range_end - range_begin;
+    if (range_length < 2) {
         return;
     }
     
-    auto range_mid = range_begin + (std::distance(range_begin, range_end) / 2);
-    MergeSort(range_begin, range_mid);
-    MergeSort(range_mid, range_end);
-    inplace_merge(range_begin, range_mid, range_end);
+    vector<typename RandomIt::value_type> temp_range(range_begin, range_end);
+    
+    auto range_mid = temp_range.begin() + (range_length / 2);
+    
+    MergeSort(temp_range.begin(), range_mid);
+    MergeSort(range_mid, temp_range.end());
+    
+    merge(temp_range.begin(), range_mid, range_mid, temp_range.end(), range_begin);
 }
 
 
