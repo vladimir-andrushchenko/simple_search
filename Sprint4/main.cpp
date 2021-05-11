@@ -9,6 +9,7 @@
 #include <vector>
 #include <numeric>
 #include <sstream>
+#include <deque>
 
 using namespace std::literals;
 
@@ -460,33 +461,53 @@ std::ostream& operator<<(std::ostream& output, const IteratorRange<IteratorRange
 
 class RequestQueue {
 public:
-    explicit RequestQueue(const SearchServer& search_server) {
-        // напишите реализацию
-    }
-    // сделаем "обёртки" для всех методов поиска, чтобы сохранять результаты для нашей статистики
+    explicit RequestQueue(const SearchServer& search_server): server_(search_server) {}
+    
+public:
     template <typename DocumentPredicate>
-    vector<Document> AddFindRequest(const string& raw_query, DocumentPredicate document_predicate) {
-        // напишите реализацию
+    std::vector<Document> AddFindRequest(const std::string& raw_query, DocumentPredicate document_predicate) {
+        ++time_;
+        
+        if (!requests_.empty() && ((time_ - requests_.front().time_created) >= kSecondsInADay)) {
+            requests_.pop_front();
+        }
+        
+        const std::vector<Document>& results = server_.FindTopDocuments(raw_query, document_predicate);
+        
+        if (results.empty()) {
+            requests_.push_back(QueryResult(time_));
+        }
+        
+        return results;
     }
-
-    vector<Document> AddFindRequest(const string& raw_query, DocumentStatus status) {
-        // напишите реализацию
+    
+    std::vector<Document> AddFindRequest(const std::string& raw_query,
+                                         DocumentStatus status = DocumentStatus::ACTUAL) {
+        return AddFindRequest(raw_query, [&status](int, DocumentStatus doc_status, int){
+            return doc_status == status;
+        });
     }
-
-    vector<Document> AddFindRequest(const string& raw_query) {
-        // напишите реализацию
-    }
-
+    
     int GetNoResultRequests() const {
-        // напишите реализацию
+        return static_cast<int>(requests_.size());
     }
+    
 private:
     struct QueryResult {
-        // определите, что должно быть в структуре
+    public:
+        QueryResult(u_int64_t current_time): time_created(current_time) {}
+        
+    public:
+        u_int64_t time_created;
     };
-    deque<QueryResult> requests_;
-    const static int sec_in_day_ = 1440;
-    // возможно, здесь вам понадобится что-то ещё
+    
+private:
+    static constexpr int kSecondsInADay = 1440;
+    
+private:
+    std::deque<QueryResult> requests_;
+    const SearchServer& server_;
+    u_int64_t time_ = 0;
 };
 
 int main() {
@@ -509,6 +530,6 @@ int main() {
     request_queue.AddFindRequest("big collar"s);
     // первый запрос удален, 1437 запросов с нулевым результатом
     request_queue.AddFindRequest("sparrow"s);
-    cout << "Total empty requests: "s << request_queue.GetNoResultRequests() << endl;
+    std::cout << "Total empty requests: "s << request_queue.GetNoResultRequests() << std::endl;
     return 0;
-} 
+}
