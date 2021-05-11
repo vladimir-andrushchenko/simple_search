@@ -135,6 +135,7 @@ void AssertImplementation(bool value, const std::string& expr_str, const std::st
 #define RUN_TEST(test_function) RunTestImplementation((test_function), #test_function)
 
 // tests
+/*
 void TestStopWordsExclusion() {
     const std::vector<int> ratings = {1, 2, 3};
     
@@ -558,5 +559,5 @@ void TestSearchServer() {
     RUN_TEST(TestQueryWithSpecialSymbol);
     RUN_TEST(TestEmptyMinusWord);
 }
-
+*/
 #endif /* Test_h */
