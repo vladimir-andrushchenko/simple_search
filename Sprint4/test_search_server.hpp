@@ -1,10 +1,3 @@
-//
-//  test_search_server.hpp
-//  Sprint4
-//
-//  Created by Vladimir Andrushchenko on 13.05.2021.
-//
-
 #ifndef test_search_server_hpp
 #define test_search_server_hpp
 
