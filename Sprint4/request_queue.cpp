@@ -6,3 +6,7 @@
 //
 
 #include "request_queue.hpp"
+
+//int RequestQueue::GetNoResultRequests() const {
+//    return static_cast<int>(requests_.size());
+//}

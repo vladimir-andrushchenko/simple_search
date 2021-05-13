@@ -18,7 +18,6 @@
 		7586A7D3262DAB8700585561 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7586A7D2262DAB8700585561 /* main.cpp */; };
 		75C204712645D60400EBBBB6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C204702645D60400EBBBB6 /* main.cpp */; };
 		75C20485264C25CE00EBBBB6 /* document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C20483264C25CE00EBBBB6 /* document.cpp */; };
-		75C20495264C25EB00EBBBB6 /* paginator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C20493264C25EB00EBBBB6 /* paginator.cpp */; };
 		75C204A5264C25FD00EBBBB6 /* read_input_functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C204A3264C25FD00EBBBB6 /* read_input_functions.cpp */; };
 		75C204B5264C261800EBBBB6 /* request_queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C204B3264C261800EBBBB6 /* request_queue.cpp */; };
 		75C204C5264C263900EBBBB6 /* search_server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C204C3264C263900EBBBB6 /* search_server.cpp */; };
@@ -171,7 +170,6 @@
 		75C204702645D60400EBBBB6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		75C20483264C25CE00EBBBB6 /* document.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = document.cpp; sourceTree = "<group>"; };
 		75C20484264C25CE00EBBBB6 /* document.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = document.hpp; sourceTree = "<group>"; };
-		75C20493264C25EB00EBBBB6 /* paginator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = paginator.cpp; sourceTree = "<group>"; };
 		75C20494264C25EB00EBBBB6 /* paginator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = paginator.hpp; sourceTree = "<group>"; };
 		75C204A3264C25FD00EBBBB6 /* read_input_functions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = read_input_functions.cpp; sourceTree = "<group>"; };
 		75C204A4264C25FD00EBBBB6 /* read_input_functions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = read_input_functions.hpp; sourceTree = "<group>"; };
@@ -376,7 +374,6 @@
 			children = (
 				75739D8A2643D3BA001BCCE0 /* main.cpp */,
 				75C20483264C25CE00EBBBB6 /* document.cpp */,
-				75C20493264C25EB00EBBBB6 /* paginator.cpp */,
 				75C204A3264C25FD00EBBBB6 /* read_input_functions.cpp */,
 				75C204B3264C261800EBBBB6 /* request_queue.cpp */,
 				75C204C3264C263900EBBBB6 /* search_server.cpp */,
@@ -791,7 +788,6 @@
 				75C20485264C25CE00EBBBB6 /* document.cpp in Sources */,
 				75C204C5264C263900EBBBB6 /* search_server.cpp in Sources */,
 				75739D8B2643D3BA001BCCE0 /* main.cpp in Sources */,
-				75C20495264C25EB00EBBBB6 /* paginator.cpp in Sources */,
 				75C204D5264C264600EBBBB6 /* string_processing.cpp in Sources */,
 				75C204B5264C261800EBBBB6 /* request_queue.cpp in Sources */,
 			);

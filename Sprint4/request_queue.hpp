@@ -1,13 +1,60 @@
-//
-//  request_queue.hpp
-//  Sprint4
-//
-//  Created by Vladimir Andrushchenko on 12.05.2021.
-//
-
 #ifndef request_queue_hpp
 #define request_queue_hpp
 
-#include <stdio.h>
+#include <deque>
+
+#include "document.hpp"
+#include "search_server.hpp"
+
+class RequestQueue {
+public:
+    explicit RequestQueue(const SearchServer& search_server): server_(search_server) {}
+    
+public:
+    template <typename DocumentPredicate>
+    std::vector<Document> AddFindRequest(const std::string& raw_query, DocumentPredicate document_predicate) {
+        ++time_;
+        
+        if (!requests_.empty() && ((time_ - requests_.front().time_created) >= kSecondsInADay)) {
+            requests_.pop_front();
+        }
+        
+        const std::vector<Document>& results = server_.FindTopDocuments(raw_query, document_predicate);
+        
+        if (results.empty()) {
+            requests_.push_back(QueryResult(time_));
+        }
+        
+        return results;
+    }
+    
+    std::vector<Document> AddFindRequest(const std::string& raw_query,
+                                         DocumentStatus status = DocumentStatus::ACTUAL)  {
+        return AddFindRequest(raw_query, [&status](int, DocumentStatus doc_status, int){
+            return doc_status == status;
+        });
+    }
+    
+    int GetNoResultRequests() const {
+        return static_cast<int>(requests_.size());
+    }
+    
+private:
+    struct QueryResult {
+    public:
+        QueryResult(u_int64_t current_time): time_created(current_time) {}
+        
+    public:
+        u_int64_t time_created;
+    };
+    
+private:
+    static constexpr int kSecondsInADay = 1440;
+    
+private:
+    std::deque<QueryResult> requests_;
+    const SearchServer& server_;
+    u_int64_t time_ = 0;
+};
 
 #endif /* request_queue_hpp */
