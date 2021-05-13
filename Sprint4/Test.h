@@ -13,6 +13,8 @@
 #include <numeric>
 #include <sstream>
 
+#include "search_server.hpp"
+
 using namespace std::string_literals;
 
 // logging functionality for containers

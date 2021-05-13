@@ -3,6 +3,8 @@
 #include "search_server.hpp"
 #include "request_queue.hpp"
 
+#include "Test.h"
+
 using namespace std::literals;
 
 int main() {
