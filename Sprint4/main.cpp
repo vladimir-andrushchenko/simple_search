@@ -1,7 +1,7 @@
 #include <string>
 
 #include "search_server.hpp"
-#include "request_queue.cpp"
+#include "request_queue.hpp"
 
 using namespace std::literals;
 
