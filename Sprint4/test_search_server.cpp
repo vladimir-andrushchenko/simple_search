@@ -1,4 +1,5 @@
 #include <vector>
+#include <numeric>
 
 #include "test_search_server.hpp"
 #include "testing_framework.h"

@@ -11,7 +11,7 @@ int main() {
     TestSearchServer();
     std::cout << std::endl;
     
-    std::cout << "basic functionality of adding, finding, and matching documents"s << std::endl;
+    std::cout << "Basic functionality of adding, finding, and matching documents"s << std::endl;
     
     {
         SearchServer search_server = CreateSearchServer("и в на"s);
@@ -35,7 +35,7 @@ int main() {
     
     std::cout << std::endl;
     
-    std::cout << "basic functionality of RequestQueue"s << std::endl;
+    std::cout << "Basic functionality of RequestQueue"s << std::endl;
     
     {
         SearchServer search_server = CreateSearchServer("and in at"s);

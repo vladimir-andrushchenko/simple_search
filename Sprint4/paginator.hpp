@@ -1,7 +1,6 @@
 #ifndef paginator_hpp
 #define paginator_hpp
 
-#include <stddef.h>
 #include <vector>
 #include <string>
 

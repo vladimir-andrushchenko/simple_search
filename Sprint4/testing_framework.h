@@ -1,16 +1,11 @@
 #ifndef Test_h
 #define Test_h
 
-#include <algorithm>
-#include <cassert>
-#include <cmath>
 #include <iostream>
 #include <map>
 #include <set>
 #include <string>
-#include <utility>
 #include <vector>
-#include <numeric>
 #include <sstream>
 
 using namespace std::string_literals;
