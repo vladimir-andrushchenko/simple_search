@@ -48,25 +48,25 @@ struct Document {
 };
 
 enum class DocumentStatus {
-    ACTUAL,
-    IRRELEVANT,
-    BANNED,
-    REMOVED,
+    kActual,
+    kIrrelevant,
+    kBanned,
+    kRemoved,
 };
 
 // log DocumentStatus is necessary for testing framework
 std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
     switch (status) {
-        case DocumentStatus::ACTUAL:
+        case DocumentStatus::kActual:
             out << "ACTUAL"s;
             break;
-        case DocumentStatus::BANNED:
+        case DocumentStatus::kBanned:
             out << "BANNED"s;
             break;
-        case DocumentStatus::IRRELEVANT:
+        case DocumentStatus::kIrrelevant:
             out << "IRRELEVANT"s;
             break;
-        case DocumentStatus::REMOVED:
+        case DocumentStatus::kRemoved:
             out << "REMOVED"s;
             break;
     }
@@ -170,7 +170,7 @@ public:
     } // FindTopDocuments
     
     std::vector<Document> FindTopDocuments(const std::string& raw_query,
-                                           const DocumentStatus& desired_status = DocumentStatus::ACTUAL) const {
+                                           const DocumentStatus& desired_status = DocumentStatus::kActual) const {
         const auto predicate = [desired_status](int , DocumentStatus document_status, int ) {
             return document_status == desired_status;
         };
@@ -213,7 +213,7 @@ public:
 private:
     struct DocumentData {
         int rating = 0;
-        DocumentStatus status = DocumentStatus::ACTUAL;
+        DocumentStatus status = DocumentStatus::kActual;
     };
     
     struct Query {
@@ -426,11 +426,11 @@ int main() {
         std::cout << "Ошибка создания search_server "s << ": "s << e.what() << std::endl;
     }
     
-    AddDocument(search_server, 1, "пушистый кот пушистый хвост"s, DocumentStatus::ACTUAL, {7, 2, 7});
-    AddDocument(search_server, 1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2});
-    AddDocument(search_server, -1, "пушистый пёс и модный ошейник"s, DocumentStatus::ACTUAL, {1, 2});
-    AddDocument(search_server, 3, "большой пёс скво\x12рец евгений"s, DocumentStatus::ACTUAL, {1, 3, 2});
-    AddDocument(search_server, 4, "большой пёс скворец евгений"s, DocumentStatus::ACTUAL, {1, 1, 1});
+    AddDocument(search_server, 1, "пушистый кот пушистый хвост"s, DocumentStatus::kActual, {7, 2, 7});
+    AddDocument(search_server, 1, "пушистый пёс и модный ошейник"s, DocumentStatus::kActual, {1, 2});
+    AddDocument(search_server, -1, "пушистый пёс и модный ошейник"s, DocumentStatus::kActual, {1, 2});
+    AddDocument(search_server, 3, "большой пёс скво\x12рец евгений"s, DocumentStatus::kActual, {1, 3, 2});
+    AddDocument(search_server, 4, "большой пёс скворец евгений"s, DocumentStatus::kActual, {1, 1, 1});
     
     FindTopDocuments(search_server, "пушистый -пёс"s);
     FindTopDocuments(search_server, "пушистый --кот"s);

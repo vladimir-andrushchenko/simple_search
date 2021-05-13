@@ -14,6 +14,7 @@
 #include <sstream>
 
 #include "search_server.hpp"
+#include "string_processing.hpp"
 
 using namespace std::string_literals;
 

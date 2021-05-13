@@ -165,7 +165,7 @@
 		7586A7D2262DAB8700585561 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7586A7E1262DC83900585561 /* Sprint3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sprint3; sourceTree = BUILT_PRODUCTS_DIR; };
 		7586A7E3262DC83900585561 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		7586A7F7262DCA0100585561 /* Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Test.h; sourceTree = "<group>"; };
+		7586A7F7262DCA0100585561 /* test_search_server.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test_search_server.h; sourceTree = "<group>"; };
 		75C2046E2645D60400EBBBB6 /* Stack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Stack; sourceTree = BUILT_PRODUCTS_DIR; };
 		75C204702645D60400EBBBB6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		75C20483264C25CE00EBBBB6 /* document.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = document.cpp; sourceTree = "<group>"; };
@@ -371,7 +371,7 @@
 		75739D892643D3BA001BCCE0 /* Sprint4 */ = {
 			isa = PBXGroup;
 			children = (
-				7586A7F7262DCA0100585561 /* Test.h */,
+				7586A7F7262DCA0100585561 /* test_search_server.h */,
 				75739D8A2643D3BA001BCCE0 /* main.cpp */,
 				75C20483264C25CE00EBBBB6 /* document.cpp */,
 				75C204A3264C25FD00EBBBB6 /* read_input_functions.cpp */,

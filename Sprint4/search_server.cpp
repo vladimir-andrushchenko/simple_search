@@ -6,17 +6,17 @@ using namespace std::literals;
 // log DocumentStatus is necessary for testing framework
 std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
     switch (status) {
-        case DocumentStatus::ACTUAL:
-            out << "ACTUAL"s;
+        case DocumentStatus::kActual:
+            out << "kActual"s;
             break;
-        case DocumentStatus::BANNED:
-            out << "BANNED"s;
+        case DocumentStatus::kBanned:
+            out << "kBanned"s;
             break;
-        case DocumentStatus::IRRELEVANT:
-            out << "IRRELEVANT"s;
+        case DocumentStatus::kIrrelevant:
+            out << "kIrrelevant"s;
             break;
-        case DocumentStatus::REMOVED:
-            out << "REMOVED"s;
+        case DocumentStatus::kRemoved:
+            out << "kRemoved"s;
             break;
     }
     

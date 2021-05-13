@@ -30,7 +30,7 @@ public:
     std::vector<Document> FindTopDocuments(const std::string& raw_query, Predicate predicate) const;
     
     std::vector<Document> FindTopDocuments(const std::string& raw_query,
-                                           const DocumentStatus& desired_status = DocumentStatus::ACTUAL) const;
+                                           const DocumentStatus& desired_status = DocumentStatus::kActual) const;
     
     std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const;
     
@@ -39,7 +39,7 @@ public:
 private:
     struct DocumentData {
         int rating = 0;
-        DocumentStatus status = DocumentStatus::ACTUAL;
+        DocumentStatus status = DocumentStatus::kActual;
     };
     
     struct Query {
