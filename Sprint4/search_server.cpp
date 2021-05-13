@@ -1,3 +1,6 @@
+#include <cassert>
+#include <cmath>
+
 #include "search_server.hpp"
 #include "string_processing.hpp"
 
@@ -174,7 +177,7 @@ double SearchServer::ComputeWordInverseDocumentFrequency(const std::string& word
     
     assert(number_of_documents_constains_word != 0);
     
-    return log(static_cast<double>(GetDocumentCount()) / number_of_documents_constains_word);
+    return std::log(static_cast<double>(GetDocumentCount()) / number_of_documents_constains_word);
 } // ComputeWordInverseDocumentFrequency
 
 std::vector<Document> SearchServer::FindAllDocuments(const Query& query) const {
