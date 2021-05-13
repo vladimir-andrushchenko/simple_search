@@ -8,7 +8,7 @@
 using namespace std::literals;
 
 
-// https://onlinegdb.com/HkZIJT5du
+// https://onlinegdb.com/HkZIJT5du sometime exceedes compile time 
 int main() {
     TestSearchServer();
     std::cout << std::endl;
