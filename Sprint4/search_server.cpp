@@ -3,26 +3,6 @@
 
 using namespace std::literals;
 
-// log DocumentStatus is necessary for testing framework
-std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
-    switch (status) {
-        case DocumentStatus::kActual:
-            out << "kActual"s;
-            break;
-        case DocumentStatus::kBanned:
-            out << "kBanned"s;
-            break;
-        case DocumentStatus::kIrrelevant:
-            out << "kIrrelevant"s;
-            break;
-        case DocumentStatus::kRemoved:
-            out << "kRemoved"s;
-            break;
-    }
-    
-    return out;
-}
-
 SearchServer::SearchServer(const std::string& stop_words) {
     if (!IsValidWord(stop_words)) {
         throw std::invalid_argument("stop word contains unaccaptable symbol"s);

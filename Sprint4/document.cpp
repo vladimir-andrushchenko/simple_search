@@ -16,3 +16,22 @@ std::ostream& operator<<(std::ostream& output, const Document& document) {
     PrintDocument(document);
     return output;
 }
+
+std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
+    switch (status) {
+        case DocumentStatus::kActual:
+            out << "kActual"s;
+            break;
+        case DocumentStatus::kBanned:
+            out << "kBanned"s;
+            break;
+        case DocumentStatus::kIrrelevant:
+            out << "kIrrelevant"s;
+            break;
+        case DocumentStatus::kRemoved:
+            out << "kRemoved"s;
+            break;
+    }
+    
+    return out;
+}
