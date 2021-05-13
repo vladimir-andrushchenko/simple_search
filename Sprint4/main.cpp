@@ -1,9 +1,9 @@
 #include <string>
+#include <iostream>
 
 #include "search_server.hpp"
 #include "request_queue.hpp"
-
-#include "test_search_server.h"
+#include "test_search_server.hpp"
 
 using namespace std::literals;
 

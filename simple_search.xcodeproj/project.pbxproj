@@ -22,6 +22,7 @@
 		75C204C5264C263900EBBBB6 /* search_server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C204C3264C263900EBBBB6 /* search_server.cpp */; };
 		75C204D5264C264600EBBBB6 /* string_processing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C204D3264C264600EBBBB6 /* string_processing.cpp */; };
 		75C2050B264D257500EBBBB6 /* request_queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C2050A264D257500EBBBB6 /* request_queue.cpp */; };
+		75C20535264D2E2C00EBBBB6 /* test_search_server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C20533264D2E2C00EBBBB6 /* test_search_server.cpp */; };
 		75F5CBFF261B5D7A00CB6D97 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75F5CBFE261B5D7A00CB6D97 /* main.cpp */; };
 		75F5CC0D261CEA8F00CB6D97 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75F5CC0C261CEA8F00CB6D97 /* main.cpp */; };
 /* End PBXBuildFile section */
@@ -165,7 +166,7 @@
 		7586A7D2262DAB8700585561 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7586A7E1262DC83900585561 /* Sprint3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sprint3; sourceTree = BUILT_PRODUCTS_DIR; };
 		7586A7E3262DC83900585561 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		7586A7F7262DCA0100585561 /* test_search_server.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test_search_server.h; sourceTree = "<group>"; };
+		7586A7F7262DCA0100585561 /* testing_framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testing_framework.h; sourceTree = "<group>"; };
 		75C2046E2645D60400EBBBB6 /* Stack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Stack; sourceTree = BUILT_PRODUCTS_DIR; };
 		75C204702645D60400EBBBB6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		75C20483264C25CE00EBBBB6 /* document.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = document.cpp; sourceTree = "<group>"; };
@@ -179,6 +180,8 @@
 		75C204D3264C264600EBBBB6 /* string_processing.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = string_processing.cpp; sourceTree = "<group>"; };
 		75C204D4264C264600EBBBB6 /* string_processing.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = string_processing.hpp; sourceTree = "<group>"; };
 		75C2050A264D257500EBBBB6 /* request_queue.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = request_queue.cpp; sourceTree = "<group>"; };
+		75C20533264D2E2C00EBBBB6 /* test_search_server.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = test_search_server.cpp; sourceTree = "<group>"; };
+		75C20534264D2E2C00EBBBB6 /* test_search_server.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = test_search_server.hpp; sourceTree = "<group>"; };
 		75CAF0D02626DB0D00F120AA /* DebuggerTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DebuggerTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F5CBFC261B5D7A00CB6D97 /* Synonyms */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Synonyms; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F5CBFE261B5D7A00CB6D97 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -371,7 +374,9 @@
 		75739D892643D3BA001BCCE0 /* Sprint4 */ = {
 			isa = PBXGroup;
 			children = (
-				7586A7F7262DCA0100585561 /* test_search_server.h */,
+				7586A7F7262DCA0100585561 /* testing_framework.h */,
+				75C20533264D2E2C00EBBBB6 /* test_search_server.cpp */,
+				75C20534264D2E2C00EBBBB6 /* test_search_server.hpp */,
 				75739D8A2643D3BA001BCCE0 /* main.cpp */,
 				75C20483264C25CE00EBBBB6 /* document.cpp */,
 				75C204A3264C25FD00EBBBB6 /* read_input_functions.cpp */,
@@ -789,6 +794,7 @@
 				75C204C5264C263900EBBBB6 /* search_server.cpp in Sources */,
 				75C2050B264D257500EBBBB6 /* request_queue.cpp in Sources */,
 				75739D8B2643D3BA001BCCE0 /* main.cpp in Sources */,
+				75C20535264D2E2C00EBBBB6 /* test_search_server.cpp in Sources */,
 				75C204D5264C264600EBBBB6 /* string_processing.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
