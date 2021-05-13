@@ -53,54 +53,69 @@ void MatchDocuments(const SearchServer& search_server, const std::string& query)
     }
 }
 
-int main() {
+SearchServer CreateSearchServer(const std::string& stop_words) {
     SearchServer search_server;
     
     try {
-        search_server = SearchServer("и в на"s);
+        search_server = SearchServer(stop_words);
     } catch (const std::invalid_argument& e) {
         std::cout << "Ошибка создания search_server "s << ": "s << e.what() << std::endl;
     }
     
-    AddDocument(search_server, 1, "пушистый кот пушистый хвост"s, DocumentStatus::kActual, {7, 2, 7});
-    AddDocument(search_server, 1, "пушистый пёс и модный ошейник"s, DocumentStatus::kActual, {1, 2});
-    AddDocument(search_server, -1, "пушистый пёс и модный ошейник"s, DocumentStatus::kActual, {1, 2});
-    AddDocument(search_server, 3, "большой пёс скво\x12рец евгений"s, DocumentStatus::kActual, {1, 3, 2});
-    AddDocument(search_server, 4, "большой пёс скворец евгений"s, DocumentStatus::kActual, {1, 1, 1});
-    
-    FindTopDocuments(search_server, "пушистый -пёс"s);
-    FindTopDocuments(search_server, "пушистый --кот"s);
-    FindTopDocuments(search_server, "пушистый -"s);
-    FindTopDocuments(search_server, "скво\x12рец"s);
-    
-    MatchDocuments(search_server, "пушистый пёс"s);
-    MatchDocuments(search_server, "модный -кот"s);
-    MatchDocuments(search_server, "модный --пёс"s);
-    MatchDocuments(search_server, "пушистый - хвост"s);
+    return search_server;
 }
 
-//int main() {
-//    TestSearchServer();
-//    
-//    SearchServer search_server("and in at"s);
-//    RequestQueue request_queue(search_server);
-//
-//    search_server.AddDocument(1, "curly cat curly tail"s, DocumentStatus::kActual, {7, 2, 7});
-//    search_server.AddDocument(2, "curly dog and fancy collar"s, DocumentStatus::kActual, {1, 2, 3});
-//    search_server.AddDocument(3, "big cat fancy collar "s, DocumentStatus::kActual, {1, 2, 8});
-//    search_server.AddDocument(4, "big dog sparrow Eugene"s, DocumentStatus::kActual, {1, 3, 2});
-//    search_server.AddDocument(5, "big dog sparrow Vasiliy"s, DocumentStatus::kActual, {1, 1, 1});
-//
-//    // 1439 запросов с нулевым результатом
-//    for (int i = 0; i < 1439; ++i) {
-//        request_queue.AddFindRequest("empty request"s);
-//    }
-//    // все еще 1439 запросов с нулевым результатом
-//    request_queue.AddFindRequest("curly dog"s);
-//    // новые сутки, первый запрос удален, 1438 запросов с нулевым результатом
-//    request_queue.AddFindRequest("big collar"s);
-//    // первый запрос удален, 1437 запросов с нулевым результатом
-//    request_queue.AddFindRequest("sparrow"s);
-//    std::cout << "Total empty requests: "s << request_queue.GetNoResultRequests() << std::endl;
-//    return 0;
-//}
+int main() {
+    TestSearchServer();
+    std::cout << std::endl;
+    
+    std::cout << "basic functionality of adding, finding, and matching documents"s << std::endl;
+    
+    {
+        SearchServer search_server = CreateSearchServer("и в на"s);
+        
+        AddDocument(search_server, 1, "пушистый кот пушистый хвост"s, DocumentStatus::kActual, {7, 2, 7});
+        AddDocument(search_server, 1, "пушистый пёс и модный ошейник"s, DocumentStatus::kActual, {1, 2});
+        AddDocument(search_server, -1, "пушистый пёс и модный ошейник"s, DocumentStatus::kActual, {1, 2});
+        AddDocument(search_server, 3, "большой пёс скво\x12рец евгений"s, DocumentStatus::kActual, {1, 3, 2});
+        AddDocument(search_server, 4, "большой пёс скворец евгений"s, DocumentStatus::kActual, {1, 1, 1});
+        
+        FindTopDocuments(search_server, "пушистый -пёс"s);
+        FindTopDocuments(search_server, "пушистый --кот"s);
+        FindTopDocuments(search_server, "пушистый -"s);
+        FindTopDocuments(search_server, "скво\x12рец"s);
+        
+        MatchDocuments(search_server, "пушистый пёс"s);
+        MatchDocuments(search_server, "модный -кот"s);
+        MatchDocuments(search_server, "модный --пёс"s);
+        MatchDocuments(search_server, "пушистый - хвост"s);
+    }
+    
+    std::cout << std::endl;
+    
+    std::cout << "basic functionality of RequestQueue"s << std::endl;
+    
+    {
+        SearchServer search_server = CreateSearchServer("and in at"s);
+        RequestQueue request_queue(search_server);
+        
+        AddDocument(search_server, 1, "curly cat curly tail"s, DocumentStatus::kActual, {7, 2, 7});
+        AddDocument(search_server, 2, "curly dog and fancy collar"s, DocumentStatus::kActual, {1, 2, 3});
+        AddDocument(search_server, 3, "big cat fancy collar "s, DocumentStatus::kActual, {1, 2, 8});
+        AddDocument(search_server, 4, "big dog sparrow Eugene"s, DocumentStatus::kActual, {1, 3, 2});
+        AddDocument(search_server, 5, "big dog sparrow Vasiliy"s, DocumentStatus::kActual, {1, 1, 1});
+        
+        // 1439 запросов с нулевым результатом
+        for (int i = 0; i < 1439; ++i) {
+            request_queue.AddFindRequest("empty request"s);
+        }
+        // все еще 1439 запросов с нулевым результатом
+        request_queue.AddFindRequest("curly dog"s);
+        // новые сутки, первый запрос удален, 1438 запросов с нулевым результатом
+        request_queue.AddFindRequest("big collar"s);
+        // первый запрос удален, 1437 запросов с нулевым результатом
+        request_queue.AddFindRequest("sparrow"s);
+        std::cout << "Total empty requests: "s << request_queue.GetNoResultRequests() << std::endl;
+    }
+}
+
