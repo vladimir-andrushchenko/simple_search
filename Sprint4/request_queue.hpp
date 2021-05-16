@@ -1,5 +1,4 @@
-#ifndef request_queue_hpp
-#define request_queue_hpp
+#pragma once
 
 #include <deque>
 
@@ -53,5 +52,3 @@ std::vector<Document> RequestQueue::AddFindRequest(const std::string& raw_query,
     
     return results;
 }
-
-#endif /* request_queue_hpp */

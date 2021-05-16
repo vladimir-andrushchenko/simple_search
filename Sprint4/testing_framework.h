@@ -1,5 +1,4 @@
-#ifndef Test_h
-#define Test_h
+#pragma once
 
 #include <iostream>
 #include <map>
@@ -129,4 +128,3 @@ void AssertImplementation(bool value, const std::string& expr_str, const std::st
 
 #define RUN_TEST(test_function) RunTestImplementation((test_function), #test_function)
 
-#endif /* Test_h */

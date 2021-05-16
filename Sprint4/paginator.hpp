@@ -1,5 +1,4 @@
-#ifndef paginator_hpp
-#define paginator_hpp
+#pragma once
 
 #include <vector>
 #include <string>
@@ -86,5 +85,3 @@ std::ostream& operator<<(std::ostream& output, const IteratorRange<IteratorRange
     }
     return output;
 }
-
-#endif /* paginator_hpp */

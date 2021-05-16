@@ -1,5 +1,4 @@
-#ifndef document_hpp
-#define document_hpp
+#pragma once
 
 #include <iostream>
 
@@ -25,4 +24,3 @@ void PrintDocument(const Document& document);
 
 std::ostream& operator<<(std::ostream& output, const Document& document);
 
-#endif /* document_hpp */

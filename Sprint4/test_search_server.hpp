@@ -1,5 +1,4 @@
-#ifndef test_search_server_hpp
-#define test_search_server_hpp
+#pragma once
 
 void TestStopWordsExclusion();
 
@@ -39,4 +38,4 @@ void TestSearchNonExistentWord();
 
 void TestSearchServer();
 
-#endif /* test_search_server_hpp */
+

@@ -1,5 +1,4 @@
-#ifndef search_server_hpp
-#define search_server_hpp
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -142,4 +141,3 @@ void MatchDocuments(const SearchServer& search_server, const std::string& query)
 
 SearchServer CreateSearchServer(const std::string& stop_words);
 
-#endif /* search_server_hpp */

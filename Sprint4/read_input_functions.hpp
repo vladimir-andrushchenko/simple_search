@@ -1,5 +1,4 @@
-#ifndef read_input_functions_hpp
-#define read_input_functions_hpp
+#pragma once
 
 #include <string>
 
@@ -7,4 +6,3 @@ std::string ReadLine();
 
 int ReadLineWithNumber();
 
-#endif /* read_input_functions_hpp */
