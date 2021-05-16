@@ -7,7 +7,7 @@
 
 class RequestQueue {
 public:
-    explicit RequestQueue(const SearchServer& search_server): server_(search_server) {}
+    explicit RequestQueue(const SearchServer& search_server);
     
 public:
     template <typename DocumentPredicate>

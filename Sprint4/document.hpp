@@ -7,8 +7,8 @@ struct Document {
     double relevance = 0.0;
     int rating = 0;
     
-    Document(): id(0), relevance(0), rating(0) {};
-    Document(int id, double relevance, int rating): id(id), relevance(relevance), rating(rating) {};
+    Document();
+    Document(int id, double relevance, int rating);
 };
 
 enum class DocumentStatus {
