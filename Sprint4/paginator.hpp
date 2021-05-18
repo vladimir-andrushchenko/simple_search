@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 
 using namespace std::literals;
 
@@ -28,32 +29,61 @@ private:
     InputIterator end_iterator_;
 };
 
+//void FillRandom(vector<int>& v, int n) {
+//    v.reserve(n);
+//
+//    for (int i = 0; i < n; i += 15) {
+//        int number = rand();
+//
+//        // мы можем заполнить 15 элементов вектора,
+//        // но не более, чем нам осталось до конца:
+//        int count = min(15, n - i);
+//
+//        for (int j = 0; j < count; ++j)
+//            // таким образом, получим j-й бит числа.
+//            // операцию побитового сдвига вы уже видели в этой программе
+//            // на этот раз двигаем вправо, чтобы нужный бит оказался самым последним
+//            v.push_back((number >> j) % 2);
+//    }
+//}
+
 template <typename Iterator>
 class Paginator {
 public:
     Paginator(Iterator range_begin, Iterator range_end, size_t page_size) {
+        const auto page_size_signed = static_cast<long>(page_size);
+        
         if (range_begin == range_end) {
             throw std::invalid_argument("no empty ranges"s);
         }
         
-        for (auto it = range_begin; it != range_end;) {
-            bool reached_end = false;
-            
-            for (size_t j = 1; j < page_size; ++j) {
-                if (it + j == range_end) {
-                    pages_.push_back({it, it + j});
-                    reached_end = true;
-                    break;
-                }
-            }
-            
-            if (reached_end) {
-                break;
-            }
-            
-            pages_.push_back({it, it + page_size});
-            it += page_size;
+        auto left = std::distance(range_begin, range_end);
+        
+        while (left > 0) {
+            const auto step = std::min(page_size_signed, left);
+            pages_.push_back({range_begin, range_begin + step});
+            left -= step;
+            range_begin += step;
         }
+        
+//        for (auto it = range_begin; it != range_end;) {
+//            bool reached_end = false;
+//
+//            for (size_t j = 1; j < page_size; ++j) {
+//                if (it + j == range_end) {
+//                    pages_.push_back({it, it + j});
+//                    reached_end = true;
+//                    break;
+//                }
+//            }
+//
+//            if (reached_end) {
+//                break;
+//            }
+//
+//            pages_.push_back({it, it + page_size});
+//            it += page_size;
+//        }
     }
     
 public:
