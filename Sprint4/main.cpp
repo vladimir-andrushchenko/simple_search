@@ -80,7 +80,7 @@ int main() {
         const auto pages = Paginate(search_results, page_size);
 
         // Выводим найденные документы по страницам
-        for (auto page = pages.begin(); page != pages.end(); ++page) {
+        for (auto page = pages.Begin(); page != pages.End(); ++page) {
             std::cout << *page << std::endl;
             std::cout << "Page break"s << std::endl;
         }

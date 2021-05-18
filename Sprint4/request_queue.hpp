@@ -28,7 +28,7 @@ private:
     };
     
 private:
-    static constexpr int kSecondsInADay = 1440;
+    static constexpr int kMinutessInADay = 1440;
     
 private:
     std::deque<QueryResult> requests_;
@@ -40,7 +40,7 @@ template <typename DocumentPredicate>
 std::vector<Document> RequestQueue::AddFindRequest(const std::string& raw_query, DocumentPredicate document_predicate) {
     ++time_;
     
-    if (!requests_.empty() && ((time_ - requests_.front().time_created) >= kSecondsInADay)) {
+    if (!requests_.empty() && ((time_ - requests_.front().time_created) >= kMinutessInADay)) {
         requests_.pop_front();
     }
     

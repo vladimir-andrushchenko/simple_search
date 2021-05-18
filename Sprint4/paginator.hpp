@@ -32,13 +32,16 @@ private:
 template <typename Iterator>
 class Paginator {
 public:
-    Paginator(Iterator range_begin, Iterator range_end, size_t page_size) {
+    Paginator() = default;
+
+public:
+    void Init(Iterator range_begin, Iterator range_end, size_t page_size) {
         if (range_begin == range_end) {
             throw std::invalid_argument("no empty ranges"s);
         }
-        
+
         size_t left = std::distance(range_begin, range_end);
-        
+
         while (left > 0) {
             const auto current_page_size = std::min(page_size, left);
             pages_.push_back({range_begin, range_begin + current_page_size});
@@ -48,15 +51,19 @@ public:
     }
     
 public:
-    auto begin() const {
+    bool IsInitialized() {
+        return !(pages_.begin() == pages_.end());
+    }
+    
+    auto Begin() const {
         return pages_.begin();
     }
     
-    auto end() const {
+    auto End() const {
         return pages_.end();
     }
     
-    size_t size() {
+    size_t Size() {
         return pages_.size();
     }
     
@@ -65,8 +72,10 @@ private:
 };
 
 template <typename Container>
-auto Paginate(const Container& c, size_t page_size) {
-    return Paginator(std::begin(c), std::end(c), page_size);
+auto Paginate(const Container& container, size_t page_size) {
+    Paginator<decltype(std::begin(container))> paginator;
+    paginator.Init(std::begin(container), std::end(container), page_size);
+    return paginator;
 }
 
 template<typename IteratorRangeType>
