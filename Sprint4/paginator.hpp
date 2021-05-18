@@ -29,24 +29,6 @@ private:
     InputIterator end_iterator_;
 };
 
-//void FillRandom(vector<int>& v, int n) {
-//    v.reserve(n);
-//
-//    for (int i = 0; i < n; i += 15) {
-//        int number = rand();
-//
-//        // мы можем заполнить 15 элементов вектора,
-//        // но не более, чем нам осталось до конца:
-//        int count = min(15, n - i);
-//
-//        for (int j = 0; j < count; ++j)
-//            // таким образом, получим j-й бит числа.
-//            // операцию побитового сдвига вы уже видели в этой программе
-//            // на этот раз двигаем вправо, чтобы нужный бит оказался самым последним
-//            v.push_back((number >> j) % 2);
-//    }
-//}
-
 template <typename Iterator>
 class Paginator {
 public:
