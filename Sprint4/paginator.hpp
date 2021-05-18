@@ -51,39 +51,18 @@ template <typename Iterator>
 class Paginator {
 public:
     Paginator(Iterator range_begin, Iterator range_end, size_t page_size) {
-        const auto page_size_signed = static_cast<long>(page_size);
-        
         if (range_begin == range_end) {
             throw std::invalid_argument("no empty ranges"s);
         }
         
-        auto left = std::distance(range_begin, range_end);
+        size_t left = std::distance(range_begin, range_end);
         
         while (left > 0) {
-            const auto step = std::min(page_size_signed, left);
-            pages_.push_back({range_begin, range_begin + step});
-            left -= step;
-            range_begin += step;
+            const auto current_page_size = std::min(page_size, left);
+            pages_.push_back({range_begin, range_begin + current_page_size});
+            left -= current_page_size;
+            range_begin += current_page_size;
         }
-        
-//        for (auto it = range_begin; it != range_end;) {
-//            bool reached_end = false;
-//
-//            for (size_t j = 1; j < page_size; ++j) {
-//                if (it + j == range_end) {
-//                    pages_.push_back({it, it + j});
-//                    reached_end = true;
-//                    break;
-//                }
-//            }
-//
-//            if (reached_end) {
-//                break;
-//            }
-//
-//            pages_.push_back({it, it + page_size});
-//            it += page_size;
-//        }
     }
     
 public:
