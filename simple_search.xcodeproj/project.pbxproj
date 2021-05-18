@@ -183,6 +183,7 @@
 		75C20533264D2E2C00EBBBB6 /* test_search_server.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = test_search_server.cpp; sourceTree = "<group>"; };
 		75C20534264D2E2C00EBBBB6 /* test_search_server.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = test_search_server.hpp; sourceTree = "<group>"; };
 		75CAF0D02626DB0D00F120AA /* DebuggerTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DebuggerTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		75D8A4A52653DE43004536F2 /* log_duration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log_duration.h; sourceTree = "<group>"; };
 		75F5CBFC261B5D7A00CB6D97 /* Synonyms */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Synonyms; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F5CBFE261B5D7A00CB6D97 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		75F5CC0A261CEA8F00CB6D97 /* BusStops */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BusStops; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -351,6 +352,7 @@
 			isa = PBXGroup;
 			children = (
 				75739D4B2641D0FF001BCCE0 /* main.cpp */,
+				75D8A4A52653DE43004536F2 /* log_duration.h */,
 			);
 			path = Playground;
 			sourceTree = "<group>";
