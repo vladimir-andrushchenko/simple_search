@@ -298,8 +298,8 @@ void TestRelevanceCalculation() {
 }
 
 void TestSplitIntoWordsEscapesSpaces() {
-    ASSERT_EQUAL((std::vector<std::string> {"hello"s, "bro"s}), SplitIntoWords("   hello    bro    "s));
-    ASSERT_EQUAL(std::vector<std::string>{}, SplitIntoWords("                 "s));
+    ASSERT_EQUAL((std::vector<std::string> {"hello"s, "bro"s}), string_processing::SplitIntoWords("   hello    bro    "s));
+    ASSERT_EQUAL(std::vector<std::string>{}, string_processing::SplitIntoWords("                 "s));
 }
 
 void TestGetDocumentIdReturnsId() {

@@ -2,6 +2,8 @@
 
 #include "string_processing.hpp"
 
+namespace string_processing {
+
 std::vector<std::string> SplitIntoWords(const std::string& text) {
     std::istringstream text_stream(text);
     
@@ -14,3 +16,5 @@ std::vector<std::string> SplitIntoWords(const std::string& text) {
     
     return words;
 }
+
+} // string_processing

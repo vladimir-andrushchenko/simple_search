@@ -16,7 +16,7 @@ SearchServer::SearchServer(const std::string& stop_words) {
 
 
 void SearchServer::SetStopWords(const std::string& text) {
-    for (const std::string& word : SplitIntoWords(text)) {
+    for (const std::string& word : string_processing::SplitIntoWords(text)) {
         stop_words_.insert(word);
     }
 } // SetStopWords
@@ -100,7 +100,7 @@ int SearchServer::GetDocumentId(int index) const {
 
 std::vector<std::string> SearchServer::SplitIntoWordsNoStop(const std::string& text) const {
     std::vector<std::string> words;
-    for (const std::string& word : SplitIntoWords(text)) {
+    for (const std::string& word : string_processing::SplitIntoWords(text)) {
         if (!IsStopWord(word)) {
             words.push_back(word);
         }
@@ -154,7 +154,7 @@ SearchServer::QueryWord SearchServer::ParseQueryWord(std::string text) const {
 SearchServer::Query SearchServer::ParseQuery(const std::string& text) const {
     Query query;
     
-    for (const std::string& word : SplitIntoWords(text)) {
+    for (const std::string& word : string_processing::SplitIntoWords(text)) {
         const QueryWord query_word = ParseQueryWord(word);
         
         if (!query_word.is_stop) {
