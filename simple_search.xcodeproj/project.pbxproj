@@ -215,6 +215,7 @@
 		75D8A5262655161F004536F2 /* request_queue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = request_queue.cpp; sourceTree = "<group>"; };
 		75D8A5272655161F004536F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		75D8A5282655161F004536F2 /* search_server.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = search_server.hpp; sourceTree = "<group>"; };
+		75D8A54C26551859004536F2 /* log_duration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log_duration.h; sourceTree = "<group>"; };
 		75F5CBFC261B5D7A00CB6D97 /* Synonyms */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Synonyms; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F5CBFE261B5D7A00CB6D97 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		75F5CC0A261CEA8F00CB6D97 /* BusStops */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BusStops; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -476,6 +477,7 @@
 				75D8A51D2655161F004536F2 /* test_search_server.cpp */,
 				75D8A51B2655161F004536F2 /* test_search_server.hpp */,
 				75D8A51C2655161F004536F2 /* testing_framework.h */,
+				75D8A54C26551859004536F2 /* log_duration.h */,
 			);
 			path = Sprint5;
 			sourceTree = "<group>";
