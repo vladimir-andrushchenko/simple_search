@@ -21,10 +21,11 @@ public:
 private:
     struct QueryResult {
     public:
-        QueryResult(u_int64_t current_time): time_created(current_time) {}
+        QueryResult(const std::string& raw_query, int results): raw_query(raw_query), results(results) {}
         
     public:
-        u_int64_t time_created;
+        const std::string raw_query;
+        const int results;
     };
     
 private:
@@ -33,21 +34,25 @@ private:
 private:
     std::deque<QueryResult> requests_;
     const SearchServer& server_;
-    u_int64_t time_ = 0;
+    int no_result_requests_counter_ = 0;
 };
 
 template <typename DocumentPredicate>
 std::vector<Document> RequestQueue::AddFindRequest(const std::string& raw_query, DocumentPredicate document_predicate) {
-    ++time_;
-    
-    if (!requests_.empty() && ((time_ - requests_.front().time_created) >= kMinutessInADay)) {
+    if (requests_.size() >= kMinutessInADay) {
+        if(requests_.front().results == 0) {
+            --no_result_requests_counter_;
+        }
+        
         requests_.pop_front();
     }
     
     const std::vector<Document>& results = server_.FindTopDocuments(raw_query, document_predicate);
     
+    requests_.push_back(QueryResult(raw_query, static_cast<int>(results.size())));
+    
     if (results.empty()) {
-        requests_.push_back(QueryResult(time_));
+        ++no_result_requests_counter_;
     }
     
     return results;

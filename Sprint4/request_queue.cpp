@@ -10,5 +10,5 @@ std::vector<Document> RequestQueue::AddFindRequest(const std::string& raw_query,
 }
 
 int RequestQueue::GetNoResultRequests() const {
-    return static_cast<int>(requests_.size());
+    return no_result_requests_counter_;
 }
