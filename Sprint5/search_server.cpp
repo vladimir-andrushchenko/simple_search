@@ -221,6 +221,8 @@ bool SearchServer::IsValidWord(const std::string& word) {
     });
 } // IsValidWord
 
+namespace search_server_helpers {
+
 void PrintMatchDocumentResult(int document_id, const std::vector<std::string>& words, DocumentStatus status) {
     std::cout << "{ "s
     << "document_id = "s << document_id << ", "s
@@ -279,3 +281,4 @@ SearchServer CreateSearchServer(const std::string& stop_words) {
     return search_server;
 }
 
+} // namespace search_server_helpers

@@ -130,6 +130,8 @@ std::vector<Document> SearchServer::FindTopDocuments(const std::string& raw_quer
     return filtered_documents;
 } // FindTopDocuments
 
+namespace search_server_helpers {
+
 void PrintMatchDocumentResult(int document_id, const std::vector<std::string>& words, DocumentStatus status);
 
 void AddDocument(SearchServer& search_server, int document_id, const std::string& document, DocumentStatus status,
@@ -140,4 +142,8 @@ void FindTopDocuments(const SearchServer& search_server, const std::string& raw_
 void MatchDocuments(const SearchServer& search_server, const std::string& query);
 
 SearchServer CreateSearchServer(const std::string& stop_words);
+
+} // namespace search_server_helpers
+
+
 
