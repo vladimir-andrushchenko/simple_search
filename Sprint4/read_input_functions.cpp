@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+namespace read_input {
+
 std::string ReadLine() {
     std::string line;
     getline(std::cin, line);
@@ -14,3 +16,5 @@ int ReadLineWithNumber() {
     ReadLine();
     return result;
 }
+
+} // namespace read_input
