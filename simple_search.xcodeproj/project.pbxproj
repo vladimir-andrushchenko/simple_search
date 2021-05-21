@@ -16,6 +16,7 @@
 		75739D752642ECE6001BCCE0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75739D742642ECE6001BCCE0 /* main.cpp */; };
 		75739D8B2643D3BA001BCCE0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75739D8A2643D3BA001BCCE0 /* main.cpp */; };
 		7586A7D3262DAB8700585561 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7586A7D2262DAB8700585561 /* main.cpp */; };
+		75A4300426579D3F00B8A227 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75A4300326579D3F00B8A227 /* main.cpp */; };
 		75C204712645D60400EBBBB6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C204702645D60400EBBBB6 /* main.cpp */; };
 		75C20485264C25CE00EBBBB6 /* document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C20483264C25CE00EBBBB6 /* document.cpp */; };
 		75C204A5264C25FD00EBBBB6 /* read_input_functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C204A3264C25FD00EBBBB6 /* read_input_functions.cpp */; };
@@ -116,6 +117,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		75A42FFF26579D3F00B8A227 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		75C2046C2645D60400EBBBB6 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -183,6 +193,8 @@
 		7586A7E1262DC83900585561 /* Sprint3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sprint3; sourceTree = BUILT_PRODUCTS_DIR; };
 		7586A7E3262DC83900585561 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7586A7F7262DCA0100585561 /* testing_framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testing_framework.h; sourceTree = "<group>"; };
+		75A4300126579D3F00B8A227 /* TicketOffice */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TicketOffice; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A4300326579D3F00B8A227 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		75C2046E2645D60400EBBBB6 /* Stack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Stack; sourceTree = BUILT_PRODUCTS_DIR; };
 		75C204702645D60400EBBBB6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		75C20483264C25CE00EBBBB6 /* document.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = document.cpp; sourceTree = "<group>"; };
@@ -286,6 +298,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		75A42FFE26579D3F00B8A227 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		75C2046B2645D60400EBBBB6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -340,6 +359,7 @@
 				75739D892643D3BA001BCCE0 /* Sprint4 */,
 				75C2046F2645D60400EBBBB6 /* Stack */,
 				75D8A4B826543BB7004536F2 /* Sprint5 */,
+				75A4300226579D3F00B8A227 /* TicketOffice */,
 				750551C325EEBE80004001C5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -361,6 +381,7 @@
 				75739D882643D3BA001BCCE0 /* Sprint4 */,
 				75C2046E2645D60400EBBBB6 /* Stack */,
 				75D8A4B726543BB7004536F2 /* Sprint5 */,
+				75A4300126579D3F00B8A227 /* TicketOffice */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -449,6 +470,14 @@
 				7586A7E3262DC83900585561 /* main.cpp */,
 			);
 			path = Sprint3;
+			sourceTree = "<group>";
+		};
+		75A4300226579D3F00B8A227 /* TicketOffice */ = {
+			isa = PBXGroup;
+			children = (
+				75A4300326579D3F00B8A227 /* main.cpp */,
+			);
+			path = TicketOffice;
 			sourceTree = "<group>";
 		};
 		75C2046F2645D60400EBBBB6 /* Stack */ = {
@@ -654,6 +683,23 @@
 			productReference = 7586A7E1262DC83900585561 /* Sprint3 */;
 			productType = "com.apple.product-type.tool";
 		};
+		75A4300026579D3F00B8A227 /* TicketOffice */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A4300726579D3F00B8A227 /* Build configuration list for PBXNativeTarget "TicketOffice" */;
+			buildPhases = (
+				75A42FFD26579D3F00B8A227 /* Sources */,
+				75A42FFE26579D3F00B8A227 /* Frameworks */,
+				75A42FFF26579D3F00B8A227 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TicketOffice;
+			productName = TicketOffice;
+			productReference = 75A4300126579D3F00B8A227 /* TicketOffice */;
+			productType = "com.apple.product-type.tool";
+		};
 		75C2046D2645D60400EBBBB6 /* Stack */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 75C204742645D60400EBBBB6 /* Build configuration list for PBXNativeTarget "Stack" */;
@@ -774,6 +820,9 @@
 					7586A7E0262DC83900585561 = {
 						CreatedOnToolsVersion = 12.4;
 					};
+					75A4300026579D3F00B8A227 = {
+						CreatedOnToolsVersion = 12.5;
+					};
 					75C2046D2645D60400EBBBB6 = {
 						CreatedOnToolsVersion = 12.4;
 					};
@@ -818,6 +867,7 @@
 				75739D872643D3BA001BCCE0 /* Sprint4 */,
 				75C2046D2645D60400EBBBB6 /* Stack */,
 				75D8A4B626543BB7004536F2 /* Sprint5 */,
+				75A4300026579D3F00B8A227 /* TicketOffice */,
 			);
 		};
 /* End PBXProject section */
@@ -898,6 +948,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				756F5ED4262F37EA00D762C6 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A42FFD26579D3F00B8A227 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A4300426579D3F00B8A227 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1242,6 +1300,26 @@
 			};
 			name = Release;
 		};
+		75A4300526579D3F00B8A227 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		75A4300626579D3F00B8A227 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		75C204722645D60400EBBBB6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1431,6 +1509,15 @@
 			buildConfigurations = (
 				7586A7E6262DC83900585561 /* Debug */,
 				7586A7E7262DC83900585561 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		75A4300726579D3F00B8A227 /* Build configuration list for PBXNativeTarget "TicketOffice" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A4300526579D3F00B8A227 /* Debug */,
+				75A4300626579D3F00B8A227 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
