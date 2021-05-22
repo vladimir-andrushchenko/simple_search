@@ -1,5 +1,6 @@
 #include <cassert>
 #include <cmath>
+#include <algorithm>
 
 #include "search_server.hpp"
 #include "string_processing.hpp"
@@ -32,6 +33,22 @@ const std::map<std::string, double>& SearchServer::GetWordFrequencies(int docume
     const static std::map<std::string, double> empty_map;
     return empty_map;
 }
+
+void SearchServer::RemoveDocument(int document_id) {
+    // GetWordFrequencies relies on document_id_to_document_data_ so first delete from word_to_document_id_to_term_frequency_
+    for (const auto& [word, term_frequency] : GetWordFrequencies(document_id)) {
+        word_to_document_id_to_term_frequency_[word].erase(document_id);
+        
+        if (word_to_document_id_to_term_frequency_[word].empty()) {
+            word_to_document_id_to_term_frequency_.erase(word);
+        }
+    }
+    
+    document_id_to_document_data_.erase(document_id);
+    
+    std::remove(document_ids_.begin(), document_ids_.end(), document_id);
+}
+
 
 SearchServer::SearchServer(const std::string& stop_words) {
     if (!IsValidWord(stop_words)) {

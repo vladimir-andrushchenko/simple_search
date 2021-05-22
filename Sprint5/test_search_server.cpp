@@ -27,12 +27,12 @@ void TestGetWordFrequencies() {
     {
         SearchServer search_server;
         
-        search_server_helpers::AddDocument(search_server, 0, "funny funny cat", DocumentStatus::ACTUAL, {1, 2, 3});
+        search_server_helpers::AddDocument(search_server, 0, "funny funny cat"s, DocumentStatus::ACTUAL, {1, 2, 3});
         
         const auto word_frequencies = search_server.GetWordFrequencies(0);
         
-        assert(word_frequencies.at("funny") == 2.0 / 3.0);
-        assert(word_frequencies.at("cat") == 1.0 / 3.0);
+        assert(word_frequencies.at("funny"s) == 2.0 / 3.0);
+        assert(word_frequencies.at("cat"s) == 1.0 / 3.0);
     }
     
     {
@@ -44,6 +44,23 @@ void TestGetWordFrequencies() {
         
         assert(empty_map == word_frequencies_of_not_existing_document);
     }
+}
+
+void TestDeletingDocument() {
+    SearchServer search_server;
+    
+    search_server_helpers::AddDocument(search_server, 0, "funny funny cat"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 1, "silly dog"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    
+    auto results = search_server.FindTopDocuments("dog"s);
+    
+    assert(results[0].id == 1);
+
+    search_server.RemoveDocument(1);
+
+    results = search_server.FindTopDocuments("dog"s);
+
+    assert(results.empty());
 }
 
 /*
@@ -471,5 +488,6 @@ void TestSearchServer() {
 //    RUN_TEST(TestEmptyMinusWord);
     RUN_TEST(TestIteratingOverSearchServer);
     RUN_TEST(TestGetWordFrequencies);
+    RUN_TEST(TestDeletingDocument);
 }
 
