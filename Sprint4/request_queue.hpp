@@ -20,10 +20,8 @@ public:
     
 private:
     struct QueryResult {
-    public:
         QueryResult(const std::string& raw_query, int results): raw_query(raw_query), results(results) {}
         
-    public:
         const std::string raw_query;
         const int results;
     };
