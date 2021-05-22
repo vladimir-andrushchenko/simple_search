@@ -1,11 +1,29 @@
 #include <vector>
 #include <cmath>
+#include <cassert>
 
 #include "test_search_server.hpp"
 #include "testing_framework.h"
 #include "search_server.hpp"
 #include "string_processing.hpp"
 
+void TestIteratingOverSearchServer() {
+    SearchServer search_server;
+    
+    search_server_helpers::AddDocument(search_server, 0, "cat in the city"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 1, "funny cat"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 2, "funny dog"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    
+    std::vector<int> ids_in_search_server;
+    
+    for (const int document_id : search_server) {
+        ids_in_search_server.push_back(document_id);
+    }
+    
+    assert((ids_in_search_server == std::vector<int>{1, 2, 3}));
+}
+
+/*
 void TestStopWordsExclusion() {
     const std::vector<int> ratings = {1, 2, 3};
     
@@ -429,3 +447,4 @@ void TestSearchServer() {
     RUN_TEST(TestQueryWithSpecialSymbol);
     RUN_TEST(TestEmptyMinusWord);
 }
+*/
