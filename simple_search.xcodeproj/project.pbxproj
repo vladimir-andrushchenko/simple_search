@@ -16,6 +16,7 @@
 		75739D752642ECE6001BCCE0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75739D742642ECE6001BCCE0 /* main.cpp */; };
 		75739D8B2643D3BA001BCCE0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75739D8A2643D3BA001BCCE0 /* main.cpp */; };
 		7586A7D3262DAB8700585561 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7586A7D2262DAB8700585561 /* main.cpp */; };
+		759FD7802659A726005CB8F4 /* remove_duplicates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 759FD77E2659A726005CB8F4 /* remove_duplicates.cpp */; };
 		75A4300426579D3F00B8A227 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75A4300326579D3F00B8A227 /* main.cpp */; };
 		75C204712645D60400EBBBB6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C204702645D60400EBBBB6 /* main.cpp */; };
 		75C20485264C25CE00EBBBB6 /* document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75C20483264C25CE00EBBBB6 /* document.cpp */; };
@@ -193,6 +194,8 @@
 		7586A7E1262DC83900585561 /* Sprint3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sprint3; sourceTree = BUILT_PRODUCTS_DIR; };
 		7586A7E3262DC83900585561 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7586A7F7262DCA0100585561 /* testing_framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testing_framework.h; sourceTree = "<group>"; };
+		759FD77E2659A726005CB8F4 /* remove_duplicates.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = remove_duplicates.cpp; sourceTree = "<group>"; };
+		759FD77F2659A726005CB8F4 /* remove_duplicates.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = remove_duplicates.hpp; sourceTree = "<group>"; };
 		75A4300126579D3F00B8A227 /* TicketOffice */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TicketOffice; sourceTree = BUILT_PRODUCTS_DIR; };
 		75A4300326579D3F00B8A227 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		75C2046E2645D60400EBBBB6 /* Stack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Stack; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -507,6 +510,8 @@
 				75D8A51B2655161F004536F2 /* test_search_server.hpp */,
 				75D8A51C2655161F004536F2 /* testing_framework.h */,
 				75D8A54C26551859004536F2 /* log_duration.h */,
+				759FD77E2659A726005CB8F4 /* remove_duplicates.cpp */,
+				759FD77F2659A726005CB8F4 /* remove_duplicates.hpp */,
 			);
 			path = Sprint5;
 			sourceTree = "<group>";
@@ -979,6 +984,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				75D8A52C2655161F004536F2 /* read_input_functions.cpp in Sources */,
+				759FD7802659A726005CB8F4 /* remove_duplicates.cpp in Sources */,
 				75D8A52B2655161F004536F2 /* document.cpp in Sources */,
 				75D8A52A2655161F004536F2 /* test_search_server.cpp in Sources */,
 				75D8A52E2655161F004536F2 /* request_queue.cpp in Sources */,

@@ -4,6 +4,7 @@
 #include "search_server.hpp"
 #include "request_queue.hpp"
 #include "paginator.hpp"
+#include "remove_duplicates.hpp"
 
 //#include "test_search_server.hpp"
 
@@ -39,7 +40,7 @@ int main() {
     search_server_helpers::AddDocument(search_server, 9, "nasty rat with curly hair"s, DocumentStatus::ACTUAL, {1, 2});
     
     std::cout << "Before duplicates removed: "s << search_server.GetDocumentCount() << std::endl;
-    search_server_helpers::RemoveDuplicates(search_server);
+    RemoveDuplicates(search_server);
     std::cout << "After duplsicates removed: "s << search_server.GetDocumentCount() << std::endl;
 }
 
