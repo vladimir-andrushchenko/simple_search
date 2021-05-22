@@ -24,6 +24,14 @@ std::vector<int>::const_iterator SearchServer::end() const {
     return document_ids_.end();
 }
 
+const std::map<std::string, double>& SearchServer::GetWordFrequencies(int document_id) const {
+    if (document_id_to_document_data_.count(document_id) == 1) {
+        return document_id_to_document_data_.at(document_id).word_frequencies;
+    }
+    
+    const static std::map<std::string, double> empty_map;
+    return empty_map;
+}
 
 SearchServer::SearchServer(const std::string& stop_words) {
     if (!IsValidWord(stop_words)) {
@@ -57,13 +65,16 @@ bool SearchServer::AddDocument(int document_id, const std::string& document,
     
     const double inverse_word_count = 1.0 / static_cast<double>(words.size());
     
+    std::map<std::string, double> word_frequencies;
+    
     for (const std::string& word : words) {
         word_to_document_id_to_term_frequency_[word][document_id] += inverse_word_count;
+        word_frequencies[word] += inverse_word_count;
     }
     
     document_ids_.push_back(document_id);
     
-    document_id_to_document_data_.emplace(document_id, DocumentData{ComputeAverageRating(ratings), status});
+    document_id_to_document_data_.emplace(document_id, DocumentData{ComputeAverageRating(ratings), status, word_frequencies});
     
     return true;
 } // AddDocument

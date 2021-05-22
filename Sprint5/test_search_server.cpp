@@ -23,6 +23,29 @@ void TestIteratingOverSearchServer() {
     assert((ids_in_search_server == std::vector<int>{0, 1, 2}));
 }
 
+void TestGetWordFrequencies() {
+    {
+        SearchServer search_server;
+        
+        search_server_helpers::AddDocument(search_server, 0, "funny funny cat", DocumentStatus::ACTUAL, {1, 2, 3});
+        
+        const auto word_frequencies = search_server.GetWordFrequencies(0);
+        
+        assert(word_frequencies.at("funny") == 2.0 / 3.0);
+        assert(word_frequencies.at("cat") == 1.0 / 3.0);
+    }
+    
+    {
+        SearchServer search_server;
+        
+        const auto word_frequencies_of_not_existing_document = search_server.GetWordFrequencies(42);
+        
+        std::map<std::string, double> empty_map;
+        
+        assert(empty_map == word_frequencies_of_not_existing_document);
+    }
+}
+
 /*
 void TestStopWordsExclusion() {
     const std::vector<int> ratings = {1, 2, 3};
@@ -447,5 +470,6 @@ void TestSearchServer() {
 //    RUN_TEST(TestQueryWithSpecialSymbol);
 //    RUN_TEST(TestEmptyMinusWord);
     RUN_TEST(TestIteratingOverSearchServer);
+    RUN_TEST(TestGetWordFrequencies);
 }
 

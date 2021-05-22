@@ -2,6 +2,8 @@
 
 void TestIteratingOverSearchServer();
 
+void TestGetWordFrequencies();
+
 //void TestStopWordsExclusion();
 //
 //void TestAddedDocumentsCanBeFound();

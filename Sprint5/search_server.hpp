@@ -44,10 +44,13 @@ public:
     
     std::vector<int>::const_iterator end() const;
     
+    const std::map<std::string, double>& GetWordFrequencies(int document_id) const;
+    
 private:
     struct DocumentData {
         int rating = 0;
         DocumentStatus status = DocumentStatus::ACTUAL;
+        std::map<std::string, double> word_frequencies;
     };
     
     struct Query {
