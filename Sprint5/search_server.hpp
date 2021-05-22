@@ -40,6 +40,10 @@ public:
     
     std::vector<int>::iterator end();
     
+    std::vector<int>::const_iterator begin() const;
+    
+    std::vector<int>::const_iterator end() const;
+    
 private:
     struct DocumentData {
         int rating = 0;

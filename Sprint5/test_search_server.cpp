@@ -422,29 +422,30 @@ void TestSearchNonExistentWord() {
     
     search_server.FindTopDocuments("potato");
 }
-
-void TestSearchServer() {
-    RUN_TEST(TestStopWordsExclusion);
-    RUN_TEST(TestAddedDocumentsCanBeFound);
-    RUN_TEST(TestMinusWordsExcludeDocuments);
-    RUN_TEST(TestMatchDocumentResults);
-    RUN_TEST(TestFindTopDocumentsResultsSorting);
-    RUN_TEST(TestRatingsCalculation);
-    RUN_TEST(TestFilteringByPredicate);
-    RUN_TEST(TestFilteringByStatus);
-    RUN_TEST(TestRelevanceCalculation);
-    
-    // tests for Sprint3
-    RUN_TEST(TestGetDocumentIdThrowsOutOfRange);
-    RUN_TEST(TestSearchNonExistentWord);
-    
-    RUN_TEST(TestSplitIntoWordsEscapesSpaces);
-    RUN_TEST(TestGetDocumentIdReturnsId);
-    RUN_TEST(TestAddDocumentWithRepeatingId);
-    RUN_TEST(TestAddDocumentWithNegativeId);
-    RUN_TEST(TestAddDocumentWithSpecialSymbol);
-    RUN_TEST(TestDoubleMinusWord);
-    RUN_TEST(TestQueryWithSpecialSymbol);
-    RUN_TEST(TestEmptyMinusWord);
-}
 */
+void TestSearchServer() {
+//    RUN_TEST(TestStopWordsExclusion);
+//    RUN_TEST(TestAddedDocumentsCanBeFound);
+//    RUN_TEST(TestMinusWordsExcludeDocuments);
+//    RUN_TEST(TestMatchDocumentResults);
+//    RUN_TEST(TestFindTopDocumentsResultsSorting);
+//    RUN_TEST(TestRatingsCalculation);
+//    RUN_TEST(TestFilteringByPredicate);
+//    RUN_TEST(TestFilteringByStatus);
+//    RUN_TEST(TestRelevanceCalculation);
+//
+//    // tests for Sprint3
+//    RUN_TEST(TestGetDocumentIdThrowsOutOfRange);
+//    RUN_TEST(TestSearchNonExistentWord);
+//
+//    RUN_TEST(TestSplitIntoWordsEscapesSpaces);
+//    RUN_TEST(TestGetDocumentIdReturnsId);
+//    RUN_TEST(TestAddDocumentWithRepeatingId);
+//    RUN_TEST(TestAddDocumentWithNegativeId);
+//    RUN_TEST(TestAddDocumentWithSpecialSymbol);
+//    RUN_TEST(TestDoubleMinusWord);
+//    RUN_TEST(TestQueryWithSpecialSymbol);
+//    RUN_TEST(TestEmptyMinusWord);
+    RUN_TEST(TestIteratingOverSearchServer);
+}
+

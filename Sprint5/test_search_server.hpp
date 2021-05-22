@@ -38,5 +38,5 @@ void TestIteratingOverSearchServer();
 //
 //void TestSearchNonExistentWord();
 //
-//void TestSearchServer();
+void TestSearchServer();
 

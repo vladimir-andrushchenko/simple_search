@@ -9,7 +9,7 @@
 using namespace std::literals;
 
 int main() {
-    TestIteratingOverSearchServer();
+    TestSearchServer();
     /*
     SearchServer search_server("and with"s);
 

@@ -16,6 +16,15 @@ std::vector<int>::iterator SearchServer::end() {
     return document_ids_.end();
 }
 
+std::vector<int>::const_iterator SearchServer::begin() const {
+    return document_ids_.begin();
+}
+
+std::vector<int>::const_iterator SearchServer::end() const {
+    return document_ids_.end();
+}
+
+
 SearchServer::SearchServer(const std::string& stop_words) {
     if (!IsValidWord(stop_words)) {
         throw std::invalid_argument("stop word contains unaccaptable symbol"s);
@@ -256,28 +265,31 @@ void FindTopDocuments(const SearchServer& search_server, const std::string& raw_
     LOG_DURATION("Operation time");
     
     std::cout << "Результаты поиска по запросу: "s << raw_query << std::endl;
+    
     try {
         for (const Document& document : search_server.FindTopDocuments(raw_query)) {
             PrintDocument(document);
         }
+        
         std::cout << std::endl;
+        
     } catch (const std::exception& e) {
         std::cout << "Ошибка поиска: "s << e.what() << std::endl;
     }
 }
 
-void MatchDocuments( SearchServer& search_server, const std::string& query) {
+void MatchDocuments(const SearchServer& search_server, const std::string& query) {
     LOG_DURATION_STREAM("Operation time", std::cout);
     
     try {
         std::cout << "Матчинг документов по запросу: "s << query << std::endl;
-//        const int document_count = search_server.GetDocumentCount();
-//        for (int index = 0; index < document_count; ++index) {
-//            const int document_id = search_server.GetDocumentId(index);
-        for (int document_id : search_server) {
+        
+        for (const int document_id : search_server) {
             const auto [words, status] = search_server.MatchDocument(query, document_id);
+            
             PrintMatchDocumentResult(document_id, words, status);
         }
+        
     } catch (const std::exception& e) {
         std::cout << "Ошибка матчинга документов на запрос "s << query << ": "s << e.what() << std::endl;
     }
