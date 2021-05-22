@@ -14,7 +14,7 @@ int RequestQueue::GetNoResultRequests() const {
 }
 
 void RequestQueue::RemoveOutdatedRequests() {
-    if (requests_.size() >= kMinutessInADay) {
+    if (requests_.size() >= kMinutesInADay) {
         if(requests_.front().results == 0) {
             --no_result_requests_counter_;
         }
