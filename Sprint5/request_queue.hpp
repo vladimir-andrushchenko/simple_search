@@ -14,7 +14,7 @@ public:
     std::vector<Document> AddFindRequest(const std::string& raw_query, DocumentPredicate document_predicate);
     
     std::vector<Document> AddFindRequest(const std::string& raw_query,
-                                         DocumentStatus status = DocumentStatus::kActual);
+                                         DocumentStatus status = DocumentStatus::ACTUAL /*kActual*/);
     
     int GetNoResultRequests() const;
     

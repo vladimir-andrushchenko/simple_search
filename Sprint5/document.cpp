@@ -23,18 +23,31 @@ std::ostream& operator<<(std::ostream& output, const Document& document) {
 
 std::ostream& operator<<(std::ostream& out, const DocumentStatus status) {
     switch (status) {
-        case DocumentStatus::kActual:
+        case DocumentStatus::ACTUAL:
             out << "kActual"s;
             break;
-        case DocumentStatus::kBanned:
+        case DocumentStatus::BANNED:
             out << "kBanned"s;
             break;
-        case DocumentStatus::kIrrelevant:
+        case DocumentStatus::IRRELEVANT:
             out << "kIrrelevant"s;
             break;
-        case DocumentStatus::kRemoved:
+        case DocumentStatus::REMOVED:
             out << "kRemoved"s;
             break;
+            
+//        case DocumentStatus::kActual:
+//            out << "kActual"s;
+//            break;
+//        case DocumentStatus::kBanned:
+//            out << "kBanned"s;
+//            break;
+//        case DocumentStatus::kIrrelevant:
+//            out << "kIrrelevant"s;
+//            break;
+//        case DocumentStatus::kRemoved:
+//            out << "kRemoved"s;
+//            break;
     }
     
     return out;

@@ -12,11 +12,18 @@ struct Document {
 };
 
 enum class DocumentStatus {
-    kActual,
-    kIrrelevant,
-    kBanned,
-    kRemoved,
+    ACTUAL,
+    IRRELEVANT,
+    BANNED,
+    REMOVED,
 };
+
+//enum class DocumentStatus {
+//    kActual,
+//    kIrrelevant,
+//    kBanned,
+//    kRemoved,
+//};
 
 std::ostream& operator<<(std::ostream& out, const DocumentStatus status);
 
