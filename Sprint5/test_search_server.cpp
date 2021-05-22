@@ -63,6 +63,19 @@ void TestDeletingDocument() {
     assert(results.empty());
 }
 
+void TestRemoveDuplicates() {
+    SearchServer search_server;
+    
+    search_server_helpers::AddDocument(search_server, 0, "funny bunny", DocumentStatus::ACTUAL, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 1, "funny doggy", DocumentStatus::ACTUAL, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 2, "happy cat", DocumentStatus::ACTUAL, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 3, "cat cat happy", DocumentStatus::ACTUAL, {1, 2, 3});
+    
+    search_server_helpers::RemoveDuplicates(search_server);
+    
+    assert(search_server.GetDocumentCount() == 3);
+}
+
 /*
 void TestStopWordsExclusion() {
     const std::vector<int> ratings = {1, 2, 3};
@@ -489,5 +502,6 @@ void TestSearchServer() {
     RUN_TEST(TestIteratingOverSearchServer);
     RUN_TEST(TestGetWordFrequencies);
     RUN_TEST(TestDeletingDocument);
+    RUN_TEST(TestRemoveDuplicates);
 }
 

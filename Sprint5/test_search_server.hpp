@@ -6,6 +6,8 @@ void TestGetWordFrequencies();
 
 void TestDeletingDocument();
 
+void TestRemoveDuplicates();
+
 //void TestStopWordsExclusion();
 //
 //void TestAddedDocumentsCanBeFound();
