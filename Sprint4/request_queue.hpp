@@ -29,7 +29,7 @@ private:
     };
     
 private:
-    static constexpr int kMinutessInADay = 1440;
+    static constexpr int kMinutesInADay = 1440;
     
 private:
     void RemoveOutdatedRequests();
