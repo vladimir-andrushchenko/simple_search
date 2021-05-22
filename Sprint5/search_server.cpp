@@ -8,6 +8,14 @@
 
 using namespace std::literals;
 
+std::vector<int>::iterator SearchServer::begin() {
+    return document_ids_.begin();
+}
+
+std::vector<int>::iterator SearchServer::end() {
+    return document_ids_.end();
+}
+
 SearchServer::SearchServer(const std::string& stop_words) {
     if (!IsValidWord(stop_words)) {
         throw std::invalid_argument("stop word contains unaccaptable symbol"s);
@@ -15,7 +23,6 @@ SearchServer::SearchServer(const std::string& stop_words) {
     
     SetStopWords(stop_words);
 }
-
 
 void SearchServer::SetStopWords(const std::string& text) {
     for (const std::string& word : string_processing::SplitIntoWords(text)) {
@@ -95,9 +102,9 @@ std::tuple<std::vector<std::string>, DocumentStatus> SearchServer::MatchDocument
     return std::tuple<std::vector<std::string>, DocumentStatus>{matched_words, document_id_to_document_data_.at(document_id).status};
 } // MatchDocument
 
-int SearchServer::GetDocumentId(int index) const {
-    return document_ids_.at(index);
-}
+//int SearchServer::GetDocumentId(int index) const {
+//    return document_ids_.at(index);
+//}
 
 
 std::vector<std::string> SearchServer::SplitIntoWordsNoStop(const std::string& text) const {
@@ -259,14 +266,15 @@ void FindTopDocuments(const SearchServer& search_server, const std::string& raw_
     }
 }
 
-void MatchDocuments(const SearchServer& search_server, const std::string& query) {
+void MatchDocuments( SearchServer& search_server, const std::string& query) {
     LOG_DURATION_STREAM("Operation time", std::cout);
     
     try {
         std::cout << "Матчинг документов по запросу: "s << query << std::endl;
-        const int document_count = search_server.GetDocumentCount();
-        for (int index = 0; index < document_count; ++index) {
-            const int document_id = search_server.GetDocumentId(index);
+//        const int document_count = search_server.GetDocumentCount();
+//        for (int index = 0; index < document_count; ++index) {
+//            const int document_id = search_server.GetDocumentId(index);
+        for (int document_id : search_server) {
             const auto [words, status] = search_server.MatchDocument(query, document_id);
             PrintMatchDocumentResult(document_id, words, status);
         }

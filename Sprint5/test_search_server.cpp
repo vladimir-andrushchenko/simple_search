@@ -20,7 +20,7 @@ void TestIteratingOverSearchServer() {
         ids_in_search_server.push_back(document_id);
     }
     
-    assert((ids_in_search_server == std::vector<int>{1, 2, 3}));
+    assert((ids_in_search_server == std::vector<int>{0, 1, 2}));
 }
 
 /*

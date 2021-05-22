@@ -34,7 +34,11 @@ public:
     
     std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const;
     
-    int GetDocumentId(int index) const;
+//    int GetDocumentId(int index) const;
+    
+    std::vector<int>::iterator begin();
+    
+    std::vector<int>::iterator end();
     
 private:
     struct DocumentData {
