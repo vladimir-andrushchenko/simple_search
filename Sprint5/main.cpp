@@ -3,15 +3,15 @@
 
 #include "search_server.hpp"
 #include "request_queue.hpp"
-#include "test_search_server.hpp"
 #include "paginator.hpp"
+
+//#include "test_search_server.hpp"
 
 using namespace std::literals;
 
 int main() {
-    TestSearchServer();
+//    TestSearchServer();
     
-    /*
     SearchServer search_server("and with"s);
 
     search_server_helpers::AddDocument(search_server, 1, "funny pet and nasty rat"s, DocumentStatus::ACTUAL, {7, 2, 7});
@@ -39,8 +39,7 @@ int main() {
     search_server_helpers::AddDocument(search_server, 9, "nasty rat with curly hair"s, DocumentStatus::ACTUAL, {1, 2});
     
     std::cout << "Before duplicates removed: "s << search_server.GetDocumentCount() << std::endl;
-    RemoveDuplicates(search_server);
-    std::cout << "After duplicates removed: "s << search_server.GetDocumentCount() << std::endl;
-     */
+    search_server_helpers::RemoveDuplicates(search_server);
+    std::cout << "After duplsicates removed: "s << search_server.GetDocumentCount() << std::endl;
 }
 

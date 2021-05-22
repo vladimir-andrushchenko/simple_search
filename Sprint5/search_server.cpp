@@ -350,6 +350,7 @@ void RemoveDuplicates(SearchServer& search_server) {
         
         if (unique_documents.insert(words_in_document).second == false) {
             duplicate_document_ids.push_back(document_id);
+            std::cout << "Found duplicate document id "s << document_id << std::endl;
         }
     }
     
