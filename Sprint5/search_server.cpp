@@ -9,14 +9,6 @@
 
 using namespace std::literals;
 
-//std::vector<int>::iterator SearchServer::begin() {
-//    return document_ids_.begin();
-//}
-//
-//std::vector<int>::iterator SearchServer::end() {
-//    return document_ids_.end();
-//}
-
 std::vector<int>::const_iterator SearchServer::begin() const {
     return document_ids_.begin();
 }

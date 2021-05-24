@@ -27,9 +27,7 @@ void RemoveDuplicates(SearchServer& search_server) {
         }
     }
     
-    
     for (const int duplicate_id : duplicate_document_ids) {
         search_server.RemoveDocument(duplicate_id);
     }
-    
 }

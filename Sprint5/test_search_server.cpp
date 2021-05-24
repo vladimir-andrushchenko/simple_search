@@ -11,9 +11,9 @@
 void TestIteratingOverSearchServer() {
     SearchServer search_server;
     
-    search_server_helpers::AddDocument(search_server, 0, "cat in the city"s, DocumentStatus::ACTUAL, {1, 2, 3});
-    search_server_helpers::AddDocument(search_server, 1, "funny cat"s, DocumentStatus::ACTUAL, {1, 2, 3});
-    search_server_helpers::AddDocument(search_server, 2, "funny dog"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 0, "cat in the city"s, DocumentStatus::kActual, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 1, "funny cat"s, DocumentStatus::kActual, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 2, "funny dog"s, DocumentStatus::kActual, {1, 2, 3});
     
     std::vector<int> ids_in_search_server;
     
@@ -28,7 +28,7 @@ void TestGetWordFrequencies() {
     {
         SearchServer search_server;
         
-        search_server_helpers::AddDocument(search_server, 0, "funny funny cat"s, DocumentStatus::ACTUAL, {1, 2, 3});
+        search_server_helpers::AddDocument(search_server, 0, "funny funny cat"s, DocumentStatus::kActual, {1, 2, 3});
         
         const auto word_frequencies = search_server.GetWordFrequencies(0);
         
@@ -50,8 +50,8 @@ void TestGetWordFrequencies() {
 void TestDeletingDocument() {
     SearchServer search_server;
     
-    search_server_helpers::AddDocument(search_server, 0, "funny funny cat"s, DocumentStatus::ACTUAL, {1, 2, 3});
-    search_server_helpers::AddDocument(search_server, 1, "silly dog"s, DocumentStatus::ACTUAL, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 0, "funny funny cat"s, DocumentStatus::kActual, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 1, "silly dog"s, DocumentStatus::kActual, {1, 2, 3});
     
     auto results = search_server.FindTopDocuments("dog"s);
     
@@ -67,22 +67,16 @@ void TestDeletingDocument() {
 void TestRemoveDuplicates() {
     SearchServer search_server;
     
-    search_server_helpers::AddDocument(search_server, 0, "funny bunny", DocumentStatus::ACTUAL, {1, 2, 3});
-    search_server_helpers::AddDocument(search_server, 1, "funny doggy", DocumentStatus::ACTUAL, {1, 2, 3});
-    search_server_helpers::AddDocument(search_server, 2, "happy cat", DocumentStatus::ACTUAL, {1, 2, 3});
-    search_server_helpers::AddDocument(search_server, 3, "cat cat happy", DocumentStatus::ACTUAL, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 0, "funny bunny", DocumentStatus::kActual, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 1, "funny doggy", DocumentStatus::kActual, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 2, "happy cat", DocumentStatus::kActual, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 3, "cat cat happy", DocumentStatus::kActual, {1, 2, 3});
     
     RemoveDuplicates(search_server);
-    
-    for (const int id : search_server) {
-        std::cout << id << " "s;
-    }
-    std::cout << std::endl;
     
     assert(search_server.GetDocumentCount() == 3);
 }
 
-/*
 void TestStopWordsExclusion() {
     const std::vector<int> ratings = {1, 2, 3};
     
@@ -379,28 +373,6 @@ void TestSplitIntoWordsEscapesSpaces() {
     ASSERT_EQUAL(std::vector<std::string>{}, string_processing::SplitIntoWords("                 "s));
 }
 
-void TestGetDocumentIdReturnsId() {
-    SearchServer search_server;
-    
-    search_server.AddDocument(1, "пушистый кот пушистый хвост"s, DocumentStatus::kActual, {7, 2, 7});
-    search_server.AddDocument(2, "смешной пёс"s, DocumentStatus::kActual, {7, 2, 7});
-    
-    ASSERT_EQUAL(search_server.GetDocumentId(0), 1);
-    ASSERT_EQUAL(search_server.GetDocumentId(1), 2);
-}
-
-void TestGetDocumentIdThrowsOutOfRange() {
-    SearchServer search_server;
-    
-    try {
-        search_server.GetDocumentId(-1);
-    } catch (std::out_of_range& e) {
-        return;
-    }
-    
-    ASSERT_HINT(false, "GetDocumentId with negative id throws out_of_range"s);
-}
-
 void TestAddDocumentWithRepeatingId() {
     SearchServer search_server;
     
@@ -481,30 +453,25 @@ void TestSearchNonExistentWord() {
     
     search_server.FindTopDocuments("potato");
 }
-*/
+
 void TestSearchServer() {
-//    RUN_TEST(TestStopWordsExclusion);
-//    RUN_TEST(TestAddedDocumentsCanBeFound);
-//    RUN_TEST(TestMinusWordsExcludeDocuments);
-//    RUN_TEST(TestMatchDocumentResults);
-//    RUN_TEST(TestFindTopDocumentsResultsSorting);
-//    RUN_TEST(TestRatingsCalculation);
-//    RUN_TEST(TestFilteringByPredicate);
-//    RUN_TEST(TestFilteringByStatus);
-//    RUN_TEST(TestRelevanceCalculation);
-//
-//    // tests for Sprint3
-//    RUN_TEST(TestGetDocumentIdThrowsOutOfRange);
-//    RUN_TEST(TestSearchNonExistentWord);
-//
-//    RUN_TEST(TestSplitIntoWordsEscapesSpaces);
-//    RUN_TEST(TestGetDocumentIdReturnsId);
-//    RUN_TEST(TestAddDocumentWithRepeatingId);
-//    RUN_TEST(TestAddDocumentWithNegativeId);
-//    RUN_TEST(TestAddDocumentWithSpecialSymbol);
-//    RUN_TEST(TestDoubleMinusWord);
-//    RUN_TEST(TestQueryWithSpecialSymbol);
-//    RUN_TEST(TestEmptyMinusWord);
+    RUN_TEST(TestStopWordsExclusion);
+    RUN_TEST(TestAddedDocumentsCanBeFound);
+    RUN_TEST(TestMinusWordsExcludeDocuments);
+    RUN_TEST(TestMatchDocumentResults);
+    RUN_TEST(TestFindTopDocumentsResultsSorting);
+    RUN_TEST(TestRatingsCalculation);
+    RUN_TEST(TestFilteringByPredicate);
+    RUN_TEST(TestFilteringByStatus);
+    RUN_TEST(TestRelevanceCalculation);
+    RUN_TEST(TestSearchNonExistentWord);
+    RUN_TEST(TestSplitIntoWordsEscapesSpaces);
+    RUN_TEST(TestAddDocumentWithRepeatingId);
+    RUN_TEST(TestAddDocumentWithNegativeId);
+    RUN_TEST(TestAddDocumentWithSpecialSymbol);
+    RUN_TEST(TestDoubleMinusWord);
+    RUN_TEST(TestQueryWithSpecialSymbol);
+    RUN_TEST(TestEmptyMinusWord);
     RUN_TEST(TestIteratingOverSearchServer);
     RUN_TEST(TestGetWordFrequencies);
     RUN_TEST(TestDeletingDocument);

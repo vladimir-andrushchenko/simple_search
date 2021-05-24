@@ -30,15 +30,9 @@ public:
     std::vector<Document> FindTopDocuments(const std::string& raw_query, Predicate predicate) const;
     
     std::vector<Document> FindTopDocuments(const std::string& raw_query,
-                                           const DocumentStatus& desired_status = DocumentStatus::ACTUAL /*kActual*/) const;
+                                           const DocumentStatus& desired_status = DocumentStatus::kActual) const;
     
     std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const;
-    
-//    int GetDocumentId(int index) const;
-    
-//    std::vector<int>::iterator begin();
-//    
-//    std::vector<int>::iterator end();
     
     std::vector<int>::const_iterator begin() const;
     
@@ -51,7 +45,7 @@ public:
 private:
     struct DocumentData {
         int rating = 0;
-        DocumentStatus status = DocumentStatus::ACTUAL;
+        DocumentStatus status = DocumentStatus::kActual;
         std::map<std::string, double> word_frequencies;
     };
     
