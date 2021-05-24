@@ -67,10 +67,10 @@ void TestDeletingDocument() {
 void TestRemoveDuplicates() {
     SearchServer search_server;
     
-    search_server_helpers::AddDocument(search_server, 0, "funny bunny", DocumentStatus::kActual, {1, 2, 3});
-    search_server_helpers::AddDocument(search_server, 1, "funny doggy", DocumentStatus::kActual, {1, 2, 3});
-    search_server_helpers::AddDocument(search_server, 2, "happy cat", DocumentStatus::kActual, {1, 2, 3});
-    search_server_helpers::AddDocument(search_server, 3, "cat cat happy", DocumentStatus::kActual, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 0, "funny bunny"s, DocumentStatus::kActual, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 1, "funny doggy"s, DocumentStatus::kActual, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 2, "happy cat"s, DocumentStatus::kActual, {1, 2, 3});
+    search_server_helpers::AddDocument(search_server, 3, "cat cat happy"s, DocumentStatus::kActual, {1, 2, 3});
     
     remove_duplicates::RemoveDuplicates(search_server);
     

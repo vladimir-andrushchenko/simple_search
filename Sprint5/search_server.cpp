@@ -27,7 +27,6 @@ const std::map<std::string, double>& SearchServer::GetWordFrequencies(int docume
 }
 
 void SearchServer::RemoveDocument(int document_id) {
-    // GetWordFrequencies relies on document_id_to_document_data_ so first delete from word_to_document_id_to_term_frequency_
     for (const auto& [word, term_frequency] : GetWordFrequencies(document_id)) {
         word_to_document_id_to_term_frequency_[word].erase(document_id);
         
