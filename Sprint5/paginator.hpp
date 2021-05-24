@@ -55,11 +55,11 @@ public:
         return !(pages_.begin() == pages_.end());
     }
     
-    auto Begin() const {
+    auto begin() const {
         return pages_.begin();
     }
     
-    auto End() const {
+    auto end() const {
         return pages_.end();
     }
     

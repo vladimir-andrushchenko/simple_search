@@ -36,9 +36,9 @@ public:
     
 //    int GetDocumentId(int index) const;
     
-    std::vector<int>::iterator begin();
-    
-    std::vector<int>::iterator end();
+//    std::vector<int>::iterator begin();
+//    
+//    std::vector<int>::iterator end();
     
     std::vector<int>::const_iterator begin() const;
     
@@ -155,8 +155,6 @@ void FindTopDocuments(const SearchServer& search_server, const std::string& raw_
 void MatchDocuments(const SearchServer& search_server, const std::string& query);
 
 SearchServer CreateSearchServer(const std::string& stop_words);
-
-void RemoveDuplicates(SearchServer& search_server);
 
 } // namespace search_server_helpers
 

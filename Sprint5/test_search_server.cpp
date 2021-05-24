@@ -6,6 +6,7 @@
 #include "testing_framework.h"
 #include "search_server.hpp"
 #include "string_processing.hpp"
+#include "remove_duplicates.hpp"
 
 void TestIteratingOverSearchServer() {
     SearchServer search_server;
@@ -71,7 +72,12 @@ void TestRemoveDuplicates() {
     search_server_helpers::AddDocument(search_server, 2, "happy cat", DocumentStatus::ACTUAL, {1, 2, 3});
     search_server_helpers::AddDocument(search_server, 3, "cat cat happy", DocumentStatus::ACTUAL, {1, 2, 3});
     
-    search_server_helpers::RemoveDuplicates(search_server);
+    RemoveDuplicates(search_server);
+    
+    for (const int id : search_server) {
+        std::cout << id << " "s;
+    }
+    std::cout << std::endl;
     
     assert(search_server.GetDocumentCount() == 3);
 }

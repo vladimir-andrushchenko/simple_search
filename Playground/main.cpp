@@ -1,10 +1,6 @@
-#include <algorithm>
-#include <cmath>
-#include <cstdint>
-#include <iostream>
-#include <random>
 #include <vector>
-
+#include <algorithm>
+#include <iostream>
 
 using namespace std;
 

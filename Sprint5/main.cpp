@@ -6,12 +6,12 @@
 #include "paginator.hpp"
 #include "remove_duplicates.hpp"
 
-//#include "test_search_server.hpp"
+#include "test_search_server.hpp"
 
 using namespace std::literals;
 
 int main() {
-//    TestSearchServer();
+    TestSearchServer();
     
     SearchServer search_server("and with"s);
 
