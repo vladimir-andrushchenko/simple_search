@@ -72,7 +72,7 @@ void TestRemoveDuplicates() {
     search_server_helpers::AddDocument(search_server, 2, "happy cat", DocumentStatus::kActual, {1, 2, 3});
     search_server_helpers::AddDocument(search_server, 3, "cat cat happy", DocumentStatus::kActual, {1, 2, 3});
     
-    RemoveDuplicates(search_server);
+    remove_duplicates::RemoveDuplicates(search_server);
     
     assert(search_server.GetDocumentCount() == 3);
 }

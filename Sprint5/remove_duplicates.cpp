@@ -7,6 +7,8 @@
 
 using namespace std::literals;
 
+namespace remove_duplicates {
+
 void RemoveDuplicates(SearchServer& search_server) {
     std::set<std::set<std::string>> unique_documents;
     
@@ -30,4 +32,6 @@ void RemoveDuplicates(SearchServer& search_server) {
     for (const int duplicate_id : duplicate_document_ids) {
         search_server.RemoveDocument(duplicate_id);
     }
+}
+
 }
