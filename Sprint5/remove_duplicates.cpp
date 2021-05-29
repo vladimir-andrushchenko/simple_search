@@ -15,7 +15,7 @@ void RemoveDuplicates(SearchServer& search_server) {
     std::vector<int> duplicate_document_ids;
     
     for (const int document_id : search_server) {
-        const std::map<std::string, double> words_to_term_frequencies = search_server.GetWordFrequencies(document_id);
+        const auto words_to_term_frequencies = search_server.GetWordFrequencies(document_id);
         
         std::set<std::string> words_in_document;
         
