@@ -18,11 +18,12 @@ std::vector<int>::const_iterator SearchServer::end() const {
 }
 
 const std::map<std::string, double>& SearchServer::GetWordFrequencies(int document_id) const {
+    const static std::map<std::string, double> empty_map;
+    
     if (document_id_to_document_data_.count(document_id) > 0) {
         return document_id_to_document_data_.at(document_id).word_frequencies;
     }
     
-    const static std::map<std::string, double> empty_map;
     return empty_map;
 }
 
