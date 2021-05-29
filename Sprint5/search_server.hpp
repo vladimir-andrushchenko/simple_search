@@ -34,9 +34,9 @@ public:
     
     std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const;
     
-    std::vector<int>::const_iterator begin() const;
+    std::set<int>::const_iterator begin() const;
     
-    std::vector<int>::const_iterator end() const;
+    std::set<int>::const_iterator end() const;
     
     const std::map<std::string, double>& GetWordFrequencies(int document_id) const;
     
@@ -89,7 +89,7 @@ private:
     
     std::map<int, DocumentData> document_id_to_document_data_;
     
-    std::vector<int> document_ids_;
+    std::set<int> document_ids_;
 };
 
 template <typename StringCollection>

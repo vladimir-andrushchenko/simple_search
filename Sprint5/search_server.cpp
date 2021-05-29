@@ -9,11 +9,11 @@
 
 using namespace std::literals;
 
-std::vector<int>::const_iterator SearchServer::begin() const {
+std::set<int>::const_iterator SearchServer::begin() const {
     return document_ids_.begin();
 }
 
-std::vector<int>::const_iterator SearchServer::end() const {
+std::set<int>::const_iterator SearchServer::end() const {
     return document_ids_.end();
 }
 
@@ -38,7 +38,7 @@ void SearchServer::RemoveDocument(int document_id) {
     
     document_id_to_document_data_.erase(document_id);
     
-    document_ids_.erase(std::remove(document_ids_.begin(), document_ids_.end(), document_id));
+    document_ids_.erase(document_id);
 }
 
 SearchServer::SearchServer(const std::string& stop_words) {
@@ -80,7 +80,7 @@ bool SearchServer::AddDocument(int document_id, const std::string& document,
         word_frequencies[word] += inverse_word_count;
     }
     
-    document_ids_.push_back(document_id);
+    document_ids_.insert(document_id);
     
     document_id_to_document_data_.emplace(document_id, DocumentData{ComputeAverageRating(ratings), status, word_frequencies});
     
