@@ -18,7 +18,7 @@ std::vector<int>::const_iterator SearchServer::end() const {
 }
 
 const std::map<std::string, double>& SearchServer::GetWordFrequencies(int document_id) const {
-    if (document_id_to_document_data_.count(document_id) == 1) {
+    if (document_id_to_document_data_.count(document_id) > 0) {
         return document_id_to_document_data_.at(document_id).word_frequencies;
     }
     
