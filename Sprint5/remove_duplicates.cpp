@@ -23,7 +23,7 @@ void RemoveDuplicates(SearchServer& search_server) {
             words_in_document.insert(word);
         }
         
-        if (unique_documents.insert(words_in_document).second == false) {
+        if (unique_documents.insert(words_in_document).second) {
             duplicate_document_ids.push_back(document_id);
             std::cout << "Found duplicate document id "s << document_id << std::endl;
         }
