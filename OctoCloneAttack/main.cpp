@@ -52,9 +52,10 @@ public:
     // равным (количество_щупалец + 1):
     // 1, 2, 3, ...
     // Возвращает ссылку на добавленное щупальце
-    // Tentacle& AddTentacle() {
-    //     Реализуйте добавление щупальца самостоятельно
-    // }
+     Tentacle& AddTentacle() {
+         tentacles_.push_back(new Tentacle(static_cast<int>(tentacles_.size()) + 1));
+         return *tentacles_.GetItems().back();
+     }
 
     int GetTentacleCount() const noexcept {
         return static_cast<int>(tentacles_.size());
@@ -91,7 +92,7 @@ int main() {
 
     // Осьминогу можно добавлять щупальца
     // Раскомментируйте код, после того как реализуете метод AddTentacle
-    /*
+    
     {
         Octopus octopus(1);
         Tentacle* t0 = &octopus.GetTentacle(0);
@@ -109,7 +110,7 @@ int main() {
             assert(octopus.GetTentacle(i).GetId() == i + 1);
         }
     }
-    */
+    
 
     // Осьминоги могут прицепляться к щупальцам друг друга
     {
