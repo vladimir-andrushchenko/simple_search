@@ -31,6 +31,16 @@ public:
             delete item;
         }
     }
+    
+    PtrVector& operator=(const PtrVector& other) {
+        if (this != &other) {
+            PtrVector other_copy(other);
+            
+            items_.swap(other_copy.GetItems());
+        }
+        
+        return *this;
+    }
 
 public:
     // Возвращает ссылку на вектор указателей
