@@ -32,6 +32,7 @@ public:
         }
     }
 
+public:
     // Возвращает ссылку на вектор указателей
     std::vector<T*>& GetItems() noexcept {
         return items_;

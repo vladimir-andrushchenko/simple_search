@@ -228,6 +228,7 @@
 		755FABE32667B62E00218F9C /* ptr_vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ptr_vector.h; sourceTree = "<group>"; };
 		755FABE82667B6BE00218F9C /* OctoCloneAttack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = OctoCloneAttack; sourceTree = BUILT_PRODUCTS_DIR; };
 		755FABEA2667B6BE00218F9C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		755FABEF2667BDCE00218F9C /* scoped_pointer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scoped_pointer.h; sourceTree = "<group>"; };
 		75739D2E264153C3001BCCE0 /* PrintRange */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PrintRange; sourceTree = BUILT_PRODUCTS_DIR; };
 		75739D30264153C3001BCCE0 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		75739D492641D0FF001BCCE0 /* Playground */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Playground; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -502,6 +503,7 @@
 			isa = PBXGroup;
 			children = (
 				755FABD32667900200218F9C /* main.cpp */,
+				755FABEF2667BDCE00218F9C /* scoped_pointer.h */,
 			);
 			path = ScopedPointer;
 			sourceTree = "<group>";
