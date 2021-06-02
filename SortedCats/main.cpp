@@ -64,7 +64,6 @@ ostream& operator<<(ostream& out, const Cat& cat) {
     return out;
 }
 
-
 // Возвращает массив указателей на элементы вектора cats, отсортированные с использованием
 // компаратора comp. Компаратор comp - функция, принимающая два аргумента типа const Cat&
 // и возвращающая true, если значения упорядочены, и false в ином случае
@@ -108,7 +107,6 @@ void PrintCatPointerValues(const vector<const Cat*>& cat_pointers, ostream& out)
     out << "}"s;
 }
 
-
 int main() {
     const vector<Cat> cats = {
         {"“Cat in Boots”"s, Gender::Male, CatBreed::Bengal, 2},
@@ -139,3 +137,4 @@ int main() {
         cout << endl;
     }
 }
+
