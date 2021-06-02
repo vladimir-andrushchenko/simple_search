@@ -5,8 +5,6 @@
 #include <cassert>
 #include <vector>
 
-using namespace std;
-
 template <typename T>
 class PtrVector {
 public:
@@ -35,15 +33,39 @@ public:
     }
 
     // Возвращает ссылку на вектор указателей
-    vector<T*>& GetItems() noexcept {
+    std::vector<T*>& GetItems() noexcept {
         return items_;
     }
 
     // Возвращает константную ссылку на вектор указателей
-    vector<T*> const& GetItems() const noexcept {
+    std::vector<T*> const& GetItems() const noexcept {
         return items_;
+    }
+    
+    typename std::vector<T*>::const_iterator begin() {
+        return items_.begin();
+    }
+    
+    typename std::vector<T*>::const_iterator end() {
+        return items_.end();
+    }
+    
+    auto size() const {
+        return items_.size();
+    }
+    
+    auto at(size_t i) const {
+        return items_.at(i);
+    }
+    
+    void clear() {
+        items_.clear();
+    }
+    
+    void push_back(T* element) {
+        items_.push_back(element);
     }
 
 private:
-    vector<T*> items_;
+    std::vector<T*> items_;
 };

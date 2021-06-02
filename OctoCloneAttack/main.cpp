@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "ptr_vector.h"
+
 using namespace std;
 
 // Щупальце
@@ -98,7 +100,7 @@ private:
     }
 
     // Вектор хранит указатели на щупальца. Сами объекты щупалец находятся в куче
-    vector<Tentacle*> tentacles_;
+    PtrVector<Tentacle> tentacles_;
 };
 
 int main() {
