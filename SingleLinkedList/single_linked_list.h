@@ -1,22 +1,12 @@
 #pragma once
 
+#include <iterator>
+#include <cstddef>
+
 using namespace std;
 
 template <typename Type>
 class SingleLinkedList {
-public:
-    struct Node {
-        Node() = default;
-        
-        Node(const Type& val, Node* next)
-        : value(val)
-        , next_node(next) {
-        }
-        
-        Type value;
-        Node* next_node = nullptr;
-    };
-    
 public:
     ~SingleLinkedList() {
         Clear();
@@ -49,6 +39,19 @@ public:
             --size_;
         }
     }
+    
+private:
+    struct Node {
+        Node() = default;
+        
+        Node(const Type& val, Node* next)
+        : value(val)
+        , next_node(next) {
+        }
+        
+        Type value;
+        Node* next_node = nullptr;
+    };
     
 private:
     Node head_{};
