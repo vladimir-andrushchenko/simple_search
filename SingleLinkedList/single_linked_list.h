@@ -24,21 +24,10 @@ public:
     }
     
     // Вставляет элемент value в начало списка за время O(1)
-    void PushFront(const Type& value) {
-        head_.next_node = new Node(value, head_.next_node);
-        ++size_;
-    }
+    void PushFront(const Type& value);
     
     // Очищает список за время O(N)
-    void Clear() noexcept {
-        while (head_.next_node) {
-            Node* current_node = head_.next_node;
-            head_.next_node = current_node->next_node;
-            delete current_node;
-            
-            --size_;
-        }
-    }
+    void Clear() noexcept;
     
 private:
     struct Node {
@@ -58,3 +47,19 @@ private:
     size_t size_ = 0;
 };
 
+template <typename Type>
+void SingleLinkedList<Type>::PushFront(const Type& value) {
+    head_.next_node = new Node(value, head_.next_node);
+    ++size_;
+}
+
+template <typename Type>
+void SingleLinkedList<Type>::Clear() noexcept {
+    while (head_.next_node) {
+        Node* current_node = head_.next_node;
+        head_.next_node = current_node->next_node;
+        delete current_node;
+        
+        --size_;
+    }
+}
