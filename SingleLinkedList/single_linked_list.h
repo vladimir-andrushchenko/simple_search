@@ -3,6 +3,7 @@
 #include <iterator>
 #include <cstddef>
 #include <vector>
+#include <forward_list>
 
 using namespace std;
 
@@ -22,47 +23,45 @@ public:
     SingleLinkedList() = default;
     
     SingleLinkedList(std::initializer_list<Type> values) {
+        // Сначала надо удостовериться, что текущий список пуст
         assert(size_ == 0 && head_.next_node == nullptr);
-        assert(values.size() > 0);
-        
-        SingleLinkedList temp;
+        assert(values.begin() != values.end());
+ 
+        auto last_node = before_begin_;
 
-        for (int i = static_cast<int>(values.size()) - 1; i >= 0; --i) {
-            temp.PushFront(*(values.begin() + i));
+        for (const auto& value : values) {
+            InsertAfter(last_node.GetRawPointer(), value);
+            ++last_node;
         }
-        
-        swap(temp);
     }
     
     SingleLinkedList(const SingleLinkedList<Type>& other) {
+        // Сначала надо удостовериться, что текущий список пуст
         assert(size_ == 0 && head_.next_node == nullptr);
-        
-        std::vector<Type> temporary_container(other.size_);
+        assert(other.begin() != other.end());
+ 
+        auto last_node = before_begin_;
 
-        auto runner = other.begin();
-        
-        for (auto it = temporary_container.begin(); it != temporary_container.end(); ++it) {
-            *it = *runner++;
+        for (const auto& value : other) {
+            InsertAfter(last_node.GetRawPointer(), value);
+            ++last_node;
         }
-
-        SingleLinkedList temp;
-        
-        for (auto it = temporary_container.rbegin(); it != temporary_container.rend(); ++it) {
-            temp.PushFront(*it);
-        }
-        
-        swap(temp);
     }
+    
+//    template <typename Iterator>
+//    SingleLinkedList(Iterator begin, Iterator)
     
     ~SingleLinkedList() {
         Clear();
     }
     
-    SingleLinkedList& operator=(const SingleLinkedList& rhs) {
-        
-        
-        return *this;
-    }
+    
+    
+//    SingleLinkedList& operator=(const SingleLinkedList& rhs) {
+//
+//
+//        return *this;
+//    }
     
 public:
     // Возвращает количество элементов в списке за время O(1)
@@ -127,6 +126,19 @@ private:
         Type value;
         Node* next_node = nullptr;
     };
+    
+public:
+    void InsertAfter(Node* node, const Type& value) {
+        if (node == nullptr) {
+            PushFront(value);
+        }
+        
+        const auto node_after_inserted = node->next_node;
+        
+        Node* new_node = new Node{value, node_after_inserted};
+        
+        node->next_node = new_node;
+    }
     
 private:
     Node head_{};
@@ -219,6 +231,10 @@ public:
     
     [[nodiscard]] pointer operator->() const noexcept {
         return &(node_->value);
+    }
+    
+    auto GetRawPointer() {
+        return node_;
     }
     
 private:
