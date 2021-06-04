@@ -58,6 +58,12 @@ public:
         Clear();
     }
     
+    SingleLinkedList& operator=(const SingleLinkedList& rhs) {
+        
+        
+        return *this;
+    }
+    
 public:
     // Возвращает количество элементов в списке за время O(1)
     [[nodiscard]] size_t GetSize() const noexcept {

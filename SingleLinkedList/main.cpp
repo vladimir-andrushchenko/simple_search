@@ -350,7 +350,7 @@ void TestCompareAndCopy() {
             assert(list_copy == non_empty_list);
         }
     }
-    /*
+    
     // Присваивание списков
     {
         const SingleLinkedList<int> source_list{1, 2, 3, 4};
@@ -422,7 +422,7 @@ void TestCompareAndCopy() {
             assert(false);
         }
     }
- */
+ 
 }
 
 int main() {
