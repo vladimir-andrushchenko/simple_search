@@ -270,7 +270,7 @@ void TestCompareAndCopy() {
         assert(list_2 != list_1);
         assert(empty_list == another_empty_list);
     }
-/*
+
     // Обмен содержимого списков
     {
         SingleLinkedList<int> first;
@@ -313,7 +313,7 @@ void TestCompareAndCopy() {
             assert(second.GetSize() == old_second_size);
         }
     }
-
+    /*
     // Инициализация списка при помощи std::initializer_list
     {
         SingleLinkedList<int> list{1, 2, 3, 4, 5};

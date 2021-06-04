@@ -12,6 +12,24 @@ public:
     class BasicIterator;
     
 public:
+//    SingleLinkedList(std::initializer_list<Type> values) {
+//        SingleLinkedList temp;
+//
+//        for (auto value : values) {
+//            temp.PushFront(value);
+//        }
+//
+//        assert(size_ == 0 && head_.next_node == nullptr);
+//
+//        for (auto value : temp) {
+//            PushFront(value);
+//        }
+//    }
+//
+//    SingleLinkedList(const SingleLinkedList& other) {
+//        // Реализуйте конструктор самостоятельно
+//    }
+    
     ~SingleLinkedList() {
         Clear();
     }
@@ -32,6 +50,12 @@ public:
     
     // Очищает список за время O(N)
     void Clear() noexcept;
+    
+    // Обменивает содержимое списков за время O(1)
+    void swap(SingleLinkedList& other) noexcept {
+        std::swap(head_, other.head_);
+        std::swap(size_, other.size_);
+    }
     
 public:
     using value_type = Type;
@@ -88,12 +112,14 @@ private:
     Iterator end_{head_.next_node};
 };
 
+// PushFront
 template <typename Type>
 void SingleLinkedList<Type>::PushFront(const Type& value) {
     head_.next_node = new Node(value, head_.next_node);
     ++size_;
 }
 
+// Clear
 template <typename Type>
 void SingleLinkedList<Type>::Clear() noexcept {
     while (head_.next_node) {
@@ -105,6 +131,13 @@ void SingleLinkedList<Type>::Clear() noexcept {
     }
 }
 
+// swap
+template <typename Type>
+void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
+    lhs.swap(rhs);
+}
+
+// BasicIterator
 template <typename Type>
 template <typename ValueType>
 class SingleLinkedList<Type>::BasicIterator {
