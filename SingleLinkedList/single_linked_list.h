@@ -23,33 +23,26 @@ public:
     SingleLinkedList() = default;
     
     SingleLinkedList(std::initializer_list<Type> values) {
-        // Сначала надо удостовериться, что текущий список пуст
-        assert(size_ == 0 && head_.next_node == nullptr);
-        assert(values.begin() != values.end());
- 
-        auto last_node = before_begin_;
-
-        for (const auto& value : values) {
-            InsertAfter(last_node.GetRawPointer(), value);
-            ++last_node;
-        }
+        SingleLinkedList(values.begin(), values.end());
     }
     
     SingleLinkedList(const SingleLinkedList<Type>& other) {
+        SingleLinkedList(other.begin(), other.end());
+    }
+    
+    template <typename Iterator>
+    SingleLinkedList(Iterator begin, Iterator end) {
         // Сначала надо удостовериться, что текущий список пуст
         assert(size_ == 0 && head_.next_node == nullptr);
-        assert(other.begin() != other.end());
+        assert(begin != end);
  
         auto last_node = before_begin_;
 
-        for (const auto& value : other) {
-            InsertAfter(last_node.GetRawPointer(), value);
+        for (auto it = begin; it != end; ++it) {
+            InsertAfter(last_node.GetRawPointer(), *it);
             ++last_node;
         }
     }
-    
-//    template <typename Iterator>
-//    SingleLinkedList(Iterator begin, Iterator)
     
     ~SingleLinkedList() {
         Clear();
