@@ -442,7 +442,7 @@ int main() {
     RUN_TEST(TestEmptyList);
     RUN_TEST(TestPushFrontAndDelete);
     RUN_TEST(TestSilgleLinkedListIterator);
-//    RUN_TEST(TestCompareAndCopy);
+    RUN_TEST(TestCompareAndCopy);
     RUN_TEST(TestInsertAfter);
 
     return 0;

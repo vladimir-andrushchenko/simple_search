@@ -23,27 +23,31 @@ public:
     SingleLinkedList() = default;
     
     SingleLinkedList(std::initializer_list<Type> values) {
-        SingleLinkedList(values.begin(), values.end());
+        SingleLinkedList temp(values.begin(), values.end());
+        swap(temp);
     }
     
     SingleLinkedList(const SingleLinkedList<Type>& other) {
-        SingleLinkedList(other.begin(), other.end());
+        SingleLinkedList temp(other.begin(), other.end());
+        swap(temp);
     }
-    
+  
+private:
     template <typename Iterator>
     SingleLinkedList(Iterator begin, Iterator end) {
         // Сначала надо удостовериться, что текущий список пуст
         assert(size_ == 0 && head_.next_node == nullptr);
-        assert(begin != end);
  
         auto last_node = before_begin_;
 
         for (auto it = begin; it != end; ++it) {
             InsertAfter(last_node.GetRawPointer(), *it);
             ++last_node;
+            ++size_;
         }
     }
     
+public:
     ~SingleLinkedList() {
         Clear();
     }
@@ -51,7 +55,9 @@ public:
     
     
 //    SingleLinkedList& operator=(const SingleLinkedList& rhs) {
-//
+//        if (this != rhs) {
+//            SingleLinkedList temp()
+//        }
 //
 //        return *this;
 //    }
