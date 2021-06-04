@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <vector>
 #include <forward_list>
+#include <algorithm>
+#include <cassert>
 
 using namespace std;
 
@@ -52,15 +54,14 @@ public:
         Clear();
     }
     
-    
-    
-//    SingleLinkedList& operator=(const SingleLinkedList& rhs) {
-//        if (this != rhs) {
-//            SingleLinkedList temp()
-//        }
-//
-//        return *this;
-//    }
+    SingleLinkedList& operator=(const SingleLinkedList& rhs) {
+        if (this != &rhs) {
+            SingleLinkedList temp(rhs);
+            swap(temp);
+        }
+
+        return *this;
+    }
     
 public:
     // Возвращает количество элементов в списке за время O(1)
@@ -81,10 +82,12 @@ public:
     
     // Обменивает содержимое списков за время O(1)
     void swap(SingleLinkedList& other) noexcept {
-        std::swap(head_, other.head_);
+        auto temp = head_.next_node;
+        head_.next_node = other.head_.next_node;
+        other.head_.next_node = temp;
         std::swap(size_, other.size_);
     }
-    
+
 public:
     [[nodiscard]] Iterator begin() noexcept {
         auto before_begin_copy = before_begin_;
