@@ -313,7 +313,7 @@ void TestCompareAndCopy() {
             assert(second.GetSize() == old_second_size);
         }
     }
-    /*
+    
     // Инициализация списка при помощи std::initializer_list
     {
         SingleLinkedList<int> list{1, 2, 3, 4, 5};
@@ -321,7 +321,7 @@ void TestCompareAndCopy() {
         assert(!list.IsEmpty());
         assert(std::equal(list.begin(), list.end(), std::begin({1, 2, 3, 4, 5})));
     }
-
+    
     // Лексикографическое сравнение списков
     {
         using IntList = SingleLinkedList<int>;
@@ -331,7 +331,7 @@ void TestCompareAndCopy() {
         assert((IntList{1, 2, 4} > IntList{1, 2, 3}));
         assert((IntList{1, 2, 3} >= IntList{1, 2, 3}));
     }
-
+    
     // Копирование списков
     {
         const SingleLinkedList<int> empty_list{};
@@ -350,7 +350,7 @@ void TestCompareAndCopy() {
             assert(list_copy == non_empty_list);
         }
     }
-
+    /*
     // Присваивание списков
     {
         const SingleLinkedList<int> source_list{1, 2, 3, 4};

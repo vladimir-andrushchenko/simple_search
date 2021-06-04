@@ -2,6 +2,7 @@
 
 #include <iterator>
 #include <cstddef>
+#include <vector>
 
 using namespace std;
 
@@ -11,24 +12,47 @@ public:
     template <typename ValueType>
     class BasicIterator;
     
+    using value_type = Type;
+    using reference = value_type&;
+    using const_reference = const value_type&;
+    using Iterator = BasicIterator<Type>;
+    using ConstIterator = BasicIterator<const Type>;
+    
 public:
-//    SingleLinkedList(std::initializer_list<Type> values) {
-//        SingleLinkedList temp;
-//
-//        for (auto value : values) {
-//            temp.PushFront(value);
-//        }
-//
-//        assert(size_ == 0 && head_.next_node == nullptr);
-//
-//        for (auto value : temp) {
-//            PushFront(value);
-//        }
-//    }
-//
-//    SingleLinkedList(const SingleLinkedList& other) {
-//        // Реализуйте конструктор самостоятельно
-//    }
+    SingleLinkedList() = default;
+    
+    SingleLinkedList(std::initializer_list<Type> values) {
+        assert(size_ == 0 && head_.next_node == nullptr);
+        assert(values.size() > 0);
+        
+        SingleLinkedList temp;
+
+        for (int i = static_cast<int>(values.size()) - 1; i >= 0; --i) {
+            temp.PushFront(*(values.begin() + i));
+        }
+        
+        swap(temp);
+    }
+    
+    SingleLinkedList(const SingleLinkedList<Type>& other) {
+        assert(size_ == 0 && head_.next_node == nullptr);
+        
+        std::vector<Type> temporary_container(other.size_);
+
+        auto runner = other.begin();
+        
+        for (auto it = temporary_container.begin(); it != temporary_container.end(); ++it) {
+            *it = *runner++;
+        }
+
+        SingleLinkedList temp;
+        
+        for (auto it = temporary_container.rbegin(); it != temporary_container.rend(); ++it) {
+            temp.PushFront(*it);
+        }
+        
+        swap(temp);
+    }
     
     ~SingleLinkedList() {
         Clear();
@@ -58,12 +82,6 @@ public:
     }
     
 public:
-    using value_type = Type;
-    using reference = value_type&;
-    using const_reference = const value_type&;
-    using Iterator = BasicIterator<Type>;
-    using ConstIterator = BasicIterator<const Type>;
-
     [[nodiscard]] Iterator begin() noexcept {
         auto before_begin_copy = before_begin_;
         return ++before_begin_copy;
