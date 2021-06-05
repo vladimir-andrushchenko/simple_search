@@ -34,7 +34,6 @@ public:
         swap(temp);
     }
     
-public:
     ~SingleLinkedList() {
         Clear();
     }
@@ -187,35 +186,36 @@ template <typename Type>
 template <typename ValueType>
 class SingleLinkedList<Type>::BasicIterator {
 public:
-    friend class SingleLinkedList;
-    
-    explicit BasicIterator(Node* node): node_(node) {}
-    
-public:
     using iterator_category = std::forward_iterator_tag;
     using value_type = Type;
     using difference_type = std::ptrdiff_t;
     using pointer = ValueType*;
     using reference = ValueType&;
     
+public:
+    friend class SingleLinkedList;
+    
     BasicIterator() = default;
     
     BasicIterator(const BasicIterator<Type>& other) noexcept {
         node_ = other.node_;
     }
+    
+    explicit BasicIterator(Node* node): node_(node) {}
 
     BasicIterator& operator=(const BasicIterator& rhs) = default;
     
+public:
     [[nodiscard]] bool operator==(const BasicIterator<const Type>& rhs) const noexcept {
+        return node_ == rhs.node_;
+    }
+    
+    [[nodiscard]] bool operator==(const BasicIterator<Type>& rhs) const noexcept {
         return node_ == rhs.node_;
     }
     
     [[nodiscard]] bool operator!=(const BasicIterator<const Type>& rhs) const noexcept {
         return !(*this == rhs);
-    }
-    
-    [[nodiscard]] bool operator==(const BasicIterator<Type>& rhs) const noexcept {
-        return node_ == rhs.node_;
     }
     
     [[nodiscard]] bool operator!=(const BasicIterator<Type>& rhs) const noexcept {
@@ -241,6 +241,7 @@ public:
         return &(node_->value);
     }
     
+public:
     auto GetRawPointer() {
         return node_;
     }
