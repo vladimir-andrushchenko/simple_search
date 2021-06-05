@@ -122,6 +122,8 @@ public:
         
         node->next_node = new_node;
         
+        ++size_;
+        
         return Iterator{new_node};
     }
 
@@ -162,24 +164,23 @@ private:
         auto last_node = before_begin_;
         
         for (auto it = begin; it != end; ++it) {
-            InsertAfter(last_node.GetRawPointer(), *it);
+            InsertAfter(last_node, *it);
             ++last_node;
-            ++size_; // TODO: two duplicate insert functions
         }
     }
     
-private:
-    void InsertAfter(Node* node, const Type& value) {
-        if (node == nullptr) {
-            PushFront(value);
-        }
-        
-        const auto node_after_inserted = node->next_node;
-        
-        Node* new_node = new Node{value, node_after_inserted};
-        
-        node->next_node = new_node;
-    }
+//private:
+//    void InsertAfter(Node* node, const Type& value) {
+//        if (node == nullptr) {
+//            PushFront(value);
+//        }
+//
+//        const auto node_after_inserted = node->next_node;
+//
+//        Node* new_node = new Node{value, node_after_inserted};
+//
+//        node->next_node = new_node;
+//    }
     
 private:
     Node head_{};
