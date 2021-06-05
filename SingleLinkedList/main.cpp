@@ -424,25 +424,25 @@ void TestCompareAndCopy() {
     }
 }
 
-void TestInsertAfter() {
-    SingleLinkedList<int> list1;
-    list1.PushFront(2);
-    list1.PushFront(1);
-    
-    SingleLinkedList<int> list2;
-    list2.PushFront(1);
-    auto ptr = list2.begin().GetRawPointer();
-    list2.InsertAfter(ptr, 2);
-    
-    assert(list1 == list2);
-}
+//void TestInsertAfter() {
+//    SingleLinkedList<int> list1;
+//    list1.PushFront(2);
+//    list1.PushFront(1);
+//
+//    SingleLinkedList<int> list2;
+//    list2.PushFront(1);
+//    auto ptr = list2.begin().GetRawPointer();
+//    list2.InsertAfter(ptr, 2);
+//
+//    assert(list1 == list2);
+//}
 
 int main() {
     RUN_TEST(TestEmptyList);
     RUN_TEST(TestPushFrontAndDelete);
     RUN_TEST(TestSilgleLinkedListIterator);
     RUN_TEST(TestCompareAndCopy);
-    RUN_TEST(TestInsertAfter);
+//    RUN_TEST(TestInsertAfter);
 
     return 0;
 }

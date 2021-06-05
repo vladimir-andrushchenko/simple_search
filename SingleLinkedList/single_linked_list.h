@@ -33,21 +33,6 @@ public:
         SingleLinkedList temp(other.begin(), other.end());
         swap(temp);
     }
-  
-private:
-    template <typename Iterator>
-    SingleLinkedList(Iterator begin, Iterator end) {
-        // Сначала надо удостовериться, что текущий список пуст
-        assert(size_ == 0 && head_.next_node == nullptr);
- 
-        auto last_node = before_begin_;
-
-        for (auto it = begin; it != end; ++it) {
-            InsertAfter(last_node.GetRawPointer(), *it);
-            ++last_node;
-            ++size_;
-        }
-    }
     
 public:
     ~SingleLinkedList() {
@@ -115,7 +100,22 @@ private:
         Node* next_node = nullptr;
     };
     
-public:
+private:
+    template <typename Iterator>
+    SingleLinkedList(Iterator begin, Iterator end) {
+        // Сначала надо удостовериться, что текущий список пуст
+        assert(size_ == 0 && head_.next_node == nullptr);
+        
+        auto last_node = before_begin_;
+        
+        for (auto it = begin; it != end; ++it) {
+            InsertAfter(last_node.GetRawPointer(), *it);
+            ++last_node;
+            ++size_;
+        }
+    }
+    
+private:
     void InsertAfter(Node* node, const Type& value) {
         if (node == nullptr) {
             PushFront(value);
