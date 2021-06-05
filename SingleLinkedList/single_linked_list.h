@@ -85,6 +85,60 @@ public:
         return end();
     }
     
+    // Возвращает итератор, указывающий на позицию перед первым элементом односвязного списка.
+    // Разыменовывать этот итератор нельзя - попытка разыменования приведёт к неопределённому поведению
+    [[nodiscard]] Iterator before_begin() noexcept {
+        return before_begin_;
+    }
+
+    // Возвращает константный итератор, указывающий на позицию перед первым элементом односвязного списка.
+    // Разыменовывать этот итератор нельзя - попытка разыменования приведёт к неопределённому поведению
+    [[nodiscard]] ConstIterator cbefore_begin() const noexcept {
+        return before_begin_;
+    }
+
+    // Возвращает константный итератор, указывающий на позицию перед первым элементом односвязного списка.
+    // Разыменовывать этот итератор нельзя - попытка разыменования приведёт к неопределённому поведению
+    [[nodiscard]] ConstIterator before_begin() const noexcept {
+        return before_begin_;
+    }
+    
+public:
+    /*
+     * Вставляет элемент value после элемента, на который указывает pos.
+     * Возвращает итератор на вставленный элемент
+     * Если при создании элемента будет выброшено исключение, список останется в прежнем состоянии
+     */
+    Iterator InsertAfter(ConstIterator pos, const Type& value) {
+        auto node = pos.GetRawPointer();
+        
+        if (node == nullptr) {
+            PushFront(value);
+        }
+        
+        const auto node_after_inserted = node->next_node;
+        
+        Node* new_node = new Node{value, node_after_inserted};
+        
+        node->next_node = new_node;
+        
+        return Iterator{new_node};
+    }
+
+    void PopFront() noexcept {
+        auto node_to_delete = head_.next_node;
+        head_.next_node = head_.next_node->next_node;
+        delete node_to_delete;
+    }
+
+    /*
+     * Удаляет элемент, следующий за pos.
+     * Возвращает итератор на элемент, следующий за удалённым
+     */
+    Iterator EraseAfter(ConstIterator pos) noexcept {
+        // Заглушка. Реализуйте метод самостоятельно
+        return {};
+    }
     
 private:
     struct Node {
@@ -110,7 +164,7 @@ private:
         for (auto it = begin; it != end; ++it) {
             InsertAfter(last_node.GetRawPointer(), *it);
             ++last_node;
-            ++size_;
+            ++size_; // TODO: two duplicate insert functions
         }
     }
     
