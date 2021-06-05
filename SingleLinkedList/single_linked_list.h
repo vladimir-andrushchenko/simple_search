@@ -138,8 +138,15 @@ public:
      * Возвращает итератор на элемент, следующий за удалённым
      */
     Iterator EraseAfter(ConstIterator pos) noexcept {
-        // Заглушка. Реализуйте метод самостоятельно
-        return {};
+        auto node = pos.GetRawPointer();
+        
+        auto node_to_delete = node->next_node;
+        
+        node->next_node = node->next_node->next_node;
+        
+        delete node_to_delete;
+        
+        return Iterator{node->next_node};
     }
     
 private:
