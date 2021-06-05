@@ -64,29 +64,15 @@ public:
     }
     
 public:
-    // Возвращает количество элементов в списке за время O(1)
-    [[nodiscard]] size_t GetSize() const noexcept {
-        return size_;
-    }
+    [[nodiscard]] size_t GetSize() const noexcept;
     
-    // Сообщает, пустой ли список за время O(1)
-    [[nodiscard]] bool IsEmpty() const noexcept {
-        return size_ == 0;
-    }
+    [[nodiscard]] bool IsEmpty() const noexcept;
     
-    // Вставляет элемент value в начало списка за время O(1)
     void PushFront(const Type& value);
     
-    // Очищает список за время O(N)
     void Clear() noexcept;
     
-    // Обменивает содержимое списков за время O(1)
-    void swap(SingleLinkedList& other) noexcept {
-        auto temp = head_.next_node;
-        head_.next_node = other.head_.next_node;
-        other.head_.next_node = temp;
-        std::swap(size_, other.size_);
-    }
+    void swap(SingleLinkedList& other) noexcept;
 
 public:
     [[nodiscard]] Iterator begin() noexcept {
@@ -150,6 +136,18 @@ private:
     Iterator end_{head_.next_node};
 };
 
+// GetSize
+template <typename Type>
+[[nodiscard]] size_t SingleLinkedList<Type>::GetSize() const noexcept {
+    return size_;
+}
+
+// IsEmpty
+template <typename Type>
+[[nodiscard]] bool SingleLinkedList<Type>::IsEmpty() const noexcept {
+    return size_ == 0;
+}
+
 // PushFront
 template <typename Type>
 void SingleLinkedList<Type>::PushFront(const Type& value) {
@@ -171,6 +169,15 @@ void SingleLinkedList<Type>::Clear() noexcept {
 
 // swap
 template <typename Type>
+void SingleLinkedList<Type>::swap(SingleLinkedList& other) noexcept {
+    auto temp = head_.next_node;
+    head_.next_node = other.head_.next_node;
+    other.head_.next_node = temp;
+    std::swap(size_, other.size_);
+}
+
+// swap
+template <typename Type>
 void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
     lhs.swap(rhs);
 }
@@ -185,7 +192,6 @@ public:
     explicit BasicIterator(Node* node): node_(node) {}
     
 public:
-
     using iterator_category = std::forward_iterator_tag;
     using value_type = Type;
     using difference_type = std::ptrdiff_t;
