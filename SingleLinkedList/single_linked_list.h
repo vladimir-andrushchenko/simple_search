@@ -87,17 +87,7 @@ public:
     }
     
 private:
-    struct Node {
-        Node() = default;
-        
-        Node(const Type& val, Node* next)
-        : value(val)
-        , next_node(next) {
-        }
-        
-        Type value;
-        Node* next_node = nullptr;
-    };
+    struct Node;
     
 private:
     template <typename Iterator>
@@ -230,7 +220,7 @@ void SingleLinkedList<Type>::PopFront() noexcept {
     delete node_to_delete;
 }
 
-
+// EraseAfter
 template <typename Type>
 typename SingleLinkedList<Type>::Iterator SingleLinkedList<Type>::EraseAfter(ConstIterator before_deleted) noexcept {
     auto node = before_deleted.GetRawPointer();
@@ -253,6 +243,20 @@ typename SingleLinkedList<Type>::Iterator SingleLinkedList<Type>::EraseAfter(Con
     
     return Iterator{node->next_node};
 }
+
+// Node
+template <typename Type>
+struct SingleLinkedList<Type>::Node {
+    Node() = default;
+    
+    Node(const Type& val, Node* next)
+    : value(val)
+    , next_node(next) {
+    }
+    
+    Type value;
+    Node* next_node = nullptr;
+};
 
 // BasicIterator
 template <typename Type>
