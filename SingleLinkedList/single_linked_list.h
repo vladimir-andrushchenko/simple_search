@@ -22,28 +22,13 @@ public:
 public:
     SingleLinkedList() = default;
     
-    SingleLinkedList(std::initializer_list<Type> values) {
-        SingleLinkedList temp(values.begin(), values.end());
-        swap(temp);
-    }
+    SingleLinkedList(std::initializer_list<Type> values);
     
-    SingleLinkedList(const SingleLinkedList<Type>& other) {
-        SingleLinkedList temp(other.begin(), other.end());
-        swap(temp);
-    }
+    SingleLinkedList(const SingleLinkedList<Type>& other);
     
-    ~SingleLinkedList() {
-        Clear();
-    }
+    ~SingleLinkedList();
     
-    SingleLinkedList& operator=(const SingleLinkedList& rhs) {
-        if (this != &rhs) {
-            SingleLinkedList temp(rhs);
-            swap(temp);
-        }
-
-        return *this;
-    }
+    SingleLinkedList& operator=(const SingleLinkedList& rhs);
     
 public:
     [[nodiscard]] size_t GetSize() const noexcept;
@@ -134,6 +119,37 @@ private:
     Iterator before_begin_{&head_};
     Iterator end_{head_.next_node};
 };
+
+// initializer_list constructor
+template <typename Type>
+SingleLinkedList<Type>::SingleLinkedList(std::initializer_list<Type> values) {
+    SingleLinkedList temp(values.begin(), values.end());
+    swap(temp);
+}
+
+// copy constructor
+template <typename Type>
+SingleLinkedList<Type>::SingleLinkedList(const SingleLinkedList<Type>& other) {
+    SingleLinkedList temp(other.begin(), other.end());
+    swap(temp);
+}
+
+// destructor
+template <typename Type>
+SingleLinkedList<Type>::~SingleLinkedList() {
+    Clear();
+}
+
+// operator=
+template <typename Type>
+SingleLinkedList<Type>& SingleLinkedList<Type>::operator=(const SingleLinkedList& rhs) {
+    if (this != &rhs) {
+        SingleLinkedList temp(rhs);
+        swap(temp);
+    }
+
+    return *this;
+}
 
 // GetSize
 template <typename Type>
