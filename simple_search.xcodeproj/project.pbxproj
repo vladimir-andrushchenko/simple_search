@@ -484,7 +484,7 @@
 				755FABD22667900200218F9C /* ScopedPointer */,
 				755FABDD2667B30900218F9C /* PtrVector */,
 				755FABE92667B6BE00218F9C /* OctoCloneAttack */,
-				755FABF52668CAEC00218F9C /* SingleLinkedList */,
+				755FABF52668CAEC00218F9C /* Sprint6 */,
 				755FAC01266E1B7500218F9C /* scoped_array_pointer */,
 				750551C325EEBE80004001C5 /* Products */,
 			);
@@ -568,13 +568,13 @@
 			path = OctoCloneAttack;
 			sourceTree = "<group>";
 		};
-		755FABF52668CAEC00218F9C /* SingleLinkedList */ = {
+		755FABF52668CAEC00218F9C /* Sprint6 */ = {
 			isa = PBXGroup;
 			children = (
 				755FABF62668CAEC00218F9C /* main.cpp */,
 				755FABFB2668CB1400218F9C /* single_linked_list.h */,
 			);
-			path = SingleLinkedList;
+			path = Sprint6;
 			sourceTree = "<group>";
 		};
 		755FAC01266E1B7500218F9C /* scoped_array_pointer */ = {
