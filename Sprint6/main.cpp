@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 // https://onlinegdb.com/sx3A51J4G
 void TestEmptyList() {
     using namespace std;

@@ -28,7 +28,7 @@ public:
     
     ~SingleLinkedList();
     
-    SingleLinkedList& operator=(const SingleLinkedList& rhs);
+    SingleLinkedList& operator=(const SingleLinkedList& right);
     
 public:
     [[nodiscard]] size_t GetSize() const noexcept;
@@ -41,11 +41,11 @@ public:
     
     void swap(SingleLinkedList& other) noexcept;
     
-    Iterator InsertAfter(ConstIterator pos, const Type& value);
+    Iterator InsertAfter(ConstIterator before_inserted, const Type& value);
 
     void PopFront() noexcept;
 
-    Iterator EraseAfter(ConstIterator pos) noexcept;
+    Iterator EraseAfter(ConstIterator before_deleted) noexcept;
 
 public:
     [[nodiscard]] Iterator begin() noexcept;
