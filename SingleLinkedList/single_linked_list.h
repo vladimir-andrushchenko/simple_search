@@ -2,8 +2,6 @@
 
 #include <iterator>
 #include <cstddef>
-#include <vector>
-#include <forward_list>
 #include <algorithm>
 #include <cassert>
 
@@ -57,6 +55,12 @@ public:
     void Clear() noexcept;
     
     void swap(SingleLinkedList& other) noexcept;
+    
+    Iterator InsertAfter(ConstIterator pos, const Type& value);
+
+    void PopFront() noexcept;
+
+    Iterator EraseAfter(ConstIterator pos) noexcept;
 
 public:
     [[nodiscard]] Iterator begin() noexcept {
@@ -85,68 +89,16 @@ public:
         return end();
     }
     
-    // Возвращает итератор, указывающий на позицию перед первым элементом односвязного списка.
-    // Разыменовывать этот итератор нельзя - попытка разыменования приведёт к неопределённому поведению
     [[nodiscard]] Iterator before_begin() noexcept {
         return before_begin_;
     }
 
-    // Возвращает константный итератор, указывающий на позицию перед первым элементом односвязного списка.
-    // Разыменовывать этот итератор нельзя - попытка разыменования приведёт к неопределённому поведению
     [[nodiscard]] ConstIterator cbefore_begin() const noexcept {
         return before_begin_;
     }
 
-    // Возвращает константный итератор, указывающий на позицию перед первым элементом односвязного списка.
-    // Разыменовывать этот итератор нельзя - попытка разыменования приведёт к неопределённому поведению
     [[nodiscard]] ConstIterator before_begin() const noexcept {
         return before_begin_;
-    }
-    
-public:
-    /*
-     * Вставляет элемент value после элемента, на который указывает pos.
-     * Возвращает итератор на вставленный элемент
-     * Если при создании элемента будет выброшено исключение, список останется в прежнем состоянии
-     */
-    Iterator InsertAfter(ConstIterator pos, const Type& value) {
-        auto node = pos.GetRawPointer();
-        
-        if (node == nullptr) {
-            PushFront(value);
-        }
-        
-        const auto node_after_inserted = node->next_node;
-        
-        Node* new_node = new Node{value, node_after_inserted};
-        
-        node->next_node = new_node;
-        
-        ++size_;
-        
-        return Iterator{new_node};
-    }
-
-    void PopFront() noexcept {
-        auto node_to_delete = head_.next_node;
-        head_.next_node = head_.next_node->next_node;
-        delete node_to_delete;
-    }
-
-    /*
-     * Удаляет элемент, следующий за pos.
-     * Возвращает итератор на элемент, следующий за удалённым
-     */
-    Iterator EraseAfter(ConstIterator pos) noexcept {
-        auto node = pos.GetRawPointer();
-        
-        auto node_to_delete = node->next_node;
-        
-        node->next_node = node->next_node->next_node;
-        
-        delete node_to_delete;
-        
-        return Iterator{node->next_node};
     }
     
 private:
@@ -165,7 +117,6 @@ private:
 private:
     template <typename Iterator>
     SingleLinkedList(Iterator begin, Iterator end) {
-        // Сначала надо удостовериться, что текущий список пуст
         assert(size_ == 0 && head_.next_node == nullptr);
         
         auto last_node = before_begin_;
@@ -175,19 +126,6 @@ private:
             ++last_node;
         }
     }
-    
-//private:
-//    void InsertAfter(Node* node, const Type& value) {
-//        if (node == nullptr) {
-//            PushFront(value);
-//        }
-//
-//        const auto node_after_inserted = node->next_node;
-//
-//        Node* new_node = new Node{value, node_after_inserted};
-//
-//        node->next_node = new_node;
-//    }
     
 private:
     Node head_{};
@@ -241,6 +179,63 @@ void SingleLinkedList<Type>::swap(SingleLinkedList& other) noexcept {
 template <typename Type>
 void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
     lhs.swap(rhs);
+}
+
+// InsertAfter
+template <typename Type>
+typename SingleLinkedList<Type>::Iterator SingleLinkedList<Type>::InsertAfter(ConstIterator before_inserted, const Type& value) {
+    auto node = before_inserted.GetRawPointer();
+    
+    if (node == nullptr) {
+        PushFront(value);
+        return begin();
+    }
+    
+    const auto node_after_inserted = node->next_node;
+    
+    Node* new_node = new Node{value, node_after_inserted};
+    
+    node->next_node = new_node;
+    
+    ++size_;
+    
+    return Iterator{new_node};
+}
+
+// PopFront
+template <typename Type>
+void SingleLinkedList<Type>::PopFront() noexcept {
+    if (IsEmpty()) {
+        return;
+    }
+    
+    auto node_to_delete = head_.next_node;
+    head_.next_node = head_.next_node->next_node;
+    delete node_to_delete;
+}
+
+
+template <typename Type>
+typename SingleLinkedList<Type>::Iterator SingleLinkedList<Type>::EraseAfter(ConstIterator before_deleted) noexcept {
+    auto node = before_deleted.GetRawPointer();
+    
+    if (node == nullptr) {
+        return Iterator{};
+    }
+    
+    auto node_to_delete = node->next_node;
+    
+    if (node_to_delete == nullptr) {
+        return Iterator{};
+    }
+    
+    node->next_node = node->next_node->next_node;
+    
+    delete node_to_delete;
+    
+    --size_;
+    
+    return Iterator{node->next_node};
 }
 
 // BasicIterator
