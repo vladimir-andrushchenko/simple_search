@@ -48,59 +48,30 @@ public:
     Iterator EraseAfter(ConstIterator pos) noexcept;
 
 public:
-    [[nodiscard]] Iterator begin() noexcept {
-        auto before_begin_copy = before_begin_;
-        return ++before_begin_copy;
-    }
+    [[nodiscard]] Iterator begin() noexcept;
     
-    [[nodiscard]] Iterator end() noexcept {
-        return end_;
-    }
+    [[nodiscard]] Iterator end() noexcept;
     
-    [[nodiscard]] ConstIterator begin() const noexcept {
-        auto before_begin_copy = before_begin_;
-        return ++before_begin_copy;
-    }
+    [[nodiscard]] ConstIterator begin() const noexcept;
     
-    [[nodiscard]] ConstIterator end() const noexcept {
-        return end_;
-    }
+    [[nodiscard]] ConstIterator end() const noexcept;
     
-    [[nodiscard]] ConstIterator cbegin() const noexcept {
-        return begin();
-    }
+    [[nodiscard]] ConstIterator cbegin() const noexcept;
     
-    [[nodiscard]] ConstIterator cend() const noexcept {
-        return end();
-    }
+    [[nodiscard]] ConstIterator cend() const noexcept;
     
-    [[nodiscard]] Iterator before_begin() noexcept {
-        return before_begin_;
-    }
+    [[nodiscard]] Iterator before_begin() noexcept;
 
-    [[nodiscard]] ConstIterator cbefore_begin() const noexcept {
-        return before_begin_;
-    }
+    [[nodiscard]] ConstIterator cbefore_begin() const noexcept;
 
-    [[nodiscard]] ConstIterator before_begin() const noexcept {
-        return before_begin_;
-    }
+    [[nodiscard]] ConstIterator before_begin() const noexcept;
     
 private:
     struct Node;
     
 private:
-    template <typename Iterator>
-    SingleLinkedList(Iterator begin, Iterator end) {
-        assert(size_ == 0 && head_.next_node == nullptr);
-        
-        auto last_node = before_begin_;
-        
-        for (auto it = begin; it != end; ++it) {
-            InsertAfter(last_node, *it);
-            ++last_node;
-        }
-    }
+    template <typename ForwardIterator>
+    SingleLinkedList(ForwardIterator begin, ForwardIterator end);
     
 private:
     Node head_{};
@@ -124,6 +95,20 @@ SingleLinkedList<Type>::SingleLinkedList(const SingleLinkedList<Type>& other) {
     swap(temp);
 }
 
+// private range based constructor
+template <typename Type>
+template <typename ForwardIterator>
+SingleLinkedList<Type>::SingleLinkedList(ForwardIterator begin, ForwardIterator end) {
+    assert(size_ == 0 && head_.next_node == nullptr);
+    
+    auto last_node = before_begin_;
+    
+    for (auto it = begin; it != end; ++it) {
+        InsertAfter(last_node, *it);
+        ++last_node;
+    }
+}
+
 // destructor
 template <typename Type>
 SingleLinkedList<Type>::~SingleLinkedList() {
@@ -132,9 +117,9 @@ SingleLinkedList<Type>::~SingleLinkedList() {
 
 // operator=
 template <typename Type>
-SingleLinkedList<Type>& SingleLinkedList<Type>::operator=(const SingleLinkedList& rhs) {
-    if (this != &rhs) {
-        SingleLinkedList temp(rhs);
+SingleLinkedList<Type>& SingleLinkedList<Type>::operator=(const SingleLinkedList& right) {
+    if (this != &right) {
+        SingleLinkedList temp(right);
         swap(temp);
     }
 
@@ -242,6 +227,54 @@ typename SingleLinkedList<Type>::Iterator SingleLinkedList<Type>::EraseAfter(Con
     --size_;
     
     return Iterator{node->next_node};
+}
+
+// iterator access
+template <typename Type>
+[[nodiscard]] typename SingleLinkedList<Type>::Iterator SingleLinkedList<Type>::begin() noexcept {
+    auto before_begin_copy = before_begin_;
+    return ++before_begin_copy;
+}
+
+template <typename Type>
+[[nodiscard]] typename SingleLinkedList<Type>::Iterator SingleLinkedList<Type>::end() noexcept {
+    return end_;
+}
+
+template <typename Type>
+[[nodiscard]] typename SingleLinkedList<Type>::ConstIterator SingleLinkedList<Type>::begin() const noexcept {
+    auto before_begin_copy = before_begin_;
+    return ++before_begin_copy;
+}
+
+template <typename Type>
+[[nodiscard]] typename SingleLinkedList<Type>::ConstIterator SingleLinkedList<Type>::end() const noexcept {
+    return end_;
+}
+
+template <typename Type>
+[[nodiscard]] typename SingleLinkedList<Type>::ConstIterator SingleLinkedList<Type>::cbegin() const noexcept {
+    return begin();
+}
+
+template <typename Type>
+[[nodiscard]] typename SingleLinkedList<Type>::ConstIterator SingleLinkedList<Type>::cend() const noexcept {
+    return end();
+}
+
+template <typename Type>
+[[nodiscard]] typename SingleLinkedList<Type>::Iterator SingleLinkedList<Type>::before_begin() noexcept {
+    return before_begin_;
+}
+
+template <typename Type>
+[[nodiscard]] typename SingleLinkedList<Type>::ConstIterator SingleLinkedList<Type>::cbefore_begin() const noexcept {
+    return before_begin_;
+}
+
+template <typename Type>
+[[nodiscard]] typename SingleLinkedList<Type>::ConstIterator SingleLinkedList<Type>::before_begin() const noexcept {
+    return before_begin_;
 }
 
 // Node
