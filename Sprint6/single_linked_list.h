@@ -282,8 +282,8 @@ template <typename Type>
 struct SingleLinkedList<Type>::Node {
     Node() = default;
     
-    Node(const Type& val, Node* next)
-    : value(val)
+    Node(const Type& node_value, Node* next)
+    : value(node_value)
     , next_node(next) {
     }
     
