@@ -168,8 +168,8 @@ void SingleLinkedList<Type>::swap(SingleLinkedList& other) noexcept {
 
 // swap
 template <typename Type>
-void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
-    lhs.swap(rhs);
+void swap(SingleLinkedList<Type>& left, SingleLinkedList<Type>& right) noexcept {
+    left.swap(right);
 }
 
 // InsertAfter
@@ -313,23 +313,23 @@ public:
     
     explicit BasicIterator(Node* node): node_(node) {}
 
-    BasicIterator& operator=(const BasicIterator& rhs) = default;
+    BasicIterator& operator=(const BasicIterator& right) = default;
     
 public:
-    [[nodiscard]] bool operator==(const BasicIterator<const Type>& rhs) const noexcept {
-        return node_ == rhs.node_;
+    [[nodiscard]] bool operator==(const BasicIterator<const Type>& right) const noexcept {
+        return node_ == right.node_;
     }
     
-    [[nodiscard]] bool operator==(const BasicIterator<Type>& rhs) const noexcept {
-        return node_ == rhs.node_;
+    [[nodiscard]] bool operator==(const BasicIterator<Type>& right) const noexcept {
+        return node_ == right.node_;
     }
     
-    [[nodiscard]] bool operator!=(const BasicIterator<const Type>& rhs) const noexcept {
-        return !(*this == rhs);
+    [[nodiscard]] bool operator!=(const BasicIterator<const Type>& right) const noexcept {
+        return !(*this == right);
     }
     
-    [[nodiscard]] bool operator!=(const BasicIterator<Type>& rhs) const noexcept {
-        return !(*this == rhs);
+    [[nodiscard]] bool operator!=(const BasicIterator<Type>& right) const noexcept {
+        return !(*this == right);
     }
     
     BasicIterator& operator++() noexcept {
@@ -361,31 +361,31 @@ private:
 };
 
 template <typename Type>
-bool operator==(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return std::equal(lhs.begin(), lhs.end(), rhs.begin());
+bool operator==(const SingleLinkedList<Type>& left, const SingleLinkedList<Type>& right) {
+    return std::equal(left.begin(), left.end(), right.begin());
 }
 
 template <typename Type>
-bool operator!=(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return !(lhs == rhs);
+bool operator!=(const SingleLinkedList<Type>& left, const SingleLinkedList<Type>& right) {
+    return !(left == right);
 }
 
 template <typename Type>
-bool operator<(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+bool operator<(const SingleLinkedList<Type>& left, const SingleLinkedList<Type>& right) {
+    return std::lexicographical_compare(left.begin(), left.end(), right.begin(), right.end());
 }
 
 template <typename Type>
-bool operator<=(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-     return !(rhs < lhs);
+bool operator<=(const SingleLinkedList<Type>& left, const SingleLinkedList<Type>& right) {
+     return !(right < left);
 }
 
 template <typename Type>
-bool operator>(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return rhs < lhs;
+bool operator>(const SingleLinkedList<Type>& left, const SingleLinkedList<Type>& right) {
+    return right < left;
 }
 
 template <typename Type>
-bool operator>=(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return rhs <= lhs;
+bool operator>=(const SingleLinkedList<Type>& left, const SingleLinkedList<Type>& right) {
+    return right <= left;
 }
