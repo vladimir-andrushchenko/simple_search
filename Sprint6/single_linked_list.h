@@ -39,7 +39,7 @@ public:
         }
         
         explicit BasicIterator(Node* node): node_(node) {}
-
+        
         BasicIterator& operator=(const BasicIterator& right) = default;
         
     public:
@@ -113,7 +113,7 @@ public:
             SingleLinkedList temp(right);
             swap(temp);
         }
-
+        
         return *this;
     }
     
@@ -149,10 +149,7 @@ public:
     Iterator InsertAfter(ConstIterator before_inserted, const Type& value)  {
         auto node = before_inserted.GetRawPointer();
         
-        if (node == nullptr) {
-            PushFront(value);
-            return begin();
-        }
+        assert(node != nullptr);
         
         const auto node_after_inserted = node->next_node;
         
@@ -164,7 +161,7 @@ public:
         
         return Iterator{new_node};
     }
-
+    
     void PopFront() noexcept {
         if (IsEmpty()) {
             return;
@@ -176,7 +173,7 @@ public:
         
         --size_;
     }
-
+    
     Iterator EraseAfter(ConstIterator before_deleted) noexcept  {
         auto node = before_deleted.GetRawPointer();
         
@@ -198,7 +195,7 @@ public:
         
         return Iterator{node->next_node};
     }
-
+    
 public:
     [[nodiscard]] Iterator begin() noexcept  {
         return Iterator{head_.next_node};
@@ -227,11 +224,11 @@ public:
     [[nodiscard]] Iterator before_begin() noexcept {
         return Iterator{&head_};
     }
-
+    
     [[nodiscard]] ConstIterator cbefore_begin() const noexcept  {
         return ConstIterator{const_cast<Node *>(&head_)};
     }
-
+    
     [[nodiscard]] ConstIterator before_begin() const noexcept {
         return ConstIterator{const_cast<Node *>(&head_)};
     }
@@ -279,7 +276,7 @@ bool operator<(const SingleLinkedList<Type>& left, const SingleLinkedList<Type>&
 
 template <typename Type>
 bool operator<=(const SingleLinkedList<Type>& left, const SingleLinkedList<Type>& right) {
-     return !(right < left);
+    return !(right < left);
 }
 
 template <typename Type>
