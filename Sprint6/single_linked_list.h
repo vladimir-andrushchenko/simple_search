@@ -5,8 +5,6 @@
 #include <algorithm>
 #include <cassert>
 
-using namespace std;
-
 template <typename Type>
 class SingleLinkedList {
 public:
@@ -99,13 +97,11 @@ public:
     SingleLinkedList() = default;
     
     SingleLinkedList(std::initializer_list<Type> values) {
-        SingleLinkedList temp(values.begin(), values.end());
-        swap(temp);
+        Assign(values.begin(), values.end());
     }
     
     SingleLinkedList(const SingleLinkedList<Type>& other)  {
-        SingleLinkedList temp(other.begin(), other.end());
-        swap(temp);
+        Assign(other.begin(), other.end());
     }
     
     ~SingleLinkedList() {
@@ -241,16 +237,18 @@ public:
     }
     
 private:
-    template <typename ForwardIterator>
-    SingleLinkedList(ForwardIterator begin, ForwardIterator end)  {
-        assert(size_ == 0 && head_.next_node == nullptr);
+    template <typename InputIterator>
+    void Assign(InputIterator from, InputIterator to) {
+        SingleLinkedList temp;
         
-        auto last_node = before_begin();
+        auto last_node = temp.before_begin();
         
-        for (auto it = begin; it != end; ++it) {
-            InsertAfter(last_node, *it);
+        for (auto it = from; it != to; ++it) {
+            temp.InsertAfter(last_node, *it);
             ++last_node;
         }
+        
+        swap(temp);
     }
     
 private:
