@@ -205,21 +205,19 @@ public:
 
 public:
     [[nodiscard]] Iterator begin() noexcept  {
-        auto before_begin_copy = before_begin_;
-        return ++before_begin_copy;
+        return Iterator{head_.next_node};
     }
     
     [[nodiscard]] Iterator end() noexcept {
-        return end_;
+        return Iterator{nullptr};
     }
     
     [[nodiscard]] ConstIterator begin() const noexcept {
-        auto before_begin_copy = before_begin_;
-        return ++before_begin_copy;
+        return ConstIterator{const_cast<Node *>(head_.next_node)};
     }
     
     [[nodiscard]] ConstIterator end() const noexcept {
-        return end_;
+        return ConstIterator{nullptr};
     }
     
     [[nodiscard]] ConstIterator cbegin() const noexcept  {
@@ -235,11 +233,11 @@ public:
     }
 
     [[nodiscard]] ConstIterator cbefore_begin() const noexcept  {
-        return before_begin_;
+        return ConstIterator{const_cast<Node *>(&head_)};
     }
 
     [[nodiscard]] ConstIterator before_begin() const noexcept {
-        return before_begin_;
+        return ConstIterator{const_cast<Node *>(&head_)};
     }
     
 private:
@@ -247,7 +245,7 @@ private:
     SingleLinkedList(ForwardIterator begin, ForwardIterator end)  {
         assert(size_ == 0 && head_.next_node == nullptr);
         
-        auto last_node = before_begin_;
+        auto last_node = before_begin();
         
         for (auto it = begin; it != end; ++it) {
             InsertAfter(last_node, *it);
@@ -258,9 +256,6 @@ private:
 private:
     Node head_{};
     size_t size_ = 0;
-    
-    Iterator before_begin_{&head_};
-    Iterator end_{head_.next_node};
 };
 
 // swap

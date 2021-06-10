@@ -567,12 +567,25 @@ void TestSingleLinkedListManipulations() {
     }
 }
 
+void TestRangeBasedForInSingleLinkedList() {
+    const SingleLinkedList<int> source  = {1, 2, 3};
+    SingleLinkedList<int> target;
+    
+    for (auto x : source) {
+        target.PushFront(x);
+    }
+    
+    assert((target == SingleLinkedList<int>{3, 2, 1}));
+    
+}
+
 int main() {
     RUN_TEST(TestEmptyList);
     RUN_TEST(TestPushFrontAndDelete);
     RUN_TEST(TestSilgleLinkedListIterator);
     RUN_TEST(TestCompareAndCopy);
     RUN_TEST(TestSingleLinkedListManipulations);
+    RUN_TEST(TestRangeBasedForInSingleLinkedList);
 
     return 0;
 }
