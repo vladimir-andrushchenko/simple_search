@@ -261,6 +261,14 @@ void swap(SingleLinkedList<Type>& left, SingleLinkedList<Type>& right) noexcept 
 
 template <typename Type>
 bool operator==(const SingleLinkedList<Type>& left, const SingleLinkedList<Type>& right) {
+    if (&left == &right) {
+        return true;
+    }
+    
+    if (left.GetSize() != right.GetSize()) {
+        return false;
+    }
+    
     return std::equal(left.begin(), left.end(), right.begin());
 }
 
