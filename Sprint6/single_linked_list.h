@@ -109,10 +109,7 @@ public:
     }
     
     SingleLinkedList& operator=(const SingleLinkedList& right) {
-        if (this != &right) {
-            SingleLinkedList temp(right);
-            swap(temp);
-        }
+        Assign(right.begin(), right.end());
         
         return *this;
     }
